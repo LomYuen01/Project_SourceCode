@@ -68,7 +68,68 @@ $result = $conn->query($sql);
             }
             ?>
 
+            <div class="summary" style="width: 20%;">
+                <div class="summary-total-items"><span class="total-items"></span>Payment</div>
+
+                <div class="shopping-option-title">Shopping Option</div>
+                <div class="shopping-options">
+                    <div class="shopping-option">
+                        <input type="radio" name="shopping-option" id="option2" value="selfcollection">
+                        <label for="option2">Self Collection</label>
+                    </div>
+                    <div class="shopping-option">
+                        <input type="radio" name="shopping-option" id="option3" value="expressdelivery">
+                        <label for="option3">Dine In</label>
+                    </div>
+                </div>
+
+                <div class="payment-method-title">Payment Method</div>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <div class="payment-method-image">
+                            <img src="source/bankpay.png" alt="Bank Payment">
+                        </div>
+                        <div class="payment-method-name">
+                            <input type="radio" name="payment" value="bank">
+                            Bank Payment
+                        </div>
+                    </div>
+
+                    <div class="payment-method">
+                        <div class="payment-method-image">
+                            <img src="source/visa.png" alt="Visa Payment">
+                        </div>
+                        <div class="payment-method-name">
+                            <input type="radio" name="payment" value="visa">
+                            Visa Payment
+                        </div>
+                    </div>
+
+                    <div class="payment-method">
+                        <div class="payment-method-image">
+                            <img src="source/ewallet.png" alt="E-Wallet Payment">
+                        </div>
+                        <div class="payment-method-name">
+                            <input type="radio" name="payment" value="e-wallet">
+                            E-Wallet Payment
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="summary-total">
+                    <div class="total-title">Total</div>
+                    <div class="total-value final-value" id="basket-total">00.00</div>
+                </div>
+                <div class="summary-checkout">
+                    <button class="checkout-cta">Checkout</button>
+                </div>
+            </div>
+
         </div>
+
     </main>
 </body>
 
