@@ -32,7 +32,7 @@
 
                             $title = $row['title'];
                             $current_image = $row['image_name'];
-                            $size = $row['size'];
+                            $FoodSize = $row['FoodSize'];
                             $featured = $row['featured'];
                             $active = $row['active'];
                         }
@@ -93,8 +93,8 @@
                         <tr>
                             <td>Food Size: </td>
                             <td>
-                                <input <?php if($size == "Yes"){echo "Checked";} ?> type="radio" name="size" value="Yes"> Yes
-                                <input <?php if($size == "No"){echo "Checked";} ?> type="radio" name="size" value="No"> No
+                                <input <?php if($FoodSize == "Yes"){echo "Checked";} ?> type="radio" name="FoodSize" value="Yes"> Yes
+                                <input <?php if($FoodSize == "No"){echo "Checked";} ?> type="radio" name="FoodSize" value="No"> No
                             </td>
 
                         <tr>
@@ -139,7 +139,7 @@
                 $id = $_POST['id'];
                 $title = $_POST['title'];
                 $current_image = $_POST['current_image'];
-                $size = $_POST['size'];
+                $FoodSize = $_POST['FoodSize'];
                 $featured = $_POST['featured'];
                 $active = $_POST['active'];
             
@@ -228,7 +228,7 @@
                     $sql2 = "UPDATE tbl_category SET
                         title = '$title',
                         image_name = '$image_name',
-                        FoodSize = $FoodSize,
+                        FoodSize = '$FoodSize',
                         featured = '$featured',
                         active = '$active'
                         WHERE id = '$id'
