@@ -16,7 +16,7 @@
             // Get the value from database
             $row = mysqli_fetch_assoc($res);
 
-            // Get the title
+            // Get the title 
             $category_title = $row['title'];
         }
         else
