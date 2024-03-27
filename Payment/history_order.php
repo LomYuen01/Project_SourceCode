@@ -1,23 +1,20 @@
 <?php
-// Start session
-session_start();
+//include('connection.php'); 
 
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
-    // If not logged in, redirect to login page
+/*
+session_start();
+if (!isset($_SESSION['username_id'])) {
+    
     header("Location: login.html");
-    exit(); // Terminate further code execution
+    exit(); 
 }
 
-// Include database connection file here
-include('connection.php');
 
-// Get purchase history records for the user
-$username = $_SESSION['username'];
-$sql = "SELECT * FROM purchase_history WHERE username = '$username'";
+
+$sql = "SELECT * FROM tbl_order";
 $result = $conn->query($sql);
+*/
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,11 +22,14 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase History</title>
+    <style>
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
 </head>
 
 <body>
-    <h2>Purchase History</h2>
-    <table border="1">
+    <h2 style="color: blue;">Purchase History</h2>
+    <table style="width: 70%; margin: 0 auto;">
         <tr>
             <th>Purchase Date</th>
             <th>Product Name</th>
@@ -38,6 +38,13 @@ $result = $conn->query($sql);
             <th>Total Price</th>
         </tr>
         <?php
+        
+        $results_per_page = 20;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page - 1) * $results_per_page;
+
+        //$sql = "SELECT * FROM tbl_order LIMIT $start, $results_per_page"; 
+        //$result = $conn->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
@@ -53,11 +60,10 @@ $result = $conn->query($sql);
         }
         ?>
     </table>
+    <div style="width: 70%; margin:40px auto 0 auto;" >
+        <a href="?page=<?php echo $page - 1; ?>">Previous</a>
+        <a href="?page=<?php echo $page + 1; ?>">Next</a>
+    </div>
 </body>
 
 </html>
-
-<?php
-// Close database connection
-$conn->close();
-?>
