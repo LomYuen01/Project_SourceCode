@@ -4,7 +4,7 @@ html a {
 }
 
 body {
-  background-color: #f5f1eb;
+  background-color: #ffffff;
   color: #0000006e;
   margin: 0 auto;
 }
@@ -110,7 +110,7 @@ main {
   width: 80%;
   border: #0077ff 1px solid;
   border-radius: 8px;
-  background-color: #fdfdfd;
+  background-color: #ffffff;
 }
 
 .basket-module {
@@ -137,7 +137,7 @@ ul {
 }
 
 li {
-  color: #84604f;
+  color: #4f4cff;
   display: inline-block;
   padding: 10px 0;
 }

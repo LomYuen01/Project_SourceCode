@@ -1,9 +1,9 @@
 <?php
 include('connection.php'); 
 
-
+/*
 session_start();
-if (!isset($_SESSION['username_id'])) {
+if (!isset($_SESSION['user_id'])) {
     
     header("Location: login.html");
     exit(); 
@@ -12,7 +12,9 @@ if (!isset($_SESSION['username_id'])) {
 
 $sql = "SELECT * FROM cart_items";
 $result = $conn->query($sql);
+*/
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,10 +27,10 @@ $result = $conn->query($sql);
     <title>Cart</title>
 </head>
 
-<body>
+<body style="background-color: #ffffff;">
     <main>
         <div class="title">
-            <h1>Payment</h1>
+            <h1>Cart</h1>
         </div>
 
         <div class="basket">
@@ -39,6 +41,7 @@ $result = $conn->query($sql);
                     <li class="price">Price</li>
                     <li class="quantity">Quantity</li>
                     <li class="subtotal">Subtotal</li>
+                    <li class="remove">Remove</li>
                 </ul>
             </div>
 
@@ -46,7 +49,10 @@ $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="basket-product">';
-                    echo '<div class="checkbox">' . $row['id'] . '</div>';
+                    echo '<div class="checkbox">';
+                    echo '<input type="checkbox" name="item'.$row['id'].'" value="item'.$row['id'].'" id="item'.$row['id'].'">';
+                    echo '<label for="item'.$row['id'].'"></label>';
+                    echo '</div>';
                     echo '<div class="item">';
                     echo '<div class="product-details">';
                     echo '<h2>' . $row['product_name'] . '</h2>';
@@ -54,9 +60,16 @@ $result = $conn->query($sql);
                     echo '</div>';
                     echo '<div class="price">' . $row['price'] . '</div>';
                     echo '<div class="quantity">';
+                    echo '<div class="quantity">';
+                    echo '<button class="quantity-button quantity-minus">-</button>';
                     echo '<div class="quantity-field">' . $row['quantity'] . '</div>';
+                    echo '<button class="quantity-button quantity-plus">+</button>';
+                    echo '</div>';
                     echo '</div>';
                     echo '<div class="subtotal">' . ($row['price'] * $row['quantity']) . '</div>';
+                    echo '<div class="remove">';
+                    echo '<button>Remove</button>';
+                    echo '</div>';
                     echo '</div>';
                 }
             } else {
@@ -75,7 +88,7 @@ $result = $conn->query($sql);
                 <div class="shopping-options">
                     <div class="shopping-option">
                         <input type="radio" name="shopping-option" id="option2" value="selfcollection">
-                        <label for="option2">Self Collection</label>
+                        <label for="option2">Delivery</label>
                     </div>
                     <div class="shopping-option">
                         <input type="radio" name="shopping-option" id="option3" value="expressdelivery">
@@ -87,7 +100,7 @@ $result = $conn->query($sql);
                 <div class="payment-methods">
                     <div class="payment-method">
                         <div class="payment-method-image">
-                            <img src="source/bankpay.png" alt="Bank Payment">
+                            <img src="source/Bank.jpg" alt="Bank Payment">
                         </div>
                         <div class="payment-method-name">
                             <input type="radio" name="payment" value="bank">
@@ -97,17 +110,7 @@ $result = $conn->query($sql);
 
                     <div class="payment-method">
                         <div class="payment-method-image">
-                            <img src="source/visa.png" alt="Visa Payment">
-                        </div>
-                        <div class="payment-method-name">
-                            <input type="radio" name="payment" value="visa">
-                            Visa Payment
-                        </div>
-                    </div>
-
-                    <div class="payment-method">
-                        <div class="payment-method-image">
-                            <img src="source/ewallet.png" alt="E-Wallet Payment">
+                            <img src="source/TNG.jpg" alt="E-Wallet Payment">
                         </div>
                         <div class="payment-method-name">
                             <input type="radio" name="payment" value="e-wallet">

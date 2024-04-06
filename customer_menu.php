@@ -17,7 +17,7 @@
         <div class="row" style="display: flex; height:100%" >
             <div class="col-md-3">
                 <!-- Display Categories -->
-                <div class="categories" style="position: sticky; left:10%; top: 90px;">
+                <div class="categories" style="position: sticky; left:10%; top: 90px;list-style-type: none;">
                     <h2>Categories</h2>
                     <ul>
                         <?php
