@@ -1,164 +1,167 @@
 <?php include('Partials/menu.php'); ?>
-
-        <?php
-            if (isset($_GET['id'])) 
+    <?php
+        if (isset($_GET['id'])) 
+        {
+            $food_id = $_GET['id'];
+            // Use $id to pre-fill the form for updating the food item
+        }
+    
+        if (isset($_SESSION['category_id'])) {
+            $category_id = $_SESSION['category_id'];
+            // Use $category_id to pre-fill the category field in the form
+        }
+        
+        // Process the value from Form and save it in Database
+        // Check whether the submit button is clicked or not
+        if(isset($_POST['submit']))
+        {
+            // Button Clicked
+            // 1. Get all the values from out Form
+            $id = $_POST['id'];
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $normal_price = $_POST['normal_price'];
+            $large_price = $_POST['large_price'];
+            $current_image = $_POST['current_image'];
+            $category = $_POST['category'];
+            $featured = $_POST['featured'];
+            $active = $_POST['active'];
+        
+            // Flag to check if we should process the image
+            $process_image = true;
+        
+            // 2. Upload the Image if selected
+            // Check whether the image is selected or not
+            if(isset($_FILES['image']['name']))
             {
-                $food_id = $_GET['id'];
-                // Use $id to pre-fill the form for updating the food item
-            }
-
-            if (isset($_SESSION['category_id'])) {
-                $category_id = $_SESSION['category_id'];
-                // Use $category_id to pre-fill the category field in the form
-            }
-
-            // Process the value from Form and save it in Database
-            // Check whether the submit button is clicked or not
-            if(isset($_POST['submit']))
-            {
-                // Button Clicked
-                // 1. Get all the values from out Form
-                $id = $_POST['id'];
-                $title = $_POST['title'];
-                $description = $_POST['description'];
-                $normal_price = $_POST['normal_price'];
-                $large_price = $_POST['large_price'];
-                $current_image = $_POST['current_image'];
-                $category = $_POST['category'];
-                $featured = $_POST['featured'];
-                $active = $_POST['active'];
-            
-                // Flag to check if we should process the image
-                $process_image = true;
-            
-                // 2. Upload the Image if selected
-                // Check whether the image is selected or not
-                if(isset($_FILES['image']['name']))
+                // Get the Image Details
+                $image_name = $_FILES['image']['name'];
+        
+                // Check whether the image is available or not
+                if($image_name != "")
                 {
-                    // Get the Image Details
-                    $image_name = $_FILES['image']['name'];
-            
-                    // Check whether the image is available or not
-                    if($image_name != "")
-                    {
-                        // Section A: Upload the new image
-            
-                        // ---------- If image exist, it will add a suffix to the image name ---------- //
-                                
-                            $ext = pathinfo($image_name, PATHINFO_EXTENSION);
-                            $base_name = basename($image_name, ".".$ext);
-                        
-                            // Start with no suffix
-                            $suffix = '';
-                            $index = 1;
-                        
-                            // While a file with the current name exists, increment the suffix
-                            while(file_exists("../images/food/" . $base_name . $suffix . '.' . $ext)) 
-                            {
-                                $suffix = '(' . $index++ . ')';
-                            }
+                    // Section A: Upload the new image
+        
+                    // ---------- If image exist, it will add a suffix to the image name ---------- //
+                            
+                        $ext = pathinfo($image_name, PATHINFO_EXTENSION);
+                        $base_name = basename($image_name, ".".$ext);
                     
-                            // Set the image name to the base name plus the suffix
-                            $image_name = $base_name . $suffix . '.' . $ext;
-            
-                        // ---------------------------------------------------------------------------- //
-            
-                        $source_path = $_FILES['image']['tmp_name'];  
-            
-                        $destination_path = "../images/food/".$image_name;
-            
-                        // Finally upload the image
-                        $upload = move_uploaded_file($source_path, $destination_path);
-            
-                        // Check whether the image is uploaded or not
-                        // If its not, we will stop the process and redirect with error message
-                        if($upload == FALSE)
+                        // Start with no suffix
+                        $suffix = '';
+                        $index = 1;
+                    
+                        // While a file with the current name exists, increment the suffix
+                        while(file_exists("../images/food/" . $base_name . $suffix . '.' . $ext)) 
                         {
-                            $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
+                            $suffix = '(' . $index++ . ')';
+                        }
+                
+                        // Set the image name to the base name plus the suffix
+                        $image_name = $base_name . $suffix . '.' . $ext;
+        
+                    // ---------------------------------------------------------------------------- //
+        
+                    $source_path = $_FILES['image']['tmp_name'];  
+        
+                    $destination_path = "../images/food/".$image_name;
+        
+                    // Finally upload the image
+                    $upload = move_uploaded_file($source_path, $destination_path);
+        
+                    // Check whether the image is uploaded or not
+                    // If its not, we will stop the process and redirect with error message
+                    if($upload == FALSE)
+                    {
+                        $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
+                        header('location:'.SITEURL.'admin/manage-food.php');
+                        die(); // Stop the Process
+                    }
+        
+                    // Section B: Remove the current Image if available
+                    if($current_image != "")
+                    {
+                        $remove_path = "../images/food/".$current_image;
+                        $remove = unlink($remove_path);
+        
+                        // Check whether the image is removed or not
+                        // If failed to remove, display message and stop the process
+                        if($remove==FALSE)
+                        {
+                            $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
                             header('location:'.SITEURL.'admin/manage-food.php');
                             die(); // Stop the Process
                         }
-            
-                        // Section B: Remove the current Image if available
-                        if($current_image != "")
-                        {
-                            $remove_path = "../images/food/".$current_image;
-                            $remove = unlink($remove_path);
-            
-                            // Check whether the image is removed or not
-                            // If failed to remove, display message and stop the process
-                            if($remove==FALSE)
-                            {
-                                $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                                header('location:'.SITEURL.'admin/manage-food.php');
-                                die(); // Stop the Process
-                            }
-                        }
-                    }
-                    else
-                    {
-                        $image_name = $current_image;
-                    
                     }
                 }
                 else
                 {
                     $image_name = $current_image;
-                }
-            
-                // Only process the rest of the script if the image was successfully processed
-                if($process_image)
-                {
-                    $title = mysqli_real_escape_string($conn, $_POST['title']);
-                    $description = mysqli_real_escape_string($conn, $_POST['description']);
-                    $normal_price = mysqli_real_escape_string($conn, $_POST['normal_price']);
-                    $large_price = mysqli_real_escape_string($conn, $_POST['large_price']);
-                    $category = mysqli_real_escape_string($conn, $_POST['category']);
-                    $featured = mysqli_real_escape_string($conn, $_POST['featured']);
-                    $active = mysqli_real_escape_string($conn, $_POST['active']);
-                    $id = mysqli_real_escape_string($conn, $_POST['id']);
-
-                    // 3. SQL Query to update Food data into Database
-                    $sql2 = "UPDATE tbl_food SET 
-                        title = '$title', 
-                        description = '$description', 
-                        image_name = '$image_name', 
-                        category_id = '$category', 
-                        featured = '$featured', 
-                        active = '$active',
-                        normal_price = '$normal_price', 
-                        large_price = '$large_price'
-                        WHERE id = '$id'";
-                        
-                    $res2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
-            
-                    // 4. Redirect to Manage Food with Message
-                    // Check whether the query executed or not
-                    if($res2 == TRUE)
-                    {
-                        // Food Updated
-                        $_SESSION['update'] = "<div class='success'> Food Updated Successfully. </div>";
-                        header('location:'.SITEURL.'admin/manage-food.php');
-                    }
-                    else
-                    {
-                        // Failed to Update Food
-                        $_SESSION['update'] = "<div class='error'> Failed to Update Food. </div>";
-                        header('location:'.SITEURL.'admin/manage-food.php');
-                    }
+                
                 }
             }
+            else
+            {
+                $image_name = $current_image;
+            }
+        
+            // Only process the rest of the script if the image was successfully processed
+            if($process_image)
+            {
+                // 3. SQL Query to update Food data into Database
+                $sql2 = "UPDATE tbl_food SET 
+                    title = '$title', 
+                    description = '$description', 
+                    image_name = '$image_name', 
+                    category_id = '$category', 
+                    featured = '$featured', 
+                    active = '$active',
+                    normal_price = '$normal_price', 
+                    large_price = '$large_price'
+                    WHERE id = '$id'
+                ";
+                    
+                $res2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+        
+                // 4. Redirect to Manage Food with Message
+                // Check whether the query executed or not
+                if($res2 == TRUE)
+                {
+                    // Food Updated
+                    $_SESSION['update'] = "<div class='success'> Food Updated Successfully. </div>";
+                    header('location:'.SITEURL.'admin/manage-food.php');
+                }
+                else
+                {
+                    // Failed to Update Food
+                    $_SESSION['update'] = "<div class='error'> Failed to Update Food. </div>";
+                    header('location:'.SITEURL.'admin/manage-food.php');
+                }
+            }
+        }
+    ?>
+    <section class="home">
+        <div class="title">
+            <div class="text">Update Food</div>
 
-        ?>
+            <?php
+                if(isset($_SESSION['upload'])) 
+                {
+                    echo $_SESSION['upload'];  
+                    unset($_SESSION['upload']);  
+                }
 
-        <!-- Main Content Section Starts -->
-        <div class="mainContent">
-            <div class="wrapper">
-                <h1>Update Food</h1>
+                if(isset($_SESSION['update'])) 
+                {
+                    echo $_SESSION['update'];  
+                    unset($_SESSION['update']);  
+                }
 
-                <br><br>
-
-                <?php
+                if(isset($_SESSION['failed-remove'])) 
+                {
+                    echo $_SESSION['failed-remove'];  
+                    unset($_SESSION['failed-remove']);  
+                }
 
                 if(isset($_GET['id']))
                 {
@@ -205,26 +208,47 @@
                     // Redirect to Manage Food Page
                     header('location:'.SITEURL.'admin/manage-food.php');
                 }
-                    
-                ?>
-                
+            ?>
+        </div>
+
+        <!-- Break --><br><!-- Line -->
+        
+        <div class="form-container">
+            <!-- =================================================== Header Section =================================================== -->
+            <section class="table-form">
                 <form action="update-food.php" method="POST" enctype="multipart/form-data">
-                    <table class="tbl-42">
-                        <tr>
-                            <td>Title: </td>
-                            <td>
-                            <input type="text" name="title" value="<?php echo $title; ?>">
-                            </td>
-                        </tr>
+                    <div class="user-details">
+                        <div class="half-width">
+                            <div class="input-box">
+                                <span class="details">Food Name</span>
+                                <input type="text" name="title" value="<?php echo $title; ?>" required>
+                            </div>
 
-                        <tr>
-                            <td>Description: </td>
-                            <td>
-                                <textarea name="description" cols="30" rows="5"><?php echo $description; ?></textarea>
-                            </td>
-                        </tr>
+                            <div class="input-box">
+                                <span class="details">Image</span>
+                                <input type="file" id="image" name="image">
+                            </div>
 
-                        <tr>
+                            <div class="input-box" style="margin-top: 5px; position: relative; display: flex; flex-wrap: wrap;">
+                                <span class="details" style="position: relative; display: flex; justify-content: center; align-items: center; margin-right: 25px;">Current Image</span>
+                                <?php
+                                    if($current_image != "")
+                                    {
+                                        // Display the Image
+                                        ?>
+                                        <img src="<?php echo SITEURL; ?>images/food/<?php echo $current_image; ?>" width="100px">
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        // Display the Message
+                                        echo "<div class='error'>Image not Added</div>";
+                                    }
+                                ?>
+                            </div>
+
+                            <div class="input-box"></div>
+
                             <?php 
                                 // Get the id of the food item from the URL
                                 if (isset($_GET['id'])) {
@@ -256,127 +280,81 @@
                                     {
                                         // Get the details of categories
                                         $id = $row['id'];
-                                        $FoodSize = $row['FoodSize'];
+                                        $featured = $row['featured'];
 
                                         if($id == $category_id)
                                         {
-                                            if($FoodSize == "Yes")
+                                            if($featured == "Yes")
                                             {
                                             ?>
-                                                <tr>
-                                                    <td>Price (Normal): </td>
-                                                    <td>
-                                                        <input type="number" name="normal_price" min="0" step="0.01" value="<?php echo $normal_price; ?>" required>
-                                                    </td>
-                                                </tr>
+                                            <div class="input-box">
+                                                <span class="details">Normal Price</span>
+                                                <input type="number" name="normal_price" value="<?php echo $normal_price; ?>" min="0" step="0.01" required>
+                                            </div>
 
-                                                <tr>
-                                                    <td>Price (Large): </td>
-                                                    <td>
-                                                        <input type="number" name="large_price" min="0" step="0.01" value="<?php echo $large_price; ?>" required>
-                                                    </td>
-                                                </tr>
-                                            <?php
-                                            }
-                                            else if($FoodSize == "No")
-                                            {
-                                            ?>
-                                                <td>Price: </td>
-                                                <td>
-                                                    <input type="number" name="normal_price" min="0" step="0.01" value="<?php echo $normal_price; ?>" required>
-                                                </td>
+                                            <div class="input-box">
+                                                <span class="details">Large Price</span>
+                                                <input type="number" name="large_price" value="<?php echo $large_price; ?>" min="0" step="0.01" required>
+                                            </div>
+                                        <?php
+                                        }
+                                        else if($featured == "No")
+                                        {
+                                        ?>
+                                            <div class="input-box">
+                                                <span class="details">Price</span>
+                                                <input type="number" name="normal_price" value="<?php echo $normal_price; ?>" min="0" step="0.01" required>
+                                            </div>
 
+                                            <div class="input-box">
                                                 <input type="hidden" name="large_price" value="0.00">
-                                            <?php
-                                            }
-                                            break; // Exit the loop as we've found the matching id
+                                            </div>
+                                        <?php
+                                        }
+                                        break; // Exit the loop as we've found the matching id
                                         }
                                     }
                                 }
                             ?>
-                        </tr>
 
-                        <tr>
-                            <td>Current Image: </td>
-                            <td>
-                                <?php
-                                    if($current_image != "")
-                                    {
-                                        // Display the Image
-                                        ?>
-                                        <img src="<?php echo SITEURL; ?>images/food/<?php echo $current_image; ?>" width="100px">
-                                        <?php
-                                    }
-                                    else
-                                    {
-                                        // Display the Message
-                                        echo "<div class='error'>Image not Added</div>";
-                                    }
-                                ?>
-                            </td>
-                        </tr>
+                            <div class="input-box">
+                                <span class="details">Description</span>
+                                <textarea name="description"><?php echo $description; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
 
-                        <tr>
-                            <td>New Image: </td>
-                            <td>
-                                <input type="file" name="image">
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Category: </td>
-                            <td>
-                                <?php
-                                    // Query to get active categories
-                                    $sql = "SELECT * FROM tbl_category WHERE id='$category_id'";
-                                    $res = mysqli_query($conn, $sql);
-                                    $row = mysqli_fetch_assoc($res);
-
-                                    if($row)
-                                    {
-                                        // We have the category
-                                        $category_title = $row['title'];
-                                        echo $category_title;
-                                    }
-                                    else
-                                    {
-                                        // We do not have the category
-                                        echo "No Category Found";
-                                    }
-                                ?>
-                                <input type="hidden" name="category" value="<?php echo $category_id; ?>">
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Featured: </td>
-                            <td>
+                    <div class="radio">
+                        <div class="featured">
+                            <span class="text">Featured</span>
+                            <div class="down">
                                 <input <?php if($featured == "Yes"){echo "Checked";} ?> type="radio" name="featured" value="Yes"> Yes 
-
                                 <input <?php if($featured == "No"){echo "Checked";} ?> type="radio" name="featured" value="No"> No
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
 
-                        <tr>
-                            <td>Active: </td>
-                            <td>
+                        <div class="active">
+                            <span class="text">Active</span>
+                            <div class="down">
                                 <input <?php if($active == "Yes"){echo "Checked";} ?> type="radio" name="active" value="Yes"> Yes 
                                 <input <?php if($active == "No"){echo "Checked";} ?> type="radio" name="active" value="No"> No
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2">
-                                <input type="hidden" name="current_image" value="<?php echo $current_image; ?>">
-                                <input type="" name="id" value="<?php echo $food_id; ?>">
-                                <input type="submit" name="submit" value="Update Food" class="btn-secondary">
-                            </td>
-                        </tr>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button">
+                        <input type="hidden" name="current_image" value="<?php echo $current_image; ?>">
+                        <input type="hidden" name="category" value="<?php echo $category_id; ?>">
+                        <input type="hidden" name="id" value="<?php echo $food_id; ?>">
+                        <input type="submit" name="submit" value="Add Food" class="btn-secondary">
+                    </div>
                 </form>
 
-            </div>
+            </section>
+            <!-- =================================================== Header Section =================================================== -->
         </div>
-        <!-- Main Content Section Ends -->
+    </section>
+    <script>
 
+    </script>
 <?php include('Partials/footer.php'); ?>

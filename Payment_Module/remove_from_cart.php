@@ -1,5 +1,5 @@
 <?php
-include('partials-front/menu.php');
+include('../partials-front/menu.php');
 
 // Temporary set user_id to 1
 $user_id = 1;

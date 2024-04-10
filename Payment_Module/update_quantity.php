@@ -1,5 +1,5 @@
 <?php
-include('partials-front/menu.php');
+include('../partials-front/menu.php');
 
 // 暂时设置 user_id 为 1
 $user_id = 1;

@@ -3,7 +3,7 @@
 <html>
     <head>
         <title>Login Food Order System</title>
-        <link rel="stylesheet" href="../css/Admin.css">
+        <link rel="stylesheet" href="../Style/style-admin.css">
     </head>
 
     <body>
@@ -34,12 +34,20 @@
                         Password: <br>
                         <input type="password" name="password" placeholder="Enter Password" required="required" /> <br><br>
 
+                        <div class="option-field">
+                            <span class="checkbox">
+                                <input type="checkbox" id="check">
+                                <label for="check">Remember me</label>
+                            </span>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+
                         <button type="submit" name="submit" class="btn-primary">Let me in.</button>
                     </form>
                 <!-- Login Form Ends here -->
-                <br>
+                <br><br>
 
-            <p>Created By - <a href="www.lomyuen.com">Lom Yuen</a></p>
+            <p>Created By - <a href="www.lomyuen.com" style="text-decoration: none;">Lom Yuen</a></p>
 
         </div>
 
@@ -54,6 +62,7 @@
         // 1. Get the Data from Login Form
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $admin_role = $_POST['admin_role'];
 
         // 2. SQL to Check whether the User with Username and Password Exists or Not
         $sql = "SELECT * FROM tbl_admin WHERE username='$username' AND password='$password'";
@@ -69,6 +78,12 @@
             // User Available and Login Success
             $_SESSION['login'] = "<div class='success text-center'>Login Successful.</div>";
             $_SESSION['user'] = $username; // To Check whether the User is Logged in or Not and Logout will unset it
+
+            // Fetch the user data
+            $row = mysqli_fetch_assoc($res);
+
+            // Save the admin role in the session
+            $_SESSION['admin_role'] = $row['admin_role'];
 
             // Redirect to Home Page/Dashboard
             header('location:'.SITEURL.'admin/');

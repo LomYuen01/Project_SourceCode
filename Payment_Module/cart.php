@@ -1,5 +1,5 @@
 <?php
-include('partials-front/menu.php');
+include('../partials-front/menu.php');
 
 $user_id = 1; // Temporary user_id
 
@@ -17,7 +17,7 @@ $total = 0;
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="Payment/cart.css">
+    <link rel="stylesheet" href="cart.css">
     <style>
         .quantitys {
             display: flex;
@@ -110,7 +110,7 @@ $total = 0;
                 <div class="payment-methods">
                     <div class="payment-method">
                         <div class="payment-method-image">
-                            <img src="Payment/source/Bank.jpg" alt="Bank Payment">
+                            <img src="img/Bank.jpg" alt="Bank Payment">
                         </div>
                         <div class="payment-method-name">
                             <input type="radio" name="payment" value="bank">
@@ -120,7 +120,7 @@ $total = 0;
 
                     <div class="payment-method">
                         <div class="payment-method-image">
-                            <img src="Payment/source/TNG.jpg" alt="E-Wallet Payment">
+                            <img src="img/TNG.jpg" alt="E-Wallet Payment">
                         </div>
                         <div class="payment-method-name">
                             <input type="radio" name="payment" value="e-wallet">
