@@ -87,8 +87,6 @@ button,
 
 input[type='checkbox'] {
   transform: scale(2);
-  margin-left: 20px;
-  margin-top: 75px;
 }
 
 main {

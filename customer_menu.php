@@ -76,7 +76,7 @@
                                             <p class="food-price ">$<?php echo $food_price; ?></p>
                                             <p class="food-detail"><?php echo $food_description; ?></p>
                                             <br>
-                                            <a href="<?php echo SITEURL; ?>cart.php?food_id=<?php echo $food_id; ?>"
+                                            <a href="<?php echo SITEURL; ?>add-cart.php?food_id=<?php echo $food_id; ?>"
                                             class="btn btn-primary">Add to Cart</a>
                                         </div>
                                     </div>
