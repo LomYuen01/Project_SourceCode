@@ -23,6 +23,7 @@ body {
     min-height: 100vh;
     background: var(--body-color);
     transition: var(--tran-05);
+    overflow-x: hidden;
 }
 
 /* ===== Header CSS ===== */
@@ -128,7 +129,7 @@ li {
     content: '';
     position: absolute;
     top: -65px;
-    height: 100%;
+    bottom: -65px;
     width: 100%;
     background-color: rgba(0, 0, 0, .4);
     z-index: 100;
