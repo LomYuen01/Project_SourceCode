@@ -1,10 +1,10 @@
-<?php include('../config/constant.php'); ?>
+<?php include('config/constant.php'); ?>
 
 <html>
     <head>
         <!-----===============| CSS |===============----->
-        <link rel="stylesheet" href="../Style/style-menu-user.css">
-        <link rel="stylesheet" href="../Style/style-footer-user.css">
+        <link rel="stylesheet" href="Style/style-menu-user.css">
+        <link rel="stylesheet" href="Style/style-footer-user.css">
 
         <!-----===========| Boxicon CSS |===========----->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
