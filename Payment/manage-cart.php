@@ -1,43 +1,20 @@
-<?php
-include('../partials-front/menu.php');
+<?php include('partials/menu.php'); ?>
 
-$user_id = 1; // Temporary user_id
+    <section class="home">
+        <?php
+            $user_id = 1; // Temporary user_id
 
-$sql = "SELECT carts.cart_id, carts.quantity, tbl_food.id as food_id, tbl_food.title, tbl_food.normal_price
-        FROM carts
-        INNER JOIN tbl_food ON carts.food_id = tbl_food.id
-        WHERE carts.user_id = $user_id";
-$result = $conn->query($sql);
+            $sql = "SELECT tbl_shopping_cart.id as cart_id, tbl_shopping_cart.quantity, tbl_food.id as food_id, tbl_food.title, tbl_food.normal_price
+            FROM tbl_shopping_cart
+            INNER JOIN tbl_food ON tbl_shopping_cart.food_id = tbl_food.id
+            WHERE tbl_shopping_cart.customer_id = $user_id";
 
-$total = 0;
+            $result = $conn->query($sql);
 
-?>
+            $total = 0;
+        ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="cart.css">
-    <style>
-        .quantitys {
-            display: flex;
-            justify-content: space-between;
-            width: 70%;
-        }
-        .quantity-button {
-            width: 15%;
-            cursor: pointer;
-        }
-        .quantity-field {
-            width: 70%;
-            text-align: center;
-        }
-    </style>
-    <title>Cart</title>
-</head>
-
-<body style="background-color: #ffffff;">
-    <main>
+        <!--===== Content =====-->
         <div class="title">
             <h1>Cart</h1>
         </div>
@@ -138,7 +115,7 @@ $total = 0;
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
     <script>
         function updateQuantity(cartId, change) {
@@ -166,4 +143,4 @@ $total = 0;
         window.location.href = 'make_order.php';
         }
     </script>
-</body>
+<?php include('partials/footer.php'); ?>

@@ -1,5 +1,5 @@
 
-        <footer>
+<footer>
             <div class="row">
                 <div class="col">
                     <h3>Working Hours <div class="underline"><span></span></div></h3>
@@ -70,6 +70,6 @@
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="../Style/form-login.js"></script>
+        <script src="Style/form-login.js"></script>
     </body>
 </html>
