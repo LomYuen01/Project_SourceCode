@@ -19,7 +19,7 @@
             <nav class="nav">
                 <a href="#" class="image-text"> 
                     <span class="image">
-                        <img src="../images/Logo.png" alt="Logo" style="height: 64px; width: auto;">
+                        <img src="images/Logo.png" alt="Logo" style="height: 64px; width: auto;">
                     </span>
                     <div class="nav-text">
                         <span class="name">Reno Kitchen</span>

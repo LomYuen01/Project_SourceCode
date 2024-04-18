@@ -997,3 +997,213 @@ body.dark .menu2-links li.active {
     color: #ff4757;
     font-weight: bold;
 }
+
+/* ===== Profile Pic CSS ===== */
+.user-pic{
+    width:40px;
+    border-radius:50%;
+    cursor:pointer;
+    margin-left:30px;
+}
+
+.user-pic:hover {
+    transform: scale(1.04);
+}
+
+.sub-menu-wrap{
+    position: absolute;
+    top: 100%;
+    right: 0px;
+    width: 320px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+    border-radius: 6px;
+}
+.sub-menu-wrap.open-menu{
+    max-height: 400px;
+}
+.sub-menu{
+    background: #fff;
+    padding:20px;
+    margin:10px;
+    background: #F6F5FF;
+    backdrop-filter: blur(7px);
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: 6px;
+}
+.user-info{
+    display:flex;
+    align-items: center;
+}
+.user-info h3{
+    font-weight: 500;
+}
+.user-info img{
+    width: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.sub-menu hr{
+    border: 0;
+    height: 1px;
+    width: 100%;
+    background: #ccc;
+    margin: 15px 0 10px ;
+}
+.sub-menu-link{
+    display:flex;
+    align-items: center;
+    text-decoration: none;
+    color:#525252;
+    margin: 12px 0;
+}
+.sub-menu-link p{
+    width: 100%;
+}
+.sub-menu-link img{
+    width: 40px;
+    background: #e5e5e5;
+    border-radius: 50%;
+    padding: 8%;
+    margin-right: 15px;
+}
+
+.sub-menu-link .icon {
+    font-size: 40px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.sub-menu-link span{
+    font-size:22px;
+    transition: transform 0.5s;
+}
+.sub-menu-link:hover span{
+    transform: translateX(5px);
+}
+.sub-menu-link:hover p{
+    font-weight: 600;
+}
+
+/* ===== Profile View CSS ===== */
+.table-1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 25%;
+    height: calc(92% - 1.6rem);
+    margin: 32px;
+    margin-right: -15px;
+    border-radius: 6px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-bottom: 25px;
+}
+
+.table-2 {
+    width: 68%;
+    height: calc(92% - 1.6rem);
+    background: linear-gradient(to bottom, #FFF, #efeef9);
+    margin: 50px;
+    border-radius: 6px;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-bottom: 25px;
+}
+
+.table-1 .profile-img {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 21px;
+    width: 295px;
+}
+
+.table-1 .profile-img img {
+    width: 295px;
+    height: 295px;
+    border-radius: 50%;
+    border: 2px solid #828282;
+}
+
+.table-1 .icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 25px;
+    left: 1px;
+    transition: var(--tran-02);
+}
+
+.table-1 .icon-border {
+    position: absolute;
+    display: inline-flex;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #828282;
+    border-radius: 50%;
+    padding: 5px;
+    color: #000000;
+    background: #f2f1fa;
+    bottom: 25px;
+    right: 25px;
+}
+
+.table-1 .icon-border:hover {
+    transform: scale(1.02);
+    color: #695CFE;
+}
+
+.table-1 .user-details {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+    width: 295px;
+}
+
+.table-1 .details {
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 15px;
+    color: #000;
+    /*background: linear-gradient(135deg, red, orange, lime, blue, violet);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient 5s ease-in-out infinite;*/
+}
+
+.table-1 .light-color{
+    font-size: 18px;
+    font-weight: none;
+    color: #6c6c6c;
+    margin-top: -5px;
+    margin-left: 15px;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
