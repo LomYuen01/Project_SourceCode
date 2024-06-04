@@ -9,7 +9,7 @@ ob_start();
     // Output the correct CSS file based on the saved theme
     $themeCSS = '<link rel="stylesheet" href="../Style/' . $savedMode . '.css">';
 
-    $admin_role = $_SESSION['admin_role'];
+    $position = $_SESSION['position'];
 ?>
 
 <html>
@@ -52,76 +52,87 @@ ob_start();
                                 <i class="bx bx-home-alt icon"></i>
                                 <span class="text nav-text">Dashboard</span>
                             </a>
-                        </li>
-                    
-                        <!--============== Manage Admin ==============-->
-                        <li class="nav-link">
-                            <a href="manage-admin.php">
-                                <i class="bx bxs-user-account icon"></i>
-                                <span class="text nav-text">Manage Admin</span>
-                            </a>
+                            <span class="tooltip">Dashboard</span>
                         </li>
 
                         <!--============ Manage .Category ============-->
                         <li class="nav-link">
                             <a href="manage-category.php">
                                 <i class='bx bx-book-content icon'></i>
-                                <span class="text nav-text">Categories</span>
+                                <span class="text nav-text">Manage Category</span>
                             </a>
+                            <span class="tooltip">Manage Category</span>
                         </li>
 
                         <!--============== Manage Foods ==============-->
                         <li class="nav-link">
                             <a href="manage-food.php">
                                 <i class='bx bx-food-menu icon'></i>
-                                <span class="text nav-text">Foods</span>
+                                <span class="text nav-text">Manage Food</span>
                             </a>
-                        </li>
-
-                        <!--====== Manage Customers Information ======-->
-                        <li class="nav-link">
-                            <a href="#">
-                                <i class='bx bxs-user-circle icon'></i>
-                                <span class="text nav-text">Customer Info</span>
-                            </a>
+                            <span class="tooltip">Manage Food</span>
                         </li>
 
                         <!--============== Manage Order ==============-->
                         <li class="nav-link">
                             <a href="manage-order.php">
                                 <i class='bx bx-dish icon'></i>
-                                <span class="text nav-text">Orders</span>
+                                <span class="text nav-text">Manage Order</span>
                             </a>
-                        </li>
-                        
-                        <!--=========== Manage .Deliveries ===========-->
-                        <li class="nav-link">
-                            <a href="#">
-                                <i class='bx bx-cart-alt icon'></i>
-                                <span class="text nav-text">Deliveries</span>
-                            </a>
+                            <span class="tooltip">Manage Order</span>
                         </li>
 
-                        <!--============= Manage Reports =============-->
+                        <?php if (isset($_SESSION['position']) && $_SESSION['position'] == 'Superadmin') { ?>
+                            <!--======= Manage Admin's Information =======-->
+                            <li class="nav-link">
+                                <a href="manage-admin.php">
+                                    <img src="Icon/admin_icon.png" class="icon" style="margin-left: 15px; min-width: 30px; width: 30px; height: 30px;">
+                                    <span class="text nav-text" style="margin-left: 15px;">Admin details</span>
+                                </a>
+                                <span class="tooltip">Admin details</span>
+                            </li>
+                        <?php } ?>
+
+                        <!--======= Manage Workers Information =======-->
                         <li class="nav-link">
-                            <a href="#">
-                                <i class='bx bx-bar-chart-alt-2 icon'></i>
-                                <span class="text nav-text">Analytics</span>
+                            <a href="manage-worker.php">
+                                <img src="Icon/chef_hat_icon.png" class="icon" style="margin-left: 14px; min-width: 32px; width: 32px; height: 32px;">
+                                <span class="text nav-text" style="margin-left: 15px;">Worker details</span>
                             </a>
+                            <span class="tooltip">Worker details</span>
+                        </li>
+
+                        <!--======= Manage Drivers Information= ======-->
+                        <li class="nav-link">
+                            <a href="manage-driver.php">
+                                <img src="Icon/driver_icon.png" class="icon" style="margin-left: 14px; min-width: 30px; width: 30px; height: 30px;">
+                                <span class="text nav-text" style="margin-left: 15px;">Driver details</span>
+                            </a>
+                            <span class="tooltip">Driver details</span>
+                        </li>
+
+                        <!--====== Manage Customers Information ======-->
+                        <li class="nav-link">
+                            <a href="manage-customer.php">
+                                <img src="Icon/customer_icon.png" class="icon" style="margin-left: 17.5px; min-width: 25px; width: 25px; height: 25px;">
+                                <span class="text nav-text" style="margin-left: 15px;">Customer details</span>
+                            </a>
+                            <span class="tooltip">Customer details</span>
                         </li>
                     </ul>
                 </div>
 
                 <div class="bottom-content">
                     <!--================= Log Out =================-->
-                    <li class="">
+                    <li class="nav-link">
                         <a href="logout.php">
                             <i class='bx bx-log-out icon'></i>
                             <span class="text nav-text">Log Out</span>
                         </a>
+                        <span class="tooltip">Log Out</span>
                     </li>
 
-                    <!--============ Dark / Light Mode ============--> 
+                    <!--============ Dark / Light Mode ============
                     <li class="mode">
                         <div class="moon-sun">
                             <i class='bx bx-moon icon moon'></i>
@@ -133,7 +144,7 @@ ob_start();
                         <div class="toggle-switch">
                             <span class="switch"></span>
                         </div>
-                    </li>
+                    </li> -->
                 </div>
             </div>
         </nav>

@@ -235,7 +235,7 @@ li {
     color: #8e4051;
 }
 
-.input-box i.pw-hide {
+.input-box .pw-hide {
     right: 0;
     font-size: 18px;
     color: #707070;

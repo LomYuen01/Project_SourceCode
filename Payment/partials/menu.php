@@ -5,7 +5,7 @@
         <!-----===============| CSS |===============----->
         <link rel="stylesheet" href="../Style/style-menu-user.css">
         <link rel="stylesheet" href="../Style/style-footer-user.css">
-        <link rel="stylesheet" href="../Style/style-payment.css">
+        <link rel="stylesheet" href="cart.css">
 
         <!-----===========| Boxicon CSS |===========----->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>

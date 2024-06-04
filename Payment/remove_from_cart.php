@@ -1,27 +1,27 @@
-<?php
-include('../partials-front/menu.php');
+<?php 
+    include('../config/constant.php'); 
 
-// Temporary set user_id to 1
-$user_id = 1;
+    // Temporary set user_id to 1
+    $user_id = 1;
 
-// Check if cart_id is set and not empty
-if (isset($_GET['cart_id']) && !empty($_GET['cart_id'])) {
-    $cart_id = $_GET['cart_id'];
+    // Check if cart_items_id is set and not empty
+    if (isset($_GET['cart_items_id']) && !empty($_GET['cart_items_id'])) {
+        $cart_id = $_GET['cart_items_id'];
 
-    // Delete the item from the cart
-    $sql_delete_cart = "DELETE FROM carts WHERE user_id='$user_id' AND cart_id='$cart_id'";
-    $res_delete_cart = mysqli_query($conn, $sql_delete_cart);
+        // Delete the item from the cart
+        $sql_delete_cart = "DELETE FROM tbl_cart_items WHERE customer_id='$user_id' AND id='$cart_id'";
+        $res_delete_cart = mysqli_query($conn, $sql_delete_cart);
 
-    if ($res_delete_cart) {
-        // Redirect to the user's cart page
-        header("Location: cart.php");
-        exit();
+        if ($res_delete_cart) {
+            // Redirect to the user's cart page
+            header("Location: cart.php");
+            exit();
+        } else {
+            echo "<div class='error'>Failed to remove item from cart.</div>";
+        }
     } else {
-        echo "<div class='error'>Failed to remove item from cart.</div>";
+        echo "<div class='error'>Invalid request.</div>";
     }
-} else {
-    echo "<div class='error'>Invalid request.</div>";
-}
 
-include('partials-front/footer.php');
+    include('partials-front/footer.php');
 ?>

@@ -40,12 +40,6 @@
                     echo "<br />" . nl2br($_SESSION['upload']);
                     unset($_SESSION['upload']);
                 }
-
-                if(isset($_SESSION['failed-remove']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['failed-remove']);
-                    unset($_SESSION['failed-remove']);
-                }
             ?>
         </div>
 
@@ -55,31 +49,47 @@
             <!-- =================================================== Header Section =================================================== -->
             <section class="table-header">
                 
-                <span></span>
+                <div class="dropdown-toggle-column">
+                    <div class="icon-border">
+                        <i class='bx bx-cog select-icon'></i>
+                        <span class="tooltip">Toggle Column</span>
+                    </div>
+                    
+                    <ul class="menu-column" style="width: 200px; font-size: 12px;">
+                        <li>
+                            <label><input type="checkbox" class="checkbox-column" data-column="1" checked/>&nbsp; No. &nbsp; </label> <br>
+                            <label><input type="checkbox" class="checkbox-column" data-column="2" checked/>&nbsp; Title &nbsp; </label> <br>
+                            <label><input type="checkbox" class="checkbox-column" data-column="3" checked/>&nbsp; Status &nbsp; </label> <br>
+                            <label><input type="checkbox" class="checkbox-column" data-column="4" checked/>&nbsp; Actions &nbsp; </label> <br>
+                        </li>
+                    </ul>
+                </div>
 
-                <div class="input-group">
+                <div class="input-group" style="margin-left: 50px;">
                     <input type="search" placeholder="Search Data...">
                     <i class='bx bx-search'></i>
                 </div>
-                <a href="<?php echo SITEURL; ?>admin/add-category.php" class="btn-primary">
-                    <i class='bx bx-plus icon'></i>
-                    <span class="icon-text">Add Category</span>
-                </a>
 
+                <span></span>
+                <span></span>
+
+                <div class="add-food">
+                    <label for="dropdown-nav-bar" class="add-btn">
+                        <i class='bx bx-plus icon'></i>
+                        <?php echo "<a href=\"".SITEURL."admin/add-category.php\">Add Category</a>" ?>
+                    </label>
+                </div>
             </section>
             <!-- =================================================== Header Section =================================================== -->
 
             <!-- ==================================================== Body Section ==================================================== -->
-            <section class="table-body">
+            <section class="table-body"style="height: 100%; box-shadow: -5px 0px 15px 2px rgba(0, 0, 0, 0.1);">
                 <table>
                     <thead>
                         <tr>
-                            <th> S.N. <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></th>
-                            <th> Title <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></th>
-                            <th> Image <span class="icon-arrow"></i></span></th>
-                            <th> Food Size <span class="icon-arrow"></i></span></th>
-                            <th> Featured <span class="icon-arrow"></i></span></th>
-                            <th> Active <span class="icon-arrow"></i></span></th>
+                            <th> No. <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></th>
+                            <th> Title <span class="icon-arrow"></span></th>
+                            <th> Status <span class="icon-arrow"></i></span></th>
                             <th> Actions <span class="icon-arrow"></i></span></th>
                         </tr>
                     </thead>
@@ -100,43 +110,20 @@
                                 {
                                     $id = $row['id'];
                                     $title = $row['title'];
-                                    $image_name = $row['image_name'];
-                                    $FoodSize = $row['FoodSize'];
-                                    $featured = $row['featured'];
                                     $active = $row['active'];
-
+                                
+                                    // Assign status based on the value of active
+                                    $status = ($active == 'Yes') ? 'Active' : 'Inactive';
+                                    $status_class = strtolower($status) . '_status';
                                 ?>
-
+                                
                                     <tr>
                                         <td><?php echo str_pad($SN++, 2, '0', STR_PAD_LEFT); ?></td>
                                         <td><?php echo $title; ?></td>
-
-                                        <td>
-                                            <?php 
-                                                // Check whether image name is available
-                                                if($image_name!="")
-                                                {
-                                                    // Display the Image
-                                                    ?>
-
-                                                        <img src="<?php echo SITEURL; ?>images/Category/<?php echo $image_name; ?>" width="100px">
-
-                                                    <?php
-                                                }
-                                                else
-                                                {
-                                                    // Display the Message
-                                                    echo "<div class='error'>Image not Added</div>";
-                                                }
-                                            ?>
-                                        </td>
-                                        
-                                        <td><?php echo $FoodSize; ?></td>
-                                        <td><?php echo $featured; ?></td>
-                                        <td><?php echo $active; ?></td>
+                                        <td><div class="<?php echo $status_class; ?>"><?php echo $status; ?></div></td>
                                         <td class="buttons">
-                                            <a href="<?php echo SITEURL; ?>admin/update-category.php?id=<?php echo $id; ?>" class="btn-secondary"><i class='bx bxs-edit'></i> Update Category</a>
-                                            <a href="<?php echo SITEURL; ?>admin/delete-category.php?id=<?php echo $id; ?>&image_name=<?php echo $image_name; ?>" class="btn-danger"><i class='bx bx-trash'></i> Delete Category</a>
+                                            <a href="<?php echo SITEURL; ?>admin/update-category.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update Category"><i class='bx bxs-edit'></i></a>
+                                            <a href="<?php echo SITEURL; ?>admin/delete-category.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-danger" title="Delete Category"><i class='bx bx-trash'></i></a>
                                         </td>
                                     </tr>
 
@@ -161,5 +148,70 @@
             <!-- ==================================================== Body Section ==================================================== -->
         </div>
     </section>
+    <script>
+        document.querySelectorAll(".dropdown-toggle-column").forEach(dropdown => {
+            const select = dropdown.querySelector(".select-icon");
+            const menu = dropdown.querySelector(".menu-column");
+
+            select.addEventListener("click", () => {
+                menu.classList.toggle("menu-open-column");
+
+                // Add or remove the 'flex' display property
+                if (menu.style.display !== 'flex') {
+                    menu.style.display = 'flex';
+                    // Scroll to the bottom of the dropdown
+                    menu.lastElementChild.scrollIntoView(true);
+                } else {
+                    menu.style.display = '';
+                }
+            });
+        });
+
+        // Function to update column visibility
+        function updateColumnVisibility(column, checked) {
+            document.querySelectorAll('tr > :nth-child(' + column + ')').forEach(function(cell) {
+                if (checked) {
+                    cell.classList.remove('hidden-column');
+                } else {
+                    cell.classList.add('hidden-column');
+                }
+            });
+        }
+
+        // Code for hiding and showing columns
+        document.querySelectorAll('.checkbox-column').forEach(function(checkbox) {
+            var column = checkbox.dataset.column;
+
+            // Add the 'hidden-column' class to the cells in this column
+            document.querySelectorAll('tr > :nth-child(' + column + ')').forEach(function(cell) {
+                cell.classList.add('hidden-column');
+            });
+
+            // Get the page name
+            var pageName = window.location.pathname.split("/").pop();
+
+            // Load the saved state from localStorage
+            var savedState = localStorage.getItem(pageName + '-checkbox-column-' + column);
+            if (savedState !== null) {
+                checkbox.checked = savedState === 'true';
+            }
+
+            // Update column visibility based on checkbox state
+            updateColumnVisibility(column, checkbox.checked);
+
+            checkbox.addEventListener('change', function() {
+                var checked = this.checked;
+
+                // Save the state to localStorage
+                localStorage.setItem(pageName + '-checkbox-column-' + column, checked);
+
+                // Update column visibility based on checkbox state
+                updateColumnVisibility(column, checked);
+            });
+        });
+
+        // Show the content once the state has been loaded
+        document.body.style.display = '';
+    </script>
 
 <?php include('Partials/footer.php'); ?>

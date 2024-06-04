@@ -62,7 +62,7 @@
         // 1. Get the Data from Login Form
         $username = $_POST['username'];
         $password = $_POST['password'];
-        $admin_role = $_POST['admin_role'];
+        $position = $_POST['position'];
 
         // 2. SQL to Check whether the User with Username and Password Exists or Not
         $sql = "SELECT * FROM tbl_admin WHERE username='$username' AND password='$password'";
@@ -82,8 +82,12 @@
             // Fetch the user data
             $row = mysqli_fetch_assoc($res);
 
+            // Save the admin id and address_id in the session
+            $_SESSION['admin_id'] = $row['id'];
+            $_SESSION['address_id'] = $row['address_id'];
+
             // Save the admin role in the session
-            $_SESSION['admin_role'] = $row['admin_role'];
+            $_SESSION['position'] = $row['position'];
 
             // Redirect to Home Page/Dashboard
             header('location:'.SITEURL.'admin/');

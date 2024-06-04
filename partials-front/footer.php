@@ -54,7 +54,7 @@
                     <h3>Newsletter <div class="underline"><span></span></div></h3>
                     <form>
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" placeholder="Enter your email" class="input" required>
+                        <input type="email" placeholder="Enter your email" class="input">
                         <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
                     </form>
                     <div class="social-icons">

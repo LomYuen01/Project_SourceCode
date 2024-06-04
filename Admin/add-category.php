@@ -5,205 +5,189 @@
             <div class="text">Add Category</div>
 
             <?php
-                if(isset($_SESSION['add']))  // Checking whether the session is set or not
+                if(isset($_SESSION['add'])) 
                 {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
+                    echo $_SESSION['add'];  
+                    unset($_SESSION['add']);  
                 }
 
-                if(isset($_SESSION['upload']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['upload']);
-                    unset($_SESSION['upload']);
+                if (isset($_SESSION['duplicates'])) {
+                    echo "<br />" . nl2br($_SESSION['duplicates']);
+                    unset($_SESSION['duplicates']);
                 }
             ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
-        
-        <div class="form-container">
-            <!-- =================================================== Header Section =================================================== -->
-            <section class="table-form">
-                <form action="" method="POST" enctype="multipart/form-data">
-                    <div class="user-details">
-                        <div class="half-width">
-                            <div class="input-box">
-                                <span class="details">Category Name</span>
-                                <input type="text" name="title" placeholder="Category Name" required>
-                            </div>
 
-                            <div class="input-box"></div>
+        <div class="table" style="padding-left: 25px;">
+            <form action="" method="POST" style="width: 40%">
+                <div class="category-container" data-title="Category Details">
+                    <div class="category-details">
+                        <div class="input-box">
+                            <span class="details">Category Name</span>
+                            <input type="text" name="title" value="" placeholder="Category Name" required>
+                        </div>
 
-                            <div class="input-box">
-                                <span class="details">Image</span>
-                                <input type="file" id="image" name="image">
+                        <div id="variations" class="input-box">
+                            <div class="box" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span class="details">Variations</span>
+                                <div class="button-container">
+                                    <button type="button" class="addVariation" title="Add Variation" onclick="addVariation()">+</button>
+                                </div>
                             </div>
+                            <div class="variation-inputs" style="width: 100%;">
+                                <div class="input-group">
+                                    <input type="text" name="variations[]" value="" placeholder="Food Variation" required>
+                                    <button type="button" class="remove-button" title="Remove Variation" onclick="removeVariation(this)">-</button>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="variations[]" value="" placeholder="Food Variation" required>
+                                    <button type="button" class="remove-button" title="Remove Variation" onclick="removeVariation(this)">-</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dropdown2">
+                            <div class="status" style="margin: 0; margin-top: 8px;">
+                                <span class="details">Status</span>
+                                <select name="status" style="font-size: 14px; font-weight: 500;">
+                                    <option value="Yes">Active</option>
+                                    <option value="No">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="button" style="left: 0; padding-bottom: 0">
+                            <input type="submit" name="submit" value="Add Category" class="btn-secondary">
                         </div>
                     </div>
-
-                    <div class="radio">
-                        <div class="FoodSize">
-                            <span class="text">Food Size</span>
-                            <div class="down">
-                                <input type="radio" name="FoodSize" value="Yes"> Yes 
-                                <input type="radio" name="FoodSize" value="No"> No
-                            </div>
-                        </div>
-
-                        <div class="featured">
-                            <span class="text">Featured</span>
-                            <div class="down">
-                                <input type="radio" name="featured" value="Yes"> Yes 
-                                <input type="radio" name="featured" value="No"> No
-                            </div>
-                        </div>
-
-                        <div class="active">
-                            <span class="text">Active</span>
-                            <div class="down">
-                                <input type="radio" name="active" value="Yes"> Yes 
-                                <input type="radio" name="active" value="No"> No
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="button">
-                        <input type="submit" name="submit" value="Add Food" class="btn-secondary">
-                    </div>
-                </form>
-
-            </section>
-            <!-- =================================================== Header Section =================================================== -->
+                </div>
+            </form>
         </div>
     </section>
+    <script>
+        function addVariation() {
+            // Create a new div element
+            var newDiv = document.createElement("div");
+            newDiv.className = "input-group";
+
+            // Create a new input element
+            var newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.name = "variations[]";
+            newInput.placeholder = "Food Variation";    
+
+            // Create a new button element
+            var newButton = document.createElement("button");
+            newButton.className = "remove-button";
+            newButton.title = "Remove Variation";
+            newButton.innerHTML = "-";
+            newButton.onclick = function() {
+                removeVariation(newButton);
+            };
+
+            // Add the new input and button to the new div
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newButton);
+
+            // Add the new div to the variations div
+            var variationsDiv = document.querySelector(".variation-inputs");
+            variationsDiv.appendChild(newDiv);
+        }
+
+        function removeVariation(button) {
+            // Remove the parent div of the button
+            button.parentNode.remove();
+        }
+    </script>
 <?php include('Partials/footer.php'); ?>
 
 <?php
-// Process the value from Form and save it in Database
-// Check whether the submit button is clicked or not
-
-if(isset($_POST['submit']))
-{
-    // echo "Clicked";
-    // 1. Get the value from Category Form
-    $title = $_POST['title'];
-    
-    // For radio input, we need to check whether the button is selected or not
-    if(isset($_POST['FoodSize']))
+    if(isset($_POST['submit']))
     {
-        // Get the value from Form
-        $FoodSize = $_POST['FoodSize'];
-    }
-    else
-    {
-        // Set the Defult Value
-        $FoodSize = "No";
-    }
+        // Get the data from Form
+        $title = mysqli_real_escape_string($conn, $_POST['title']);
+        $status = mysqli_real_escape_string($conn, $_POST['status']);
+        $variations = $_POST['variations'];
 
-    if(isset($_POST['featured']))
-    {
-        // Get the value from Form
-        $featured = $_POST['featured'];
-    }
-    else
-    {
-        // Set the Defult Value
-        $featured = "No";
-    }
+        // Check if the category name already exists
+        $sql_check_category = "SELECT * FROM tbl_category WHERE title = '$title'";
+        $res_check_category = mysqli_query($conn, $sql_check_category) or die(mysqli_error());
+        if($res_check_category->num_rows > 0) {
+            // Category name already exists
+            $_SESSION['duplicates'] = "<div class='error'> Category Name already Exists. </div>";
+            header('location:' . SITEURL . 'admin/add-category.php');
+            exit;
+        }
 
-    if(isset($_POST['active']))
-    {
-        // Get the value from Form
-        $active = $_POST['active'];
-    }
-    else
-    {
-        // Set the Defult Value
-        $active = "No";
-    }
-
-    // Check whether the image is selected or not and set the value for image name accrodingly
-    if(isset($_FILES['image']['name']))
-    {
-        // To upload image we need image name, source path and destination path
-        $image_name = $_FILES['image']['name'];
-
-        // Upload the image only if image is selected
-        if($image_name != "")
-        {
-            // ---------- If image exist, it will add a suffix to the image name ---------- //
-            
-                $ext = pathinfo($image_name, PATHINFO_EXTENSION);
-                $base_name = basename($image_name, ".".$ext);
-            
-                // Start with no suffix
-                $suffix = '';
-                $index = 1;
-            
-                // While a file with the current name exists, increment the suffix
-                while(file_exists("../images/category/" . $base_name . $suffix . '.' . $ext)) 
-                {
-                    $suffix = '(' . $index++ . ')';
-                }
-        
-                // Set the image name to the base name plus the suffix
-                $image_name = $base_name . $suffix . '.' . $ext;
-
-            // ---------------------------------------------------------------------------- //
-
-            $source_path = $_FILES['image']['tmp_name'];  
-
-            $destination_path = "../images/category/".$image_name;
-
-            // Finally upload the image
-            $upload = move_uploaded_file($source_path, $destination_path);
-
-            // Check whether the image is uploaded or not
-            // If its not, we will stop the process and redirect with error message
-            if($upload == FALSE)
-            {
-                $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                header('location:'.SITEURL.'admin/add-category.php');
-                die(); // Stop the Process
+        // Check if any of the variations already exist
+        foreach($variations as $variation) {
+            $variation = mysqli_real_escape_string($conn, $variation);
+            $sql_check_variation = "SELECT * FROM tbl_store_variation WHERE name = '$variation'";
+            $res_check_variation = mysqli_query($conn, $sql_check_variation) or die(mysqli_error());
+            if($res_check_variation->num_rows > 0) {
+                // Variation already exists
+                $_SESSION['duplicates'] = "<div class='error'> Variation already Exists. </div>";
+                header('location:' . SITEURL . 'admin/add-category.php');
+                exit;
             }
         }
 
+        // SQL Query to save the category details into tbl_category
+        $sql_category = "INSERT INTO tbl_category SET
+            title = '$title',
+            active = '$status'
+        ";
+
+        // Executing Query and Saving Data into tbl_category
+        $res_category = mysqli_query($conn, $sql_category) or die(mysqli_error());
+
+        // Check whether the (Query is executed) data is inserted or not
+        if($res_category==TRUE)
+        {
+            // Data Inserted
+            // Get the ID of the inserted category row
+            $category_id = mysqli_insert_id($conn);
+
+            // Loop through the variations and insert each one into the tbl_store_variation table
+            foreach($variations as $variation) {
+                $variation = mysqli_real_escape_string($conn, $variation);
+
+                // SQL Query to save the variation details into tbl_store_variation
+                $sql_variation = "INSERT INTO tbl_store_variation SET
+                    category_id = '$category_id',
+                    name = '$variation'
+                ";
+
+                // Executing Query and Saving Data into tbl_store_variation
+                $res_variation = mysqli_query($conn, $sql_variation) or die(mysqli_error());
+
+                // Check whether the (Query is executed) data is inserted or not and display appropriate message
+                if($res_variation==FALSE)
+                {
+                    // Failed to Insert Data
+                    // Create a Session Variable to Display Message
+                    $_SESSION['add'] = "<div class='error'> Failed to Add Variation. Try Again Later. </div>";
+
+                    // Redirect to Add Category Page
+                    header("location:".SITEURL.'admin/add-category.php');
+                    exit();  // Terminate the script execution if a variation fails to insert
+                }
+            }
+
+            // If all variations inserted successfully, redirect to Manage Category Page
+            $_SESSION['add'] = "<div class='success'> Category Added Successfully. </div>";
+            header("location:".SITEURL.'admin/manage-category.php');
+        }
+        else
+        {
+            // Failed to Insert Data
+            // Create a Session Variable to Display Message
+            $_SESSION['add'] = "<div class='error'> Failed to Add Category. Try Again Later. </div>";
+
+            // Redirect to Add Category Page
+            header("location:".SITEURL.'admin/add-category.php');
+        }
     }
-    else
-    {
-        // Don't Upload the image and set the image name value as blank
-        $image_name = "";
-    }
-
-    // 2. Create SQL Query to Insert Category into Database
-    $sql = "INSERT INTO tbl_category SET
-        title = '$title',
-        image_name = '$image_name',
-        FoodSize = '$FoodSize',
-        featured = '$featured',
-        active = '$active'
-    ";
-
-    // 3. Execute the Query and Save in Database
-    $res = mysqli_query($conn, $sql);
-
-    // 4. Check whether the query is executed or not and data is added or not
-    if($res == TRUE)
-    {
-        // Query Executed and Category Added
-        $_SESSION['add'] = "<div class='success'> Category Added Successfully. </div>";
-
-        // Redirect to Manage Category Page
-        header('location:'.SITEURL.'admin/manage-category.php');
-    }
-    else
-    {
-        // Failed to Add Category
-        $_SESSION['add'] = "<div class='error'> Failed to Add Category. </div>";
-
-        // Redirect to Add Category Page
-        header('location:'.SITEURL.'admin/add-category.php');
-    }
-}
-
 ?>
