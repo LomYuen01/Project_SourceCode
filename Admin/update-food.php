@@ -97,12 +97,11 @@
                 else
                 {
                     $image_name = $current_image;
-                
                 }
             }
             else
             {
-                $image_name = $current_image;
+                $current_image = $current_image;  // Default Value
             }
         
             // Only process the rest of the script if the image was successfully processed
