@@ -68,7 +68,14 @@
             <hr>
             <p class="copyright">All Rights Reserved, Reno Kitchen &copy; 2024</p>
         </footer>
+        
+        <script>
+            let subMenu = document.getElementById("subMenu");
 
+            function toggleMenu(){
+                subMenu.classList.toggle("open-menu");
+            }
+        </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="Style/form-login.js"></script>
     </body>

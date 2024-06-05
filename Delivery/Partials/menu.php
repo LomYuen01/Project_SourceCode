@@ -10,7 +10,7 @@ ob_start();
     $themeCSS = '<link rel="stylesheet" href="../Style/' . $savedMode . '.css">';
 
     // Assuming $driver_id is the ID of the driver
-    $driver_id = $_SESSION['driver_id'];
+    $driver_id = $_SESSION['driver']['driver_id'];
 
     // Create the Sql Query to Get the details
     $sql = "SELECT a.* FROM tbl_driver a WHERE a.id=$driver_id";
@@ -106,16 +106,22 @@ ob_start();
 
                         <!-- LINEEEEEEEE --> <hr> <!-- LINEEEEEEEE -->
 
-                        <a href="edit-profile.php?id=<?php echo $_SESSION['driver_id']; ?>&address_id=<?php echo $_SESSION['address_id']; ?>" class="sub-menu-link">
+                        <a href="edit-profile.php?id=<?php echo $_SESSION['driver']['driver_id']; ?>&address_id=<?php echo $_SESSION['driver']['address_id']; ?>" class="sub-menu-link">
                             <i class='bx bxs-user-circle icon'></i>
                             <p>Edit Profile</p>
                             <span>></span>
+                            <form method="post" action="edit-profile.php">
+                                <input type="hidden" name="redirect_url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+                            </form>
                         </a>
 
                         <a href="#" class="sub-menu-link">
                             <i class='bx bx-lock icon'></i>
                             <p>Change Password</p>
                             <span>></span>
+                            <form method="post" action="change-password.php">
+                                <input type="hidden" name="redirect_url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+                            </form>
                         </a>
 
                         <a href="logout.php" class="sub-menu-link">

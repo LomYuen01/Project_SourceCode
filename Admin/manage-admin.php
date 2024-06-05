@@ -130,7 +130,7 @@
                                             <td> <?php echo $position; ?> </td>
                                             <td><div class="<?php echo strtolower($status); ?>_status"><?php echo $status; ?></div></td>
                                             <td class="buttons"  style="padding-right: 3rem;"> 
-                                                <?php if (isset($_SESSION['position']) && $_SESSION['position'] == 'Superadmin') { ?>
+                                                <?php if (isset($_SESSION['admin']['position']) && $_SESSION['admin']['position'] == 'Superadmin') { ?>
                                                     <a href="<?php echo SITEURL; ?>admin/view-admin.php?id=<?php echo $id; ?>&address_id=<?php echo $address_id; ?>" style="width: 40px; font-size: 14px;" class="btn-primary" title="View details"><i class='bx bx-search-alt'></i></a>
                                                     <a href="<?php echo SITEURL; ?>Admin/update-admin.php?id=<?php echo $id; ?>&address_id=<?php echo $address_id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update details"><i class='bx bxs-edit'></i></a>
                                                 <?php } ?>

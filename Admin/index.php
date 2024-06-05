@@ -1,7 +1,7 @@
 <?php include('Partials/menu.php'); ?>
     <?php
         // Assuming $admin_id is the ID of the admin
-        $admin_id = $_SESSION['admin_id'];
+        $admin_id = $_SESSION['admin']['admin_id'];
 
         // Create the Sql Query to Get the details
         $sql = "SELECT a.* FROM tbl_admin a WHERE a.id=$admin_id";
@@ -67,7 +67,7 @@
 
                     <!-- LINEEEEEEEE --> <hr> <!-- LINEEEEEEEE -->
 
-                    <a href="edit-profile.php?id=<?php echo $_SESSION['admin_id']; ?>&address_id=<?php echo $_SESSION['address_id']; ?>" class="sub-menu-link">
+                    <a href="edit-profile.php?id=<?php echo $_SESSION['admin']['admin_id']; ?>&address_id=<?php echo $_SESSION['admin']['address_id']; ?>" class="sub-menu-link">
                         <i class='bx bxs-user-circle icon'></i>
                         <p>Edit Profile</p>
                         <span>></span>

@@ -90,14 +90,14 @@
                             $_SESSION['user-not-found'] = "<div class='error error-text-shadow'> Driver Information Not Found. </div>";
                     
                             // Redirect to Manage driver Page
-                            header('location:'.SITEURL.'delivery/index.php');
+                            header('location:'.SITEURL.'admin/manage-driver.php');
                         }
                     }
                 }
                 else
                 {
                     // Redirect to Manage driver Page
-                    header('location:'.SITEURL.'delivery/index.php');
+                    header('location:'.SITEURL.'admin/manage-driver.php');
                 }
             ?>
             <div class="error" id="errorMessage" style="display: none;"></div>
@@ -421,7 +421,7 @@
                 if($upload == FALSE)
                 {
                     $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'delivery/index.php');
+                    header('location:'.SITEURL.'admin/manage-driver.php');
                     die(); // Stop the Process
                 }
 
@@ -436,7 +436,7 @@
                     if($remove==FALSE)
                     {
                         $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                        header('location:'.SITEURL.'delivery/index.php');
+                        header('location:'.SITEURL.'admin/manage-driver.php');
                         die(); // Stop the Process
                     }
                 }
@@ -507,7 +507,7 @@
                 $_SESSION['update'] = "<div class='success success-text-shadow' style='color: white;'> Driver Updated Successfully. </div>";
 
                 // Redirect to Manage Driver Page
-                header("location:".SITEURL.'delivery/index.php');
+                header("location:".SITEURL.'admin/manage-driver.php');
             }
             else
             {
@@ -516,7 +516,7 @@
                 $_SESSION['update'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update Driver. Try Again Later. </div>";
 
                 // Redirect to Manage Driver Page
-                header("location:".SITEURL.'delivery/index.php');
+                header("location:".SITEURL.'admin/manage-driver.php');
             }
         }
         else
@@ -526,7 +526,7 @@
             $_SESSION['update'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update Address. Try Again Later. </div>";
 
             // Redirect to Manage Driver Page
-            header("location:".SITEURL.'delivery/index.php');
+            header("location:".SITEURL.'admin/manage-driver.php');
         }
     }
 ob_end_flush();

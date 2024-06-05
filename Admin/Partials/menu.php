@@ -9,7 +9,7 @@ ob_start();
     // Output the correct CSS file based on the saved theme
     $themeCSS = '<link rel="stylesheet" href="../Style/' . $savedMode . '.css">';
 
-    $position = $_SESSION['position'];
+    $position = $_SESSION['admin']['position'];
 ?>
 
 <html>
@@ -82,7 +82,7 @@ ob_start();
                             <span class="tooltip">Manage Order</span>
                         </li>
 
-                        <?php if (isset($_SESSION['position']) && $_SESSION['position'] == 'Superadmin') { ?>
+                        <?php if (isset($_SESSION['admin']['position']) && $_SESSION['admin']['position'] == 'Superadmin') { ?>
                             <!--======= Manage Admin's Information =======-->
                             <li class="nav-link">
                                 <a href="manage-admin.php">

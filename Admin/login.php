@@ -76,18 +76,18 @@
         if($count == 1)
         {
             // User Available and Login Success
-            $_SESSION['login'] = "<div class='success text-center'>Login Successful.</div>";
-            $_SESSION['user'] = $username; // To Check whether the User is Logged in or Not and Logout will unset it
+            $_SESSION['admin']['login'] = "<div class='success text-center'>Login Successful.</div>";
+            $_SESSION['admin']['user'] = $username; // To Check whether the User is Logged in or Not and Logout will unset it
 
             // Fetch the user data
             $row = mysqli_fetch_assoc($res);
 
             // Save the admin id and address_id in the session
-            $_SESSION['admin_id'] = $row['id'];
-            $_SESSION['address_id'] = $row['address_id'];
+            $_SESSION['admin']['admin_id'] = $row['id'];
+            $_SESSION['admin']['address_id'] = $row['address_id'];
 
             // Save the admin role in the session
-            $_SESSION['position'] = $row['position'];
+            $_SESSION['admin']['position'] = $row['position'];
 
             // Redirect to Home Page/Dashboard
             header('location:'.SITEURL.'admin/');
@@ -95,7 +95,7 @@
         else
         {
             // User not Available and Login Fail
-            $_SESSION['login'] = "<div class='error text-center'>Username or Password did not match.</div>";
+            $_SESSION['admin']['login'] = "<div class='error text-center'>Username or Password did not match.</div>";
 
             // Redirect to Home Page/Dashboard
             header('location:'.SITEURL.'admin/login.php');
