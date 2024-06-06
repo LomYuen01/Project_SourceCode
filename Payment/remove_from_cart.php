@@ -2,7 +2,7 @@
     include('../config/constant.php'); 
 
     // Temporary set user_id to 1
-    $user_id = 1;
+    $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
 
     // Check if cart_items_id is set and not empty
     if (isset($_GET['cart_items_id']) && !empty($_GET['cart_items_id'])) {

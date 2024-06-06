@@ -531,9 +531,10 @@ li {
     margin: 15px;
 }
 
-.profile-form .button {
+.profile-form .button, .button {
     position: relative;
     display: flex;
+    justify-content: center;
     left: 15px;
     padding-bottom: 10px;
     padding-top: 10px;
@@ -1227,7 +1228,7 @@ hr {
     justify-content: space-between;
     margin: 15px;
     top: 0;
-    left: 30px;
+    left: 18px;
 }
 
 .dropdown2 select {

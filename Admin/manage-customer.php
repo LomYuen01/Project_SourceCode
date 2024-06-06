@@ -141,9 +141,9 @@
                                             <td> <?php echo $email; ?> </td>
                                             <td><div class="<?php echo strtolower($status); ?>_status"><?php echo $status; ?></div></td>
                                             <td class="buttons"  style="padding-right: 3rem;"> 
-                                                <a href="<?php echo SITEURL; ?>admin/view-customer.php?id=<?php echo $id; ?>&address_id=<?php echo $address_id; ?>" style="width: 40px; font-size: 14px;" class="btn-primary" title="View details"><i class='bx bx-search-alt'></i></a>
+                                                <a href="<?php echo SITEURL; ?>admin/view-customer.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-primary" title="View details"><i class='bx bx-search-alt'></i></a>
                                                 <?php if (isset($_SESSION['admin']['position']) && $_SESSION['admin']['position'] == 'Superadmin') { ?>
-                                                    <a href="<?php echo SITEURL; ?>Admin/update-customer.php?id=<?php echo $id; ?>&address_id=<?php echo $address_id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update details"><i class='bx bxs-edit'></i></a>
+                                                    <a href="<?php echo SITEURL; ?>Admin/update-customer.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update details"><i class='bx bxs-edit'></i></a>
                                                 <?php } ?>
                                             </td>
                                         </tr>

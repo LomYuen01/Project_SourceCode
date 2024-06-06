@@ -1,4 +1,7 @@
-<?php include('partials-front/menu.php'); ?>
+<?php 
+    include('partials-front/menu.php'); 
+    $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
+?>
     <!-- Home -->
     <style>
         table, th, td {
@@ -11,6 +14,7 @@
             border: 1px solid black;
             position: relative;
             width: 80%;
+            margin-top: -25px;
             padding-bottom: 15%;
             display: flex;
             gap: 20px;
@@ -44,7 +48,6 @@
             opacity: 0.2;
             transition: opacity 0.3s;
         }
-
 
         .order_content{
             width: 100%;
@@ -93,62 +96,34 @@
 
             <!-- Login Form -->
             <div class="form login-form">
-                <form action="#">
+                <form action="<?php echo SITEURL; ?>login.php" method="POST">
                     <h2>Login</h2>
 
                     <div class="input-box">
-                        <input type="email" placeholder="Enter your email" required>
+                        <input type="email" name="email" placeholder="Enter your email" required>
                         <i class="fa-solid fa-envelope email"></i>
                     </div>
 
                     <div class="input-box">
-                        <input type="password" placeholder="Enter your password" required>
+                        <input type="password" name="password" placeholder="Enter your password" required>
                         <i class="fa-solid fa-lock password"></i>
                         <i class="fa-solid fa-eye-slash pw-hide"></i>
                     </div>
+
+                    <input type="hidden" name="redirect_url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
 
                     <div class="option-field">
                         <span class="checkbox">
                             <input type="checkbox" id="check">
-                            <label for="check">Remember me</label>
+                            <label for="check" style="margin-bottom: 0;">Remember me</label>
                         </span>
                         <a href="#" class="forgot-password">Forgot password?</a>
                     </div>
 
-                    <button class="btn">Login Now</button>
+                    <button type="submit" name="submit" class="btn">Login Now</button>
 
                     <div class="login-singup">
-                        Don't have an account? <a href="#" id="signup">Sign up</a>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Sign up Form -->
-            <div class="form signup-form">
-                <form action="#">
-                    <h2>Sign up</h2>
-
-                    <div class="input-box">
-                        <input type="email" placeholder="Enter your email" required>
-                        <i class="fa-solid fa-envelope email"></i>
-                    </div>
-
-                    <div class="input-box">
-                        <input type="password" placeholder="Create password" required>
-                        <i class="fa-solid fa-lock password"></i>
-                        <i class="fa-solid fa-eye-slash pw-hide"></i>
-                    </div>
-
-                    <div class="input-box">
-                        <input type="password" placeholder="Confirm password" required>
-                        <i class="fa-solid fa-lock password"></i>
-                        <i class="fa-solid fa-eye-slash pw-hide"></i>
-                    </div>
-                    
-                    <button class="btn">Sign Up Now</button>
-
-                    <div class="login-singup">
-                        Already have an account? <a href="#" id="login">Login</a>
+                        Don't have an account? <a href="<?php echo SITEURL; ?>signup.php">Sign up</a>
                     </div>
                 </form>
             </div>
@@ -156,37 +131,8 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-        <?php $user_id = 1; ?>
         <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex; ">
-            <div style="border: 1px solid black; width: 20%; font-size: 1rem; background-color: #d9d9d9;">
-                <h1>Profile</h1>
-                <div style="border: 1px solid black;">
-                    <div class="profile-img" style="display: flex; justify-content: center; align-items: center; width: 100%;">
-                        <img src="images/user.png" alt="User Image" class="img-responsive img-curve" style="width: 100%; height: auto; object-fit: cover;">
-                    </div>
-                    <div class="user-info">
-                        User Name
-                    </div>
-                </div>
-                <div class="profile-menu">
-                    <ul>
-                        <li>
-                            <a href="profile_edit.php">Edit Profile</a>
-                        </li>
-                        <li>
-                            <a href="profile_password.php">Change Password</a>
-                        </li>
-                        <li>
-                            <a href="profile_order.php">Order History</a>
-                        </li>
-                        <li>
-                            <a href="profile_address.php">Address</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="order_box" style="border: 1px solid black; font-size: 1rem; width:80%;margin-left:2%;  background-color: #d9d9d9;" >
+            <div class="order_box" style="border: 1px solid black; font-size: 1rem; width: 80%; height: 75vh; margin-left: 2%; background-color: #d9d9d9;" >
                 <div class="order_tab">
                     <input type="radio" name="order" id="order_current" class="order_input" checked>
                     <label for="order_current">Order</label>
@@ -202,7 +148,6 @@
                                     <th class="order-title">Order Status</th>
                                 </tr>
                                 <?php
-                                $user_id = 1; 
 
                                 $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, 
                                     tbl_order_address.id as tbl_order_address_id, tbl_order_address.firstname, tbl_order_address.address, tbl_order_address.city, tbl_order_address.state, 

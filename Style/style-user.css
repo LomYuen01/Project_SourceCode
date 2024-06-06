@@ -260,6 +260,8 @@ li {
 
 .checkbox {
     display: flex;
+    align-items: center;
+    justify-content: center;
     column-gap: 8px;
     white-space: nowrap;
 }
@@ -372,7 +374,7 @@ li {
     align-items: center;
     text-decoration: none;
     color:#525252;
-    margin: 12px 0;
+    margin: 6px 0;
 }
 
 .sub-menu-link p{

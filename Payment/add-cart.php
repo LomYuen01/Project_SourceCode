@@ -1,6 +1,4 @@
-<?php include ('partials/menu.php'); 
-?>
-
+<?php include('partials/menu.php'); ?>
     <style>
         .selector {
             display: flex;
@@ -62,6 +60,46 @@
     </style>
 
     <section class="home">
+        <!--====== Forms ======-->
+        <div class="form-container">
+            <i class="fa-solid fa-xmark form-close"></i>
+
+            <!-- Login Form -->
+            <div class="form login-form">
+                <form action="<?php echo SITEURL; ?>login.php" method="POST">
+                    <h2>Login</h2>
+
+                    <div class="input-box">
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <i class="fa-solid fa-envelope email"></i>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="password" name="password" placeholder="Enter your password" required>
+                        <i class="fa-solid fa-lock password"></i>
+                        <i class="fa-solid fa-eye-slash pw-hide"></i>
+                    </div>
+
+                    <input type="hidden" name="redirect_url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+
+                    <div class="option-field">
+                        <span class="checkbox">
+                            <input type="checkbox" id="check">
+                            <label for="check" style="margin-bottom: 0;">Remember me</label>
+                        </span>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" name="submit" class="btn">Login Now</button>
+
+                    <div class="login-singup">
+                        Don't have an account? <a href="<?php echo SITEURL; ?>signup.php">Sign up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--====== Forms ======-->
+
         <!--===== Content =====-->
 
         <!-- fOOD MEnu Section Starts Here -->
@@ -170,7 +208,7 @@
                                                         <br>
                                                     </div>
                                                     <div class="food-menu-img"
-                                                        style="flex: 1;flex-direction: column; justify-content: center;">
+                                                        style="flex: 1; flex-direction: column; justify-content: center;">
                                                         <?php if ($food_image == "") { ?>
                                                             <div class='error' style="width: 112px; height: 112px;">Image not Available.</div>
                                                         <?php 
@@ -181,7 +219,7 @@
                                                             <div>
                                                                 <img src="<?php echo SITEURL; ?>images/food/<?php echo $food_image; ?>"
                                                                     alt="<?php echo $food_title; ?>" class="img-responsive img-curve"
-                                                                    style="width: 70%; height: 70%; object-fit: contain;">
+                                                                    style="width: 70%; height: 70%; object-fit: contain; margin-left: 15%; margin-bottom: 15px;">
                                                             </div>
                                                         <?php 
                                                         } 
@@ -231,7 +269,7 @@ ob_start();
     if(isset($_POST['submit']))
     {
         // 1. Get the data from Form
-        $customer_id = 1; // Temporary ID
+        $customer_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
         $quantity = 1; // Default quantity
 
         // Check if food_id is set in the POST array
@@ -291,7 +329,7 @@ ob_start();
         if($res == TRUE)
         {
             // Query Executed and Cart Item Added or Updated
-            $_SESSION['add'] = "<div class='success'> Cart Item Added Successfully. </div>";
+            //$_SESSION['add'] = "<div class='success'> Cart Item Added Successfully. </div>";
 
             // Redirect to Manage Cart Page
             exit;
@@ -299,8 +337,8 @@ ob_start();
         else
         {
             // Failed to Add or Update Cart Item
-            $_SESSION['add'] = "<div class='error'> Failed to Add Cart Item. </div>";
-            $_SESSION['sql_error'] = "SQL error: " . mysqli_error($conn);
+            //$_SESSION['add'] = "<div class='error'> Failed to Add Cart Item. </div>";
+            //$_SESSION['sql_error'] = "SQL error: " . mysqli_error($conn);
 
             // Redirect to Add Cart Item Page
             header('location:'.SITEURL.'Payment/customer_menu.php');

@@ -10,19 +10,13 @@
                     $customer_id = $_GET['id'];
                 }
 
-                if (isset($_GET['address_id'])) 
-                {
-                    $address_id = $_GET['address_id'];
-                }
-
                 if(isset($_GET['id'])) {
                     // Get the id of selected customer
                     $id = $_GET['id'];
 
                     // Create the Sql Query to Get the details
-                    $sql = "SELECT a.*, ad.address, ad.postal_code, ad.city, ad.state, ad.country 
+                    $sql = "SELECT a.full_name, a.username, a.password, a.image_name, a.ph_no, a.email , a.status
                             FROM tbl_customer a 
-                            JOIN tbl_address ad ON a.address_id = ad.id 
                             WHERE a.id=$id";
 
                     // Execute the Query
@@ -43,12 +37,6 @@
                             $ph_no = $row['ph_no'];
                             $email = $row['email'];
                             $status = $row['status'];
-
-                            $address = $row['address'];
-                            $postal_code = $row['postal_code'];
-                            $city = $row['city'];
-                            $state = $row['state'];
-                            $country = $row['country'];
                         }
                         else
                         {
@@ -127,35 +115,6 @@
                                 <div class="input-box">
                                     <span class="details">Ph No.</span>
                                     <input class="readonly-color" type="text" name="ph_no" value="<?php echo $ph_no; ?>" placeholder=" Phone Number" readonly>
-                                </div>
-                            </div>
-
-                            <!-- Address -->
-                            <span class="title-name">Address Details</span>
-                            <div class="half-width">
-                                <div class="input-box">
-                                    <span class="details">Address</span>
-                                    <input class="readonly-color" type="text" name="address" value="<?php echo $address; ?>" placeholder=" Floor/Unit, Street" readonly>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">Postal Code</span>
-                                    <input class="readonly-color" type="text" name="postal_code" value="<?php echo $postal_code; ?>" placeholder=" Postal Code" readonly>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">City</span>
-                                    <input class="readonly-color" type="text" name="city" value="<?php echo $city; ?>" placeholder=" City" readonly>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">State</span>
-                                    <input class="readonly-color" type="text" name="state" value="<?php echo $state; ?>" placeholder=" State" readonly>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">Country</span>
-                                    <input class="readonly-color" type="text" name="country" value="<?php echo $country; ?>" placeholder=" Country" readonly>
                                 </div>
                             </div>
 

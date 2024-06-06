@@ -70,7 +70,7 @@
                             if($count==1) {
                                 // Get the Details
                                 $row = mysqli_fetch_assoc($res);
-                        
+                                
                                 $full_name = $row['full_name'];
                                 $username = $row['username'];
                                 $current_image = $row['image_name'];
@@ -125,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="user-details">
-                                <span class="details"><?php echo $full_name; ?></span>
+                                <span class="details"><?php echo $full_name; ?> </span>
                                 <span class="light-color"><?php echo $username ?></span>
                             </div>
                         </section>

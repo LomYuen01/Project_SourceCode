@@ -86,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="button center">
+                <div class="button" style="left: 0;">
                     <input type="submit" name="submit" value="Update Order" class="btn-secondary" style="width: 85%; font-size: 14px;">
                 </div>
             </form>

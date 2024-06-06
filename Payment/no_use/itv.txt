@@ -1,6 +1,0 @@
-//item qty no more than limit 10
-//set no store than cant pay
-
-
-//after pay delete cart
-// customer make notis sytem

@@ -38,9 +38,8 @@
                     $id = $_GET['id'];
 
                     // Create the Sql Query to Get the details
-                    $sql = "SELECT a.*, ad.address, ad.postal_code, ad.city, ad.state, ad.country 
+                    $sql = "SELECT a.full_name, a.username, a.password, a.image_name, a.ph_no, a.email , a.status
                             FROM tbl_customer a 
-                            JOIN tbl_address ad ON a.address_id = ad.id 
                             WHERE a.id=$id";
 
                     // Execute the Query
@@ -61,12 +60,6 @@
                             $ph_no = $row['ph_no'];
                             $email = $row['email'];
                             $status = $row['status'];
-
-                            $address = $row['address'];
-                            $postal_code = $row['postal_code'];
-                            $city = $row['city'];
-                            $state = $row['state'];
-                            $country = $row['country'];
                         }
                         else
                         {
@@ -153,35 +146,6 @@
                                 </div>
                             </div>
 
-                            <!-- Address -->
-                            <span class="title-name">Address Details</span>
-                            <div class="half-width">
-                                <div class="input-box">
-                                    <span class="details">Address</span>
-                                    <input type="text" name="address" value="<?php echo $address; ?>" placeholder=" Floor/Unit, Street" required>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">Postal Code</span>
-                                    <input type="text" name="postal_code" value="<?php echo $postal_code; ?>" placeholder=" Postal Code" required>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">City</span>
-                                    <input type="text" name="city" value="<?php echo $city; ?>" placeholder=" City" required>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">State</span>
-                                    <input type="text" name="state" value="<?php echo $state; ?>" placeholder=" State" required>
-                                </div>
-
-                                <div class="input-box">
-                                    <span class="details">Country</span>
-                                    <input type="text" name="country" value="<?php echo $country; ?>" placeholder=" Country" required>
-                                </div>
-                            </div>
-
                             <!-- Position & Status -->
                             <span class="title-name">Account Status</span>
                             <div class="dropdown2">
@@ -199,7 +163,6 @@
                             <div class="button">
                                 <input type="hidden" name="current_image" value="<?php echo $current_image; ?>">
                                 <input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>">
-                                <input type="hidden" name="address_id" value="<?php echo $address_id; ?>">
                                 <input type="submit" name="submit" value="Update customer" class="btn-secondary">
                             </div>
                         </div>
@@ -253,15 +216,8 @@
         $ph_no = mysqli_real_escape_string($conn, $_POST['ph_no']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $status = mysqli_real_escape_string($conn, $_POST['status']);
-        
-        $address = mysqli_real_escape_string($conn, $_POST['address']);
-        $postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
-        $city = mysqli_real_escape_string($conn, $_POST['city']);
-        $state = mysqli_real_escape_string($conn, $_POST['state']);
-        $country = mysqli_real_escape_string($conn, $_POST['country']);
 
         $customer_id = mysqli_real_escape_string($conn, $_POST['customer_id']);
-        $address_id = mysqli_real_escape_string($conn, $_POST['address_id']);
 
         // 2. Upload the Image if selected
         // Check whether the select image is clicked or not and upload the image only if the image is selected
@@ -338,64 +294,37 @@
             $current_image = $current_image;  // Default Value
         }
 
-        // SQL Query to update the address details in tbl_address
-        $sql_address = "UPDATE tbl_address SET
-            address = '$address',
-            postal_code = '$postal_code',
-            city = '$city',
-            state = '$state',
-            country = '$country'
-            WHERE id = $address_id
+        // Data Updated
+        // SQL Query to update the customer details in tbl_customer
+        $sql_customer = "UPDATE tbl_customer SET
+            full_name = '$full_name',
+            username = '$username',
+            password = '$password',
+            ph_no = '$ph_no',
+            email = '$email',
+            status = '$status',
+            image_name = '$image_name'
+            WHERE id = $customer_id
         ";
 
-        // Executing Query and Updating Data in tbl_address
-        $res_address = mysqli_query($conn, $sql_address) or die(mysqli_error());
+        // Executing Query and Updating Data in tbl_customer
+        $res_customer = mysqli_query($conn, $sql_customer) or die(mysqli_error());
 
-        // Check whether the (Query is executed) data is updated or not
-        if($res_address==TRUE)
+        // Check whether the (Query is executed) data is updated or not and display appropriate message
+        if($res_customer==TRUE)
         {
             // Data Updated
-            // SQL Query to update the customer details in tbl_customer
-            $sql_customer = "UPDATE tbl_customer SET
-                full_name = '$full_name',
-                username = '$username',
-                password = '$password',
-                ph_no = '$ph_no',
-                email = '$email',
-                address_id = '$address_id',
-                status = '$status',
-                image_name = '$image_name'
-                WHERE id = $customer_id
-            ";
+            // Create a Session Variable to Display Message
+            $_SESSION['update'] = "<div class='success'> Customer Updated Successfully. </div>";
 
-            // Executing Query and Updating Data in tbl_customer
-            $res_customer = mysqli_query($conn, $sql_customer) or die(mysqli_error());
-
-            // Check whether the (Query is executed) data is updated or not and display appropriate message
-            if($res_customer==TRUE)
-            {
-                // Data Updated
-                // Create a Session Variable to Display Message
-                $_SESSION['update'] = "<div class='success'> Customer Updated Successfully. </div>";
-
-                // Redirect to Manage customer Page
-                header("location:".SITEURL.'admin/manage-customer.php');
-            }
-            else
-            {
-                // Failed to Update Data
-                // Create a Session Variable to Display Message
-                $_SESSION['update'] = "<div class='error'> Failed to Update Customer. Try Again Later. </div>";
-
-                // Redirect to Manage customer Page
-                header("location:".SITEURL.'admin/manage-customer.php');
-            }
+            // Redirect to Manage customer Page
+            header("location:".SITEURL.'admin/manage-customer.php');
         }
         else
         {
             // Failed to Update Data
             // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='error'> Failed to Update Address. Try Again Later. </div>";
+            $_SESSION['update'] = "<div class='error'> Failed to Update Customer. Try Again Later. </div>";
 
             // Redirect to Manage customer Page
             header("location:".SITEURL.'admin/manage-customer.php');

@@ -1,7 +1,7 @@
 <?php
 include('../config/constant.php');
 
-$user_id = 1;
+$user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
 
 if (isset($_POST['cart_items_id'], $_POST['change'])) {
     $cart_items_id = $_POST['cart_items_id'];

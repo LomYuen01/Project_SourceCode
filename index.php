@@ -138,7 +138,7 @@
 
         <!-- Login Form -->
         <div class="form login-form">
-            <form action="login.php" method="POST">
+            <form action="<?php echo SITEURL; ?>login.php" method="POST">
                 <h2>Login</h2>
 
                 <div class="input-box">
@@ -157,7 +157,7 @@
                 <div class="option-field">
                     <span class="checkbox">
                         <input type="checkbox" id="check">
-                        <label for="check">Remember me</label>
+                        <label for="check" style="margin-bottom: 0;">Remember me</label>
                     </span>
                     <a href="#" class="forgot-password">Forgot password?</a>
                 </div>
@@ -165,39 +165,7 @@
                 <button type="submit" name="submit" class="btn">Login Now</button>
 
                 <div class="login-singup">
-                    Don't have an account? <a href="#" id="signup">Sign up</a>
-                </div>
-            </form>
-        </div>
-
-        <!-- Sign up Form -->
-        <div class="form signup-form">
-            <form action="signup.php" method="POST">
-                <h2>Sign up</h2>
-
-                <div class="input-box">
-                    <input type="email" name="email" placeholder="Enter your email" required>
-                    <i class="fa-solid fa-envelope email"></i>
-                </div>
-
-                <div class="input-box">
-                    <input type="password"  name="password" placeholder="Create password" required>
-                    <i class="fa-solid fa-lock password"></i>
-                    <i class="fa-solid fa-eye-slash pw-hide"></i>
-                </div>
-
-                <div class="input-box">
-                    <input type="password" name="confirm_password" placeholder="Confirm password" required>
-                    <i class="fa-solid fa-lock password"></i>
-                    <i class="fa-solid fa-eye-slash pw-hide"></i>
-                </div>
-
-                <input type="hidden" name="redirect_url" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                
-                <button type="submit" name="submit" class="btn">Sign Up Now</button>
-
-                <div class="login-singup">
-                    Already have an account? <a href="#" id="login">Login</a>
+                    Don't have an account? <a href="<?php echo SITEURL; ?>signup.php">Sign up</a>
                 </div>
             </form>
         </div>
@@ -219,7 +187,7 @@
             <img src="images/story.png" alt="Chef" class="story-image">
             <div class="story-text">
                 <h3>The Passion for Yong Tau Foo</h3>
-                <p>Reno Kitchen has been selling Yong Tau Foo for nearly 20 years. What started as just one of the food court stalls has slowly developed into a full-fledged shop. Our journey is a testament to our dedication to quality and our love for this traditional dish. Come and experience the rich flavors and the warmth of our service.</p>
+                <p>Reno Kitchen has been selling Yong Tau Foo for around 3 - 4 years. What started as just one of the food court stalls has slowly developed into a full-fledged shop. Our journey is a testament to our dedication to quality and our love for this traditional dish. Come and experience the rich flavors and the warmth of our service.</p>
             </div>
         </div>
     </div>

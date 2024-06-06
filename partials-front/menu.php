@@ -16,7 +16,7 @@
     <body>
         <header class="header">
             <nav class="nav">
-                <a href="#" class="image-text"> 
+                <a href="#" class="image-text" style="margin-left: -7.5%;"> 
                     <span class="image">
                         <img src="images/Logo.png" alt="Logo" style="height: 64px; width: auto;">
                     </span>
@@ -26,10 +26,14 @@
                 </a> 
                 <ul class="nav-items">
                     <li class="nav-item">
-                        <a href="index.php" class="nav-link">Home</a>
-                        <a href="#" class="nav-link">Menu</a>
-                        <a href="#" class="nav-link">About Us</a>
-                        <a href="#" class="nav-link">Contact Us</a>
+                        <a href="<?php echo SITEURL; ?>index.php" class="nav-link">Home</a>
+                        <a href="<?php echo SITEURL; ?>Payment/customer_menu.php" class="nav-link">Menu</a>
+                        <a href="<?php echo SITEURL; ?>Payment/cart.php" class="nav-link">Cart</a>
+                        <a href="<?php echo SITEURL; ?>profile_order.php" class="nav-link">Orders</a>
+                        <a href="<?php echo SITEURL; ?>about-us.php" class="nav-link">About Us</a>
+                        <a href="<?php echo SITEURL; ?>contact-us.php" class="nav-link">Contact Us</a>
+                        <a href=""></a>
+                        <a href=""></a>
                     </li>
                 </ul>
                 <?php 
@@ -59,10 +63,10 @@
                     ?>
                         <img src="<?php echo $current_image != "" ? SITEURL."images/Profile/".$current_image : 'images/no_profile_pic.png'; ?>" rel="logo" class="user-pic" onclick="toggleMenu()">
                         <div class="sub-menu-wrap" id="subMenu">
-                            <div class="sub-menu">
+                            <div class="sub-menu" style="padding-bottom: 12px;">
                                 <div class="user-info">
                                     <img src="<?php echo $current_image != "" ? SITEURL."images/Profile/".$current_image : 'images/no_profile_pic.png'; ?>">
-                                    <h3><?php echo $full_name ?></h3>
+                                    <h3 style="color: #000;"><?php echo $full_name ?></h3>
                                 </div>
 
                                 <!-- LINEEEEEEEE --> <hr> <!-- LINEEEEEEEE -->

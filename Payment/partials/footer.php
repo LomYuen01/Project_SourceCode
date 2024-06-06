@@ -1,5 +1,5 @@
 
-<footer>
+        <footer>
             <div class="row">
                 <div class="col">
                     <h3>Working Hours <div class="underline"><span></span></div></h3>
@@ -54,7 +54,7 @@
                     <h3>Newsletter <div class="underline"><span></span></div></h3>
                     <form>
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" placeholder="Enter your email" class="input" required>
+                        <input type="email" placeholder="Enter your email" class="input">
                         <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
                     </form>
                     <div class="social-icons">
@@ -68,8 +68,15 @@
             <hr>
             <p class="copyright">All Rights Reserved, Reno Kitchen &copy; 2024</p>
         </footer>
+        
+        <script>
+            let subMenu = document.getElementById("subMenu");
 
+            function toggleMenu(){
+                subMenu.classList.toggle("open-menu");
+            }
+        </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="Style/form-login.js"></script>
+        <script src="../Style/form-login.js"></script>
     </body>
 </html>
