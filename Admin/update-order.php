@@ -159,17 +159,32 @@
         if($res_order==TRUE)
         {
             // Data Updated
-            $_SESSION['add'] = "<div class='success'> Order Status Updated Successfully. </div>";
-            header("location:".SITEURL.'admin/manage-order.php');
+            echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Order Status Updated Successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-order.php';
+                        }
+                    });
+                </script>";
         }
         else
         {
             // Failed to Update Data
-            // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'> Failed to Update Order Status. Try Again Later. </div>";
-
-            // Redirect to Update Order Page
-            header("location:".SITEURL.'admin/update-order.php?id='.$order_id);
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Update Order Status. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/update-order.php?id='.$order_id';
+                    }
+                });
+            </script>";
         }
     }
 ?>

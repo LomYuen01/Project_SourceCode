@@ -94,7 +94,7 @@ main {
 .basket {
   width: 80%;
   border: #0077ff 1px solid;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: #ffffff;
 }
 
@@ -216,12 +216,12 @@ li.subtotal:before {
   border: 1px solid #aaa;
   color: #0059ff;
   padding: 10px;
-  position: fixed;
+  position: relative;
   margin-left: 20px;
   width: 250px;
 
   box-sizing: border-box;
-  border-radius: 8%;
+  border-radius: 12px;
   display: inline;
 }
 

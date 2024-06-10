@@ -140,8 +140,6 @@
                   }
               }
               
-
-              
               $selected_payment_method = $_GET['payment']; // or $_POST['payment'] if you used a POST request
 
               if (strtolower($selected_payment_method) == 'cod') {
@@ -181,9 +179,6 @@
                       }
                   }
               }
-              
-
-              $special_request = $_POST['special_request'];
 
               // Calculate the total
               $sql_cart = "SELECT SUM(price * quantity) as total_price FROM tbl_cart_items WHERE customer_id = $user_id";
@@ -196,8 +191,7 @@
                   customer_id = $user_id,
                   address_id = $address_id,
                   pay_id = $paymethod_id,
-                  order_status = 'Pending',
-                  special_instructions = '$special_request'";
+                  order_status = 'Pending'";
               
               if ($conn->query($sql_order) == TRUE) {
                   $order_id = $conn->insert_id;
@@ -226,6 +220,15 @@
                           echo "Error: " . $sql_order_items . "<br>" . $conn->error;
                           exit;
                       }
+
+                      // Update the food stock
+                      $sql_food_stock = "SELECT * FROM tbl_food WHERE id = $cart_food_id";
+                      $result_food_stock = $conn->query($sql_food_stock);
+                      $food_stock = $result_food_stock->fetch_assoc();
+                      $new_stock = $food_stock['quantity'] - $cart_quantity;
+
+                      $sql_update_stock = "UPDATE tbl_food SET quantity = $new_stock WHERE id = $cart_food_id";
+                      $conn->query($sql_update_stock);
                   }
 
                   // Clear the cart items for the user
@@ -245,7 +248,6 @@
 .checkout-home {
   font-family: Arial;
   font-size: 17px;
-  padding: 8px;
 }
 
 * {
@@ -293,12 +295,12 @@
   padding-right: 0;
 }
 
-input[type=text] {
+input[type=text], input[type=tel] {
   width: 100%;
   margin-bottom: 20px;
-  padding: 12px;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 6px;
 }
 
 label {
@@ -307,7 +309,6 @@ label {
 }
 
 .icon-container {
-  margin-bottom: 20px;
   padding: 7px 0;
   font-size: 24px;
 }
@@ -409,14 +410,14 @@ span.price {
     <!--====== Forms ======-->
 
     <!--===== Content =====-->
-    <form action="" method="post" style="display: flex; flex-direction: row;">
-        <section class="checkout-home" style="width: 70%; margin-left: 10%">
-            <h2 style="display: block; font-size: 24px; color: #000; font-weight: 600; margin-top: -25px; margin-bottom: 25px;">Checkout</h2>
+    <form action="" method="post" style="display: flex; flex-direction: row; width: 89%; padding-top: 15px; margin: auto;">
+        <section class="checkout-home" style="width: 65%;">
+            <h2 style="display: block; font-size: 24px; color: #000; font-weight: 600; margin-top: 20px; margin-bottom: 16px;">Checkout</h2>
             <div class="row" style="width: 100%;">
-                <div class="col-75">
+                <div class="col-75" style="margin-left: 16px; padding: 0;">
                     <div class="container" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
                         <div class="row">
-                            <div style="-ms-flex: 100%; flex: 100%;">
+                            <div class="col-50" style="padding-top: 15px;">
                                 <h3>Address</h3>
                                 <div class="addresssave">
                                     <label for="saved_addresses">Select Saved Address</label>
@@ -433,7 +434,7 @@ span.price {
                                 <label for="fname"><i class="fa fa-user"></i> Full Name</label>
                                 <input type="text" id="fname" name="firstname" placeholder="Aaa Bbbbb">
                                 <label for="phone"><i class="fa fa-phone"></i> Phone Number</label>
-                                <input type="tel" id="phone" name="phone" placeholder="0123456789" style="padding: 12px; border: 1px solid #ccc; width: 100%; margin-bottom: 20px;">
+                                <input type="tel" id="phone" name="phone" placeholder="0123456789">
                                 <br>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
                                 <input type="text" id="email" name="email" placeholder="abc123@example.com">
@@ -441,7 +442,7 @@ span.price {
                                 <input type="text" id="adr" name="address" placeholder="123, adc">
                                 <label for="city"><i class="fa fa-institution"></i> Taman</label>
                                 <input type="text" id="city" name="city" placeholder="Taman Kenanga Mewah">
-                                <div class="row">
+                                <div style="margin-left: -15px; display: flex; flex-direction: row;">
                                     <div class="col-50">
                                         <label for="zip">Postcode</label>
                                         <select id="zip" name="zip" required>
@@ -464,14 +465,14 @@ span.price {
                     </div>
 
                     <!-- Existing payment section -->
-                    <div class="container" style="margin-top:2%;">
+                    <div class="container" style="margin-top: 2%; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
                         <div class="row">
-                            <div class="col-50">
+                            <div class="col-50" style="padding-top: 15px;">
                                 <h3>Payment</h3>
                                 <?php if ($selected_payment_method == 'cod') { ?>
                                     <p>COD</p>
                                 <?php } else { ?>
-                                <label for="fname">Accepted Cards</label>
+                                <label for="fname" style="margin-top: 6px; margin-bottom: -6px;">Accepted Cards</label>
                                 <div class="icon-container">
                                     <i class="fa fa-cc-visa" style="color:navy;"></i>
                                     <i class="fa fa-cc-amex" style="color:blue;"></i>
@@ -487,8 +488,7 @@ span.price {
                                         placeholder="Card Number:"
                                         class="form-control"
                                         onkeypress='return formats(this,event)'
-                                        onkeyup="return numberValidation(event)"
-                                        style="display: block; padding: 12px; border: 1px solid #ccc; width: 100%; margin-bottom: 20px;">
+                                        onkeyup="return numberValidation(event)">
                                 </div>
                                 
                                 <div style="display: block; width: 100%;">
@@ -509,23 +509,13 @@ span.price {
                             </div>
                         </div>
                     </div>
-
-                    <div class="container" style="margin-top: 2%; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                        <div class="row">
-                            <div class="col-50">
-                                <h3>Special Request</h3>
-                                <label for="special_request"></label>
-                                <textarea id="special_request" name="special_request" placeholder="Write something.." style="height:200px; width: 100%;"></textarea>
-                            </div>
-                        </div>
-                    </div>
                     <input type="submit" name="order" class="btn <?= ($total > 1)?'':'disabled'; ?>" value="Place order" style="border-radius: 18px; margin-top:5%; transition: .2s ease;">
                 </div>
             </div>
         </section>
 
-        <section style="margin-top: 5%; width: 80%;">
-            <div class="basket" style="width: 90%; margin-top: -6%; border: none;">
+        <section style="margin-top: 5%; width: 100%;">
+            <div class="basket" style="width: 100%; margin-top: -8px; border: none;">
                 <div class="basket-labels">
                     <ul>
                         <li class="food-checkbox">No.</li>
@@ -587,11 +577,11 @@ span.price {
                         <li class="item" style="width: 90%;">
                             <div class="product-details">
                                 <div style="display: flex; justify-content: space-between; text-align: right;">
-                                    <h2 style="font-size: 20px; font-weight: bold;width:100%;">Delivery Fee</h2>
-                                    <div class="total" style="font-weight: bold; width:100%;">RM <?php echo $delivery_price; ?></div>
+                                    <h2 style="font-size: 20px; font-weight: bold; width: 100%;">Delivery Fee</h2>
+                                    <div class="total" style="font-weight: bold; width: 100%;">RM <?php echo $delivery_price; ?></div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; text-align: right;">
-                                    <h2 style="font-size: 20px; font-weight: bold;width:100%;">Total</h2>
+                                    <h2 style="font-size: 20px; font-weight: bold; width: 100%;">Total</h2>
                                     <div class="total" style="font-weight: bold; width:100%;">RM <?php echo $total; ?></div>
                                 </div>
                             </div>

@@ -68,9 +68,9 @@ ob_start();
                         <li class="nav-link">
                             <a href="manage-food.php">
                                 <i class='bx bx-food-menu icon'></i>
-                                <span class="text nav-text">Manage Food</span>
+                                <span class="text nav-text">Manage Menu</span>
                             </a>
-                            <span class="tooltip">Manage Food</span>
+                            <span class="tooltip">Manage Menu</span>
                         </li>
 
                         <!--============== Manage Order ==============-->

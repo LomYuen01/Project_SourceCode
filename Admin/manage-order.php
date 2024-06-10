@@ -2,13 +2,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Manage Order</div>
-            <?php
-                if(isset($_SESSION['add']))
-                {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -23,7 +16,7 @@
                     
                     <ul class="menu-column" style="width: 200px; font-size: 12px;">
                         <li>
-                            <label><input type="checkbox" class="checkbox-column" data-column="1" checked/>&nbsp; No. &nbsp; </label> <br>
+                            <label><input type="checkbox" class="checkbox-column" data-column="1" checked/>&nbsp; Order ID &nbsp; </label> <br>
                             <label><input type="checkbox" class="checkbox-column" data-column="2" checked/>&nbsp; Customer Name &nbsp; </label> <br>
                             <label><input type="checkbox" class="checkbox-column" data-column="3" checked/>&nbsp; Order Time &nbsp; </label> <br>
                             <label><input type="checkbox" class="checkbox-column" data-column="4" checked/>&nbsp; Delivery Time &nbsp; </label> <br>
@@ -48,7 +41,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th> <span class="cursor_pointer">No. <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></span></th>
+                            <th> <span class="cursor_pointer">Order ID <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></span></th>
                             <th> <span class="cursor_pointer">Customer Name<span class="icon-arrow"></span></span></th>
                             <th> <span class="cursor_pointer">Order time <span class="icon-arrow"></span></span></th>
                             <th> <span class="cursor_pointer">Delivery time <span class="icon-arrow"></span></span></th>
@@ -68,8 +61,6 @@
 
                             // Count the rows
                             $count = mysqli_num_rows($res);
-
-                            $SN = 1;
 
                             if($count > 0)
                             {
@@ -93,7 +84,7 @@
 
                                     ?>
                                         <tr class="table-row">
-                                            <td><?php echo str_pad($SN++, 2, '0', STR_PAD_LEFT); ?></td>
+                                            <td><?php echo 'order' . str_pad($id, 2, '0', STR_PAD_LEFT); ?></td>
                                             <td><?php echo $customer_name; ?></td>
                                             <td><?php echo $order_time; ?></td>
                                             <td><?php echo $delivery_time; ?></td>

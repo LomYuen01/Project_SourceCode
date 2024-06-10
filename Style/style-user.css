@@ -118,7 +118,6 @@ li {
 .home {
     position: relative;
     min-height: 100vh;
-    height: auto;
     width: 100%;
     top: 65px;
     background-size: cover;

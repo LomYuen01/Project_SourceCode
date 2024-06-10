@@ -3,20 +3,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Add Admin</div>
-
-            <?php
-                if(isset($_SESSION['add']))  // Checking whether the session is set or not
-                {
-                    echo nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if (isset($_SESSION['duplicates'])) {
-                    echo "<br />" . nl2br($_SESSION['duplicates']);
-                    unset($_SESSION['duplicates']);
-                }
-            ?>
-            <div class="error" id="errorMessage" style="display: none;"></div>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -34,8 +20,6 @@
                         </div>
                         <div class="user-details">
                             <span class="details" style="margin-top: 15px; margin-left: 27%;">Profile Picture</span>
-                            <!--<span class="details">Lom Yuen [Superadmin]</span>
-                            <span class="light-color">Erzonth</span>-->
                         </div>
                     </section>
                     
@@ -138,11 +122,10 @@
     </section>
     <script>
         const fileInput = document.getElementById('fileInput');
-        const errorMessage = document.getElementById('errorMessage');
         const icon = document.getElementById('image_icon');
 
         icon.addEventListener('click', () => {
-        fileInput.click();
+            fileInput.click();
         });
 
         fileInput.addEventListener('change', (event) => {
@@ -150,18 +133,15 @@
             const image = new Image();
 
             image.onload = function() {
-            if (this.width !== this.height) {
-                errorMessage.textContent = 'Please upload an image with equal width and height.';
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+                if (this.width !== this.height) {
+                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
 
             image.src = URL.createObjectURL(file);
@@ -198,8 +178,17 @@
             $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
             if($res_check->num_rows > 0) {
                 // Field value already exists
-                $_SESSION['duplicates'] = "<div class='error'> $field already Exists. </div>";
-                header('location:' . SITEURL . 'admin/add-admin.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: '$field already Exists.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/add-admin.php';
+                        }
+                    });
+                </script>";
                 exit;
             }
         }
@@ -241,9 +230,18 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'admin/add-admin.php');
-                    die(); // Stop the Process
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Upload Image.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/add-admin.php';
+                            }
+                        });
+                    </script>";
+                    exit; // Stop the Process
                 }
             }
         }
@@ -292,30 +290,49 @@
             if($res_admin==TRUE)
             {
                 // Data Inserted
-                // Create a Session Variable to Display Message
-                $_SESSION['add'] = "<div class='success'> Admin Added Successfully. </div>";
-
-                // Redirect to Manage Admin Page
-                header("location:".SITEURL.'admin/manage-admin.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Admin Added Successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-admin.php';
+                        }
+                    });
+                </script>";
             }
             else
             {
                 // Failed to Insert Data
-                // Create a Session Variable to Display Message
-                $_SESSION['add'] = "<div class='error'> Failed to Add Admin. Try Again Later. </div>";
-
-                // Redirect to Manage Admin Page
-                header("location:".SITEURL.'admin/add-admin.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to Add Admin. Try Again Later.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/add-admin.php';
+                        }
+                    });
+                </script>";
             }
         }
         else
         {
             // Failed to Insert Data
             // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'> Failed to Add Address. Try Again Later. </div>";
-
-            // Redirect to Add Admin Page
-            header("location:".SITEURL.'admin/add-admin.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Add Admin. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/add-admin.php';
+                    }
+                });
+            </script>";
         }
     }
 ?>

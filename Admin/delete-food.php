@@ -2,6 +2,9 @@
     // Include constants.php for SITEURL
     include('../config/constant.php');
 
+    // Initialize response array
+    $response = array('status' => 'failed', 'message' => 'An error occurred');
+
     // Check whether the id and image_name value is set or not
     if(isset($_GET['id']) AND isset($_GET['image_name']))
     {
@@ -21,11 +24,9 @@
             // If failed to remove image then add an error message and stop the process
             if($remove==false)
             {
-                // Set the session message
-                $_SESSION['remove'] = "<div class='error'> Failed to Remove Food Image. </div>";
-                // Redirect to Manage Food page
-                header('location:'.SITEURL.'admin/manage-food.php');
-                // Stop the process
+                // Set the response message
+                $response['message'] = 'Failed to Remove Food Image.';
+                echo json_encode($response);
                 die();
             }
         }
@@ -35,19 +36,18 @@
         $res = mysqli_query($conn, $sql);
         if($res==false)
         {
-            // Set the session message
-            $_SESSION['remove'] = "<div class='error'> Failed to Remove Food Variations. </div>";
-            // Redirect to Manage Food page
-            header('location:'.SITEURL.'admin/manage-food.php');
-            // Stop the process
+            // Set the response message
+            $response['message'] = 'Failed to Remove Food Variations.';
+            echo json_encode($response);
             die();
         }
     }
     else
     {
-        // Redirect to Manage Food with Error Message
-        $_SESSION['delete'] = "<div class='error'> Unauthorized Access. </div>";
-        header('location:'.SITEURL.'admin/manage-food.php');
+        // Set the response message
+        $response['message'] = 'Unauthorized Access.';
+        echo json_encode($response);
+        die();
     }
 
     // Create SQL Query to Delete Food
@@ -56,18 +56,17 @@
     // Execute the Query
     $res = mysqli_query($conn, $sql);
 
-    // Redirect to Manage Food Page with message (success/error)
+    // Set the response status and message
     if($res == TRUE)
     {
-        // Create Session Variable to Display Message
-        $_SESSION['delete'] = "<div class='success'> Food Deleted Successfully. </div>";
-
-        header('location:'.SITEURL.'admin/manage-food.php');
+        $response['status'] = 'success';
+        $response['message'] = 'Food Deleted Successfully.';
     }
-    else{
-        // Create Session Variable to Display Message
-        $_SESSION['delete'] = "<div class='error'> Failed to Delete Food. Try Again Later. </div>";
-
-        header('location:'.SITEURL.'admin/manage-food.php');
+    else
+    {
+        $response['message'] = 'Failed to Delete Food. Try Again Later.';
     }
+
+    // Return the response
+    echo json_encode($response);
 ?>

@@ -6,50 +6,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Manage Food</div>
-
-            <?php
-                if(isset($_SESSION['add']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if(isset($_SESSION['upload']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['upload']);
-                    unset($_SESSION['upload']);
-                }
-
-                if(isset($_SESSION['remove']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['remove']);
-                    unset($_SESSION['remove']);
-                }
-
-                if(isset($_SESSION['delete']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['delete']);
-                    unset($_SESSION['delete']);
-                }
-
-                if(isset($_SESSION['no-food-found']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['no-food-found']);
-                    unset($_SESSION['no-food-found']);
-                }
-
-                if(isset($_SESSION['update']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['update']);
-                    unset($_SESSION['update']);
-                }
-
-                if(isset($_SESSION['failed-remove']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['failed-remove']);
-                    unset($_SESSION['failed-remove']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -94,13 +50,10 @@
                             while ($row = mysqli_fetch_assoc($res)) {
                                 $id = $row['id'];
                                 $title = $row['title'];
-                                $active = $row['active'];
 
-                                if ($active == 'Yes') {
-                                    echo "<li>";
-                                    echo "<a href=\"".SITEURL."admin/manage-food.php?category_id=$id\">$title</a>";
-                                    echo "</li>";
-                                }
+                                echo "<li>";
+                                echo "<a href=\"".SITEURL."admin/manage-food.php?category_id=$id\">$title</a>";
+                                echo "</li>";
                             }
                         ?>
                     </ul>
@@ -178,7 +131,7 @@
                                         <td><div class="<?php echo $status_class; ?>"><?php echo $status; ?></div></td>
                                         <td class="buttons" style="padding-right: 4rem;">
                                             <a href="<?php echo SITEURL; ?>admin/update-food.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary"><i class='bx bxs-edit'></i></a>
-                                            <a href="<?php echo SITEURL; ?>admin/delete-food.php?id=<?php echo $id; ?>&image_name=<?php echo $image_name; ?>" style="width: 40px; font-size: 14px;" class="btn-danger"><i class='bx bx-trash'></i></a>
+                                            <a href="javascript:void(0);" onclick="deleteFood(<?php echo $id; ?>, '<?php echo $image_name; ?>');" style="width: 40px; font-size: 14px;" class="btn-danger"><i class='bx bx-trash'></i></a>
                                         </td>
                                     </tr>
 
@@ -453,5 +406,48 @@
 
         // Show the content once the state has been loaded
         document.body.style.display = '';
+
+        function deleteFood(id, imageName) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '<?php echo SITEURL; ?>admin/delete-food.php',
+                        type: 'GET',
+                        data: {
+                            id: id,
+                            image_name: imageName
+                        },
+                        success: function(response) {
+                            var data = JSON.parse(response);
+                            if(data.status == 'success') {
+                                Swal.fire(
+                                    'Deleted!',
+                                    data.message,
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    data.message,
+                                    'error'
+                                );
+                            }
+                            // Reload the page after showing the alert
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        }
+                    });
+                }
+            })
+        }
     </script>
 <?php include('Partials/footer.php'); ?>

@@ -3,44 +3,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Manage Customer Details</div>
-
-            <?php 
-                if(isset($_SESSION['add']))
-                {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if(isset($_SESSION['delete']))
-                {
-                    echo "<br />" . nl2br($_SESSION['delete']);
-                    unset($_SESSION['delete']);
-                }
-
-                if(isset($_SESSION['update']))
-                {
-                    echo "<br />" . nl2br($_SESSION['update']);
-                    unset($_SESSION['update']);
-                }
-
-                if(isset($_SESSION['user-not-found']))
-                {
-                    echo "<br />" . nl2br($_SESSION['user-not-found']);
-                    unset($_SESSION['user-not-found']);
-                }
-
-                if(isset($_SESSION['pwd-not-match']))
-                {
-                    echo "<br />" . nl2br($_SESSION['pwd-not-match']);
-                    unset($_SESSION['pwd-not-match']);
-                }
-
-                if(isset($_SESSION['change-pwd']))
-                {
-                    echo "<br />" . nl2br($_SESSION['change-pwd']);
-                    unset($_SESSION['change-pwd']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -129,7 +91,6 @@
                                         $ph_no = $rows['ph_no'];
                                         $email = $rows['email'];
                                         $status = $rows['status'];
-                                        $address_id = $rows['address_id'];
 
                                         // Display the values in the table
                                         ?>
@@ -142,9 +103,9 @@
                                             <td><div class="<?php echo strtolower($status); ?>_status"><?php echo $status; ?></div></td>
                                             <td class="buttons"  style="padding-right: 3rem;"> 
                                                 <a href="<?php echo SITEURL; ?>admin/view-customer.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-primary" title="View details"><i class='bx bx-search-alt'></i></a>
-                                                <?php if (isset($_SESSION['admin']['position']) && $_SESSION['admin']['position'] == 'Superadmin') { ?>
+                                                <!--<?php if (isset($_SESSION['admin']['position']) && $_SESSION['admin']['position'] == 'Superadmin') { ?>-->
                                                     <a href="<?php echo SITEURL; ?>Admin/update-customer.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update details"><i class='bx bxs-edit'></i></a>
-                                                <?php } ?>
+                                                <!--<?php } ?>-->
                                             </td>
                                         </tr>
 

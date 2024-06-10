@@ -8,11 +8,9 @@
     
         if (isset($_SESSION['category_id'])) {
             $category_id = $_SESSION['category_id'];
-            // Use $category_id to pre-fill the category field in the form
         }
         
         // Process the value from Form and save it in Database
-        // Check whether the submit button is clicked or not
         if(isset($_POST['submit']))
         {
             // 1. Get the data from Form
@@ -22,6 +20,11 @@
             $category = $_POST['category_id'];
             $current_image = $_POST['current_image'];
             $quantity = $_POST['quantity'];
+
+            // Check if the category is active
+            $sql = "SELECT active FROM tbl_category WHERE id = '$category'";
+            $res = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($res);
 
             $normal_price = isset($_POST['normal_price']) ? $_POST['normal_price'] : 0;
             $large_price = isset($_POST['large_price']) ? $_POST['large_price'] : 0;
@@ -98,8 +101,17 @@
                     // If its not, we will stop the process and redirect with error message
                     if($upload == FALSE)
                     {
-                        $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                        header('location:'.SITEURL.'admin/manage-food.php');
+                        echo "<script>
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to Upload Image.',
+                                icon: 'error'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '".SITEURL."admin/manage-food.php';
+                                }
+                            });
+                        </script>";
                         die(); // Stop the Process
                     }
 
@@ -113,8 +125,17 @@
                         // If failed to remove, display message and stop the process
                         if($remove==FALSE)
                         {
-                            $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                            header('location:'.SITEURL.'admin/manage-food.php');
+                            echo "<script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Failed to remove current Image.',
+                                    icon: 'error'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '".SITEURL."admin/manage-food.php';
+                                    }
+                                });
+                            </script>";
                             die(); // Stop the Process
                         }
                     }
@@ -148,16 +169,16 @@
             $sql2 = "UPDATE tbl_food SET
                 title = '$title',
                 description = '$description',
-                normal_price = $normal_price,
-                large_price = $large_price,
-                quantity = $quantity,
+                normal_price = '$normal_price',
+                large_price = '$large_price',
+                quantity = '$quantity',
                 image_name = '$image_name',
-                category_id = $category,
+                category_id = '$category',
                 featured = '$featured',
                 active = '$active',
                 normal_active = '$normal_active',
                 large_active = '$large_active'
-                WHERE id = $id
+                WHERE id = '$id'
             ";
 
             // Execute the Query
@@ -185,9 +206,17 @@
                         $sql4 = "UPDATE tbl_food_variation SET active = 'Yes' WHERE food_id = $food_id AND name = '$selected'";
                         $res4 = mysqli_query($conn, $sql4);
                         if($res4 == FALSE) {
-                            // Handle error - break the loop and redirect with error message
-                            $_SESSION['update'] = "<div class='error'> Failed to Update Food Variation. </div>";
-                            header('location:'.SITEURL.'admin/manage-food.php');
+                            echo "<script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Failed to Update Food Variation.',
+                                    icon: 'error'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '".SITEURL."admin/manage-food.php';
+                                    }
+                                });
+                            </script>";
                             exit;
                         }
                     } else {
@@ -195,9 +224,17 @@
                         $sql4 = "INSERT INTO tbl_food_variation (food_id, name, active) VALUES ($food_id, '$selected', 'Yes')";
                         $res4 = mysqli_query($conn, $sql4);
                         if($res4 == FALSE) {
-                            // Handle error - break the loop and redirect with error message
-                            $_SESSION['update'] = "<div class='error'> Failed to Insert Food Variation. </div>";
-                            header('location:'.SITEURL.'admin/manage-food.php');
+                            echo "<script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Failed to Insert Food Variation.',
+                                    icon: 'error'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '".SITEURL."admin/manage-food.php';
+                                    }
+                                });
+                            </script>";
                             exit;
                         }
                     }
@@ -210,9 +247,17 @@
                     $sql4 = "DELETE FROM tbl_food_variation WHERE food_id = $food_id AND name = '$unchecked'";
                     $res4 = mysqli_query($conn, $sql4);
                     if($res4 == FALSE) {
-                        // Handle error - break the loop and redirect with error message
-                        $_SESSION['update'] = "<div class='error'> Failed to Delete Food Variation. </div>";
-                        header('location:'.SITEURL.'admin/manage-food.php');
+                        echo "<script>
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to Delete Food Variation.',
+                                icon: 'error'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '".SITEURL."admin/manage-food.php';
+                                }
+                            });
+                        </script>";
                         exit;
                     }
                 }
@@ -221,20 +266,33 @@
                 $_SESSION['category_id'] = $category_id;
 
                 // Query Executed and Food Updated
-                $_SESSION['update'] = "<div class='success'> Food Updated Successfully. </div>";
-
-                // Redirect to Manage Food Page
-                header('location:'.SITEURL.'admin/manage-food.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Food Updated Successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-food.php';
+                        }
+                    });
+                </script>";
             }
             else
             {
                 // Failed to Update Food
-                $_SESSION['update'] = "<div class='error'> Failed to Update Food. </div>";
-
-                echo "SQL error: " . mysqli_error($conn);
-
-                // Redirect to Manage Food Page
-                header('location:'.SITEURL.'admin/manage-food.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to Update Food.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-food.php';
+                        }
+                    });
+                </script>";
+                exit;
             }
         }
     ?>
@@ -431,7 +489,7 @@
                     <div class="user-details" style="background: #FFF; margin-top: -39px;">
                         <div class="button">
                             <input type="hidden" name="current_image" value="<?php echo $current_image; ?>">
-                            <input type="hidden" name="category" value="<?php echo $category_id; ?>">
+                            <input type="hidden" name="category" value="<?php echo $category; ?>">
                             <input type="hidden" name="id" value="<?php echo $food_id; ?>">
                             <input type="submit" name="submit" value="Update Food" class="btn-secondary">
                         </div>
@@ -459,18 +517,15 @@
                                         while ($row = mysqli_fetch_assoc($res)) {
                                             $id = $row['id'];
                                             $title = $row['title'];
-                                            $active = $row['active'];
-
-                                            if ($active == 'Yes') {
-                                                echo "<li style='margin-top: 5px;'>";
-                                                // Check if the category id matches the food's category id
-                                                if ($id == $category_id) {
-                                                    echo "<input type=\"radio\" name=\"category_id\" value=\"$id\" checked>&nbsp;&nbsp;$title"; 
-                                                } else {
-                                                    echo "<input type=\"radio\" name=\"category_id\" value=\"$id\">&nbsp;&nbsp;$title"; 
-                                                }
-                                                echo "</li>";
+                                            
+                                            echo "<li style='margin-top: 5px;'>";
+                                            // Check if the category id matches the food's category id
+                                            if ($id == $category_id) {
+                                                echo "<input type=\"radio\" name=\"category_id\" value=\"$id\" checked>&nbsp;&nbsp;$title"; 
+                                            } else {
+                                                echo "<input type=\"radio\" name=\"category_id\" value=\"$id\">&nbsp;&nbsp;$title"; 
                                             }
+                                            echo "</li>";
                                         }
                                     ?>
                                     <li></li>

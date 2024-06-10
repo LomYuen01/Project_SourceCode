@@ -142,18 +142,7 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-        <section class="food-search text-center">
-            <div class="container">
-                <form action="<?php echo SITEURL; ?>food-search.php" method="POST" style="display: flex; flex-direction: row; align-items: center; justify-content: center; font-size: 1em; color: black;">
-                    <input type="search" name="search" placeholder="Search for Food.." required style="font-size: 1em; color: black; border-radius: 18px; border:2px solid black;">
-                    <input type="submit" name="submit" value="Search" class="btn btn-primary" style="font-size: 1em; color: black;">
-                </form>
-            </div>
-        </section>
-        <!-- fOOD sEARCH Section Ends Here -->
-
-        <!-- fOOD MEnu Section Starts Here -->
-        <section class="food-menu">
+        <section class="food-menu" style="padding-top: 4.2%;">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3" style="display: flex;">

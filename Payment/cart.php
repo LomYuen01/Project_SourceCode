@@ -84,12 +84,11 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-        <div style="width: 80%; margin: auto;">
-            <div class="title">
-                <h1>Cart</h1>
-            </div>
-
-            <div class="basket" >
+        <div class="title" style="padding-top: 15px; margin-left: 5.5%;">
+            <h1>Cart</h1>
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 25px; width: 89%; padding-bottom: 5%; margin: auto;">
+            <div class="basket">
                 <div class="basket-labels">
                     <ul>
                         <li class="food-checkbox">No.</li>
@@ -97,7 +96,6 @@
                         <li class="price">Price</li>
                         <li class="quantity">Quantity</li>
                         <li class="subtotal">Subtotal</li>
-                        
                     </ul>
                 </div>
 
@@ -178,7 +176,7 @@
             </div>
 
             <?php if ($user_id !== ""): ?>
-                <div class="summary" style="width: 20%;">
+                <div class="summary" style="width: 25%; height: 35%;">
                     <div class="summary-total-items"><span class="total-items"></span>Payment</div>
 
                     <div class="shopping-option-title">Shopping Option</div>
@@ -332,22 +330,46 @@
             var currentMinutes = currentTime.getMinutes();
             var checkoutStartTime = new Date();
             var checkoutEndTime = new Date();
-        
+
             checkoutStartTime.setHours(checkout_start_time.split(':')[0], checkout_start_time.split(':')[1]);
             checkoutEndTime.setHours(checkout_end_time.split(':')[0], checkout_end_time.split(':')[1]);
-        
+
             if (totalPrice < minimum_cart_price) {
-                showNotification("Minimum cart price requirement is $" + minimum_cart_price);
+                showNotification("Minimum cart price requirement is RM " + minimum_cart_price);
                 return;
             }
-        
+
             if (currentTime < checkoutStartTime || currentTime > checkoutEndTime) {
                 showNotification("Checkout is available from " + checkout_start_time + " to " + checkout_end_time);
                 return;
             }
-        
-            var paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-            window.location.href = 'checkout.php?payment=' + paymentMethod;
+
+            if (document.querySelector('input[name="payment"]:checked') === null) {
+                showNotification("Please select a payment method.");
+                return;
+            }
+
+            // Perform AJAX request to check recent checkout verifications
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "check_checkout_verification.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            var paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+                            window.location.href = 'checkout.php?payment=' + paymentMethod;
+                        } else {
+                            showNotification(response.message);
+                        }
+                    } else {
+                        showNotification("An error occurred. Please try again.");
+                    }
+                }
+            };
+
+            xhr.send("user_id=" + <?php echo $user_id; ?>);
         }
     </script>
 

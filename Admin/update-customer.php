@@ -15,24 +15,6 @@
                     $address_id = $_GET['address_id'];
                 }
 
-                if(isset($_SESSION['upload'])) 
-                {
-                    echo $_SESSION['upload'];  
-                    unset($_SESSION['upload']);  
-                }
-
-                if(isset($_SESSION['update'])) 
-                {
-                    echo $_SESSION['update'];  
-                    unset($_SESSION['update']);  
-                }
-
-                if(isset($_SESSION['failed-remove'])) 
-                {
-                    echo $_SESSION['failed-remove'];  
-                    unset($_SESSION['failed-remove']);  
-                }
-
                 if(isset($_GET['id'])) {
                     // Get the id of selected customer
                     $id = $_GET['id'];
@@ -64,10 +46,17 @@
                         else
                         {
                             // Redirect to Manage customer Page with Session Message
-                            $_SESSION['user-not-found'] = "<div class='error'> customer Information Not Found. </div>";
-
-                            // Redirect to Manage customer Page
-                            header('location:'.SITEURL.'customer/manage-customer.php');
+                            echo "<script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Customer Information Not Found.',
+                                    icon: 'error'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '".SITEURL."admin/manage-customer.php';
+                                    }
+                                });
+                            </script>";
                         }
                     }
                 }
@@ -77,7 +66,6 @@
                     header('location:'.SITEURL.'customer/manage-customer.php');
                 }
             ?>
-            <div class="error" id="errorMessage" style="display: none;"></div>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -185,18 +173,15 @@
             const image = new Image();
 
             image.onload = function() {
-            if (this.width !== this.height) {
-                errorMessage.textContent = 'Please upload an image with equal width and height.';
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+                if (this.width !== this.height) {
+                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
 
             image.src = URL.createObjectURL(file);
@@ -263,8 +248,17 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'customer/manage-customer.php');
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Upload Image.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/manage-customer.php';
+                            }
+                        });
+                    </script>";
                     die(); // Stop the Process
                 }
 
@@ -278,8 +272,17 @@
                     // If failed to remove, display message and stop the process
                     if($remove==FALSE)
                     {
-                        $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                        header('location:'.SITEURL.'customer/manage-customer.php');
+                        echo "<script>
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to remove current Image.',
+                                icon: 'error'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '".SITEURL."admin/manage-customer.php';
+                                }
+                            });
+                        </script>";
                         die(); // Stop the Process
                     }
                 }
@@ -314,20 +317,32 @@
         if($res_customer==TRUE)
         {
             // Data Updated
-            // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='success'> Customer Updated Successfully. </div>";
-
-            // Redirect to Manage customer Page
-            header("location:".SITEURL.'admin/manage-customer.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Customer Updated Successfully.',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/manage-customer.php';
+                    }
+                });
+            </script>";
         }
         else
         {
             // Failed to Update Data
-            // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='error'> Failed to Update Customer. Try Again Later. </div>";
-
-            // Redirect to Manage customer Page
-            header("location:".SITEURL.'admin/manage-customer.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Update Customer. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/manage-customer.php';
+                    }
+                });
+            </script>";
         }
     }
 ?>

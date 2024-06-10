@@ -1,21 +1,7 @@
 <?php include('Partials/menu.php'); ?>
-
     <section class="home">
         <div class="title">
             <div class="text">Add Category</div>
-
-            <?php
-                if(isset($_SESSION['add'])) 
-                {
-                    echo $_SESSION['add'];  
-                    unset($_SESSION['add']);  
-                }
-
-                if (isset($_SESSION['duplicates'])) {
-                    echo "<br />" . nl2br($_SESSION['duplicates']);
-                    unset($_SESSION['duplicates']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -116,8 +102,17 @@
         $res_check_category = mysqli_query($conn, $sql_check_category) or die(mysqli_error());
         if($res_check_category->num_rows > 0) {
             // Category name already exists
-            $_SESSION['duplicates'] = "<div class='error'> Category Name already Exists. </div>";
-            header('location:' . SITEURL . 'admin/add-category.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Category Name already Exists.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/add-category.php';
+                    }
+                });
+            </script>";
             exit;
         }
 
@@ -128,8 +123,17 @@
             $res_check_variation = mysqli_query($conn, $sql_check_variation) or die(mysqli_error());
             if($res_check_variation->num_rows > 0) {
                 // Variation already exists
-                $_SESSION['duplicates'] = "<div class='error'> Variation already Exists. </div>";
-                header('location:' . SITEURL . 'admin/add-category.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Variation already Exists.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/add-category.php';
+                        }
+                    });
+                </script>";
                 exit;
             }
         }
@@ -167,27 +171,48 @@
                 if($res_variation==FALSE)
                 {
                     // Failed to Insert Data
-                    // Create a Session Variable to Display Message
-                    $_SESSION['add'] = "<div class='error'> Failed to Add Variation. Try Again Later. </div>";
-
-                    // Redirect to Add Category Page
-                    header("location:".SITEURL.'admin/add-category.php');
-                    exit();  // Terminate the script execution if a variation fails to insert
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Add Variation. Try Again Later.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/add-category.php';
+                            }
+                        });
+                    </script>";
+                    exit;  // Terminate the script execution if a variation fails to insert
                 }
             }
 
             // If all variations inserted successfully, redirect to Manage Category Page
-            $_SESSION['add'] = "<div class='success'> Category Added Successfully. </div>";
-            header("location:".SITEURL.'admin/manage-category.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Category Added Successfully.',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/manage-category.php';
+                    }
+                });
+            </script>";
         }
         else
         {
             // Failed to Insert Data
-            // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'> Failed to Add Category. Try Again Later. </div>";
-
-            // Redirect to Add Category Page
-            header("location:".SITEURL.'admin/add-category.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Add Category. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/add-category.php';
+                    }
+                });
+            </script>";
         }
     }
 ?>

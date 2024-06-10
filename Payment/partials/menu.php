@@ -34,7 +34,6 @@
                         <a href="<?php echo SITEURL; ?>about-us.php" class="nav-link">About Us</a>
                         <a href="<?php echo SITEURL; ?>contact-us.php" class="nav-link">Contact Us</a>
                         <a href=""></a>
-                        <a href=""></a>
                     </li>
                 </ul>
                 <?php 

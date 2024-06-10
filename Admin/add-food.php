@@ -1,39 +1,7 @@
 <?php include('Partials/menu.php'); ?>
-
-    <!----------------------------------------------------------------------------------------------------------------------------------------------------------+
-    |  The Main Content is shifted below the PHP function is because the main content started a session already and if the php were below it, we're basically   |
-    |  creating another session which could lead to an error "Cannot Modify header Information"                                                                 |
-    +----------------------------------------------------------------------------------------------------------------------------------------------------------->
-
     <section class="home">
         <div class="title">
             <div class="text">Add Food</div>
-
-            <?php
-                if(isset($_SESSION['upload'])) 
-                {
-                    echo $_SESSION['upload'];  
-                    unset($_SESSION['upload']);  
-                }
-
-                if(isset($_SESSION['add'])) 
-                {
-                    echo $_SESSION['add'];  
-                    unset($_SESSION['add']);  
-                }
-
-                if(isset($_SESSION['no-category-found'])) 
-                {
-                    echo $_SESSION['no-category-found'];  
-                    unset($_SESSION['no-category-found']);  
-                }
-
-                if(isset($_SESSION['duplicates'])) 
-                {
-                    echo $_SESSION['duplicates'];  
-                    unset($_SESSION['duplicates']);  
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -188,6 +156,24 @@
     </section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        document.querySelectorAll('.checkbox-splash').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                // Correctly target the nested input element within the next sibling div
+                var inputBox = this.nextElementSibling.querySelector('input[type="number"]');
+                if (this.checked) {
+                    inputBox.disabled = false;
+                    inputBox.style.backgroundColor = '#FFFFFF'; // Adjusted for better visibility
+                    inputBox.style.color = 'black';
+                    inputBox.style.cursor = 'text';
+                } else {
+                    inputBox.disabled = true;
+                    inputBox.style.backgroundColor = '#F7F7EF';
+                    inputBox.style.color = '#B0B0B6';
+                    inputBox.style.cursor = 'not-allowed';
+                }
+            });
+        });
+
         $(document).ready(function() {
             // Add an onchange event listener to the category radio buttons
             $('input[name="category_id"]').change(function() {
@@ -214,7 +200,6 @@
             });
         });
     </script>
-    <script src="../Style/add-food.js"></script>
 <?php include('Partials/footer.php'); ?>
 
 <?php
@@ -265,8 +250,17 @@
 
         if ($result->num_rows > 0) {
             // Food name already exists
-            $_SESSION['duplicates'] = "<div class='error'> Food Name already Exists. </div>";
-            header('location:'.SITEURL.'admin/add-food.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Food Name already Exists.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/add-food.php';
+                    }
+                });
+            </script>";
             exit;
         }
 
@@ -315,9 +309,20 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'admin/add-food.php');
-                    die(); // Stop the Process
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Upload Image.',
+                            icon: 'error'
+                        })
+                            
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/add-food.php';
+                            }
+                        });
+                    </script>";
+                    exit; // Stop the Process
                 }
             }
         }
@@ -376,8 +381,17 @@
                     $res3 = mysqli_query($conn, $sql3);
                     if($res3 == FALSE) {
                         // Handle error - break the loop and redirect with error message
-                        $_SESSION['add'] = "<div class='error'> Failed to Add Food Variation. </div>";
-                        header('location:'.SITEURL.'admin/add-food.php');
+                        echo "<script>
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to Add Food Variation.',
+                                icon: 'error'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '".SITEURL."admin/add-food.php';
+                                }
+                            });
+                        </script>";
                         exit;
                     }
                 }
@@ -387,20 +401,32 @@
             $_SESSION['category_id'] = $category_id;
 
             // Query Executed and Food Added
-            $_SESSION['add'] = "<div class='success'> Food Added Successfully. </div>";
-
-            // Redirect to Manage Food Page
-            header('location:'.SITEURL.'admin/manage-food.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Food Added Successfully.',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."Admin/manage-food.php';
+                    }
+                });
+            </script>";
         }
         else
         {
             // Failed to Add Food
-            $_SESSION['add'] = "<div class='error'> Failed to Add Food. </div>";
-
-            echo "SQL error: " . mysqli_error($conn);
-
-            // Redirect to Add Food Page
-            header('location:'.SITEURL.'admin/add-food.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Add Food. Please Try Again.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."Admin/add-food.php';
+                    }
+                });
+            </script>";
         }
     }
 ?>

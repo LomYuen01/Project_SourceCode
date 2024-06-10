@@ -15,24 +15,6 @@
                     $address_id = $_GET['address_id'];
                 }
 
-                if(isset($_SESSION['upload'])) 
-                {
-                    echo $_SESSION['upload'];  
-                    unset($_SESSION['upload']);  
-                }
-
-                if(isset($_SESSION['update'])) 
-                {
-                    echo $_SESSION['update'];  
-                    unset($_SESSION['update']);  
-                }
-
-                if(isset($_SESSION['failed-remove'])) 
-                {
-                    echo $_SESSION['failed-remove'];  
-                    unset($_SESSION['failed-remove']);  
-                }
-
                 if(isset($_GET['id'])) {
                     // Get the id of selected driver
                     $id = $_GET['id'];
@@ -87,10 +69,17 @@
                         else
                         {
                             // Redirect to Manage driver Page with Session Message
-                            $_SESSION['user-not-found'] = "<div class='error error-text-shadow'> Driver Information Not Found. </div>";
-                    
-                            // Redirect to Manage driver Page
-                            header('location:'.SITEURL.'admin/manage-driver.php');
+                            echo "<script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Driver Information Not Found.',
+                                    icon: 'error'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '".SITEURL."admin/manage-driver.php';
+                                    }
+                                });
+                            </script>";
                         }
                     }
                 }
@@ -100,7 +89,6 @@
                     header('location:'.SITEURL.'admin/manage-driver.php');
                 }
             ?>
-            <div class="error" id="errorMessage" style="display: none;"></div>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -148,14 +136,6 @@
                                 <div class="input-box">
                                     <span class="details">Username</span>
                                     <input type="text" name="username" value="<?php echo $username; ?>" placeholder=" Username" required>
-                                </div>
-
-                                <div class="input-box password">
-                                    <span class="details">Password</span>
-                                    <div class="password-container">
-                                        <input class="readonly-color" type="password" id="password" name="password" value="<?php echo $password; ?>" placeholder=" Password" required>
-                                        <i class="fa-solid fa-eye-slash pw-hide"></i>
-                                    </div>
                                 </div>
 
                                 <div class="input-box">
@@ -257,15 +237,15 @@
                                 <div class="position">
                                     <span class="text">Position</span>
                                     <select name="position" style="font-size: 14px; font-weight: 500;">
-                                        <option value="Driver" <?php echo $position == 'Driver' ? 'selected' : ''; ?>>Driver</option>
+                                        <option value="Driver">Driver</option>
                                     </select>
                                 </div>
 
                                 <div class="status">
                                     <span class="text">Status</span>
                                     <select name="status" style="font-size: 14px; font-weight: 500;">
-                                        <option value="Active" <?php echo $status == 'Active' ? 'selected' : ''; ?>>Active</option>
-                                        <option value="Inactive" <?php echo $status == 'Inactive' ? 'selected' : ''; ?>>Inactive</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
                             </div>
@@ -329,18 +309,15 @@
             const image = new Image();
 
             image.onload = function() {
-            if (this.width !== this.height) {
-                errorMessage.textContent = 'Please upload an image with equal width and height.';
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+                if (this.width !== this.height) {
+                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
 
             image.src = URL.createObjectURL(file);
@@ -420,8 +397,17 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'admin/manage-driver.php');
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Upload Image.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/manage-driver.php';
+                            }
+                        });
+                    </script>";
                     die(); // Stop the Process
                 }
 
@@ -435,8 +421,17 @@
                     // If failed to remove, display message and stop the process
                     if($remove==FALSE)
                     {
-                        $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                        header('location:'.SITEURL.'admin/manage-driver.php');
+                        echo "<script>
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to remove current Image.',
+                                icon: 'error'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '".SITEURL."admin/manage-driver.php';
+                                }
+                            });
+                        </script>";
                         die(); // Stop the Process
                     }
                 }
@@ -503,30 +498,49 @@
                     $res_insert_license = mysqli_query($conn, $sql_insert_license);
                 }
 
-                // Create a Session Variable to Display Message
-                $_SESSION['update'] = "<div class='success success-text-shadow' style='color: white;'> Driver Updated Successfully. </div>";
-
-                // Redirect to Manage Driver Page
-                header("location:".SITEURL.'admin/manage-driver.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Driver Updated Successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-driver.php';
+                        }
+                    });
+                </script>";
             }
             else
             {
                 // Failed to Update Data
-                // Create a Session Variable to Display Message
-                $_SESSION['update'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update Driver. Try Again Later. </div>";
-
-                // Redirect to Manage Driver Page
-                header("location:".SITEURL.'admin/manage-driver.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to Update Driver. Try Again Later.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/manage-driver.php';
+                        }
+                    });
+                </script>";
             }
         }
         else
         {
             // Failed to Update Data
             // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update Address. Try Again Later. </div>";
-
-            // Redirect to Manage Driver Page
-            header("location:".SITEURL.'admin/manage-driver.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Update Address. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/manage-driver.php';
+                    }
+                });
+            </script>";
         }
     }
 ob_end_flush();

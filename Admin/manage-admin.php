@@ -3,26 +3,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Manage Admin Details</div>
-
-            <?php 
-                if(isset($_SESSION['add']))
-                {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if(isset($_SESSION['user-not-found']))
-                {
-                    echo "<br />" . nl2br($_SESSION['user-not-found']);
-                    unset($_SESSION['user-not-found']);
-                }
-
-                if(isset($_SESSION['update']))
-                {
-                    echo "<br />" . nl2br($_SESSION['update']);
-                    unset($_SESSION['update']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->

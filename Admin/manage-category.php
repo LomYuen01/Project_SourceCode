@@ -3,44 +3,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Manage Category</div>
-
-            <?php
-                if(isset($_SESSION['add']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if(isset($_SESSION['remove']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['remove']);
-                    unset($_SESSION['remove']);
-                }
-
-                if(isset($_SESSION['delete']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['delete']);
-                    unset($_SESSION['delete']);
-                }
-
-                if(isset($_SESSION['no-category-found']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['no-category-found']);
-                    unset($_SESSION['no-category-found']);
-                }
-
-                if(isset($_SESSION['update']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['update']);
-                    unset($_SESSION['update']);
-                }
-
-                if(isset($_SESSION['upload']))  // Checking whether the session is set or not
-                {
-                    echo "<br />" . nl2br($_SESSION['upload']);
-                    unset($_SESSION['upload']);
-                }
-            ?>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -117,15 +79,15 @@
                                     $status_class = strtolower($status) . '_status';
                                 ?>
                                 
-                                    <tr>
-                                        <td><?php echo str_pad($SN++, 2, '0', STR_PAD_LEFT); ?></td>
-                                        <td><?php echo $title; ?></td>
-                                        <td><div class="<?php echo $status_class; ?>"><?php echo $status; ?></div></td>
-                                        <td class="buttons">
-                                            <a href="<?php echo SITEURL; ?>admin/update-category.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update Category"><i class='bx bxs-edit'></i></a>
-                                            <a href="<?php echo SITEURL; ?>admin/delete-category.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-danger" title="Delete Category"><i class='bx bx-trash'></i></a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td><?php echo str_pad($SN++, 2, '0', STR_PAD_LEFT); ?></td>
+                                    <td><?php echo $title; ?></td>
+                                    <td><div class="<?php echo $status_class; ?>"><?php echo $status; ?></div></td>
+                                    <td class="buttons">
+                                        <a href="<?php echo SITEURL; ?>admin/update-category.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update Category"><i class='bx bxs-edit'></i></a>
+                                        <a href="javascript:void(0);" onclick="deleteCategory(<?php echo $id; ?>);" style="width: 40px; font-size: 14px;" class="btn-danger" title="Delete Category"><i class='bx bx-trash'></i></a>
+                                    </td>
+                                </tr>
 
                                 <?php
                                 }
@@ -212,6 +174,47 @@
 
         // Show the content once the state has been loaded
         document.body.style.display = '';
+
+        function deleteCategory(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '<?php echo SITEURL; ?>admin/delete-category.php',
+                        type: 'GET',
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            if(response == 'success') {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your category has been deleted.',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Failed!',
+                                    'Failed to delete category.',
+                                    'error'
+                                );
+                            }
+                            // Reload the page after showing the alert
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        }
+                    });
+                }
+            })
+        }
     </script>
 
 <?php include('Partials/footer.php'); ?>

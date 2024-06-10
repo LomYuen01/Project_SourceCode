@@ -3,20 +3,6 @@
     <section class="home">
         <div class="title">
             <div class="text">Add Worker</div>
-
-            <?php
-                if(isset($_SESSION['add']))  // Checking whether the session is set or not
-                {
-                    echo nl2br($_SESSION['add']);
-                    unset($_SESSION['add']);
-                }
-
-                if (isset($_SESSION['duplicates'])) {
-                    echo "<br />" . nl2br($_SESSION['duplicates']);
-                    unset($_SESSION['duplicates']);
-                }
-            ?>
-            <div class="error" id="errorMessage" style="display: none;"></div>
         </div>
 
         <!-- Break --><br><!-- Line -->
@@ -135,18 +121,15 @@
             const image = new Image();
 
             image.onload = function() {
-            if (this.width !== this.height) {
-                errorMessage.textContent = 'Please upload an image with equal width and height.';
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                document.getElementById('profileImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+                if (this.width !== this.height) {
+                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
 
             image.src = URL.createObjectURL(file);
@@ -173,16 +156,25 @@
         $state = mysqli_real_escape_string($conn, $_POST['state']);
         $country = mysqli_real_escape_string($conn, $_POST['country']);
 
-        // Check if the full_name, IC, ph_no, email already exists
-        $fields_to_check = ['full_name', 'IC', 'ph_no', 'email'];
+        // Check if the full_name, username, IC, ph_no, email already exists
+        $fields_to_check = ['full_name', 'username', 'IC', 'ph_no', 'email'];
         foreach($fields_to_check as $field) {
             $value = $$field;  // get the value of the variable with the name contained in $field
             $sql_check = "SELECT * FROM tbl_worker WHERE $field = '$value'";
             $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
             if($res_check->num_rows > 0) {
                 // Field value already exists
-                $_SESSION['duplicates'] = "<div class='error'> $field already Exists. </div>";
-                header('location:' . SITEURL . 'worker/add-worker.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: '$field already Exists.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/add-worker.php';
+                        }
+                    });
+                </script>";
                 exit;
             }
         }
@@ -224,9 +216,18 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.SITEURL.'worker/add-worker.php');
-                    die(); // Stop the Process
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Upload Image.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/add-worker.php';
+                            }
+                        });
+                    </script>";
+                    exit; 
                 }
             }
         }
@@ -273,30 +274,48 @@
             if($res_worker==TRUE)
             {
                 // Data Inserted
-                // Create a Session Variable to Display Message
-                $_SESSION['add'] = "<div class='success'> Worker Added Successfully. </div>";
-
-                // Redirect to Manage Worker Page
-                header("location:".SITEURL.'Admin/manage-worker.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Worker Added Successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."Admin/manage-worker.php';
+                        }
+                    });
+                </script>";
             }
             else
             {
                 // Failed to Insert Data
-                // Create a Session Variable to Display Message
-                $_SESSION['add'] = "<div class='error'> Failed to Add Worker. Try Again Later. </div>";
-
-                // Redirect to Add Worker Page
-                header("location:".SITEURL.'Admin/add-worker.php');
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to Add Worker. Try Again Later.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."Admin/add-worker.php';
+                        }
+                    });
+                </script>";
             }
         }
         else
         {
             // Failed to Insert Data
-            // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'> Failed to Add Address. Try Again Later. </div>";
-
-            // Redirect to Add Worker Page
-            header("location:".SITEURL.'Admin/add-worker.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Add Worker. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."Admin/add-worker.php';
+                    }
+                });
+            </script>";
         }
     }
 ?>

@@ -11,12 +11,6 @@
             <div class="text">Update Category</div>
 
             <?php
-                if(isset($_SESSION['update'])) 
-                {
-                    echo $_SESSION['update'];  
-                    unset($_SESSION['update']);  
-                }
-
                 if(isset($_GET['id'])) {
                     $category_id = $_GET['id'];
             
@@ -32,6 +26,7 @@
                     $res = mysqli_query($conn, $sql);
                     $variations = array();
                     while($row = mysqli_fetch_assoc($res)) {
+                        $variations_id[] = $row['id'];
                         $variations[] = $row['name'];
                     }
                 }
@@ -61,8 +56,9 @@
                                 // Check if there are any variations
                                 if(!empty($variations)) {
                                     // Loop through the variations and create an input for each one
-                                    foreach($variations as $variation): ?>
+                                    foreach($variations as $index => $variation): ?>
                                         <div class="input-group">
+                                            <input type="hidden" name="variations_id[]" value="<?php echo $variations_id[$index]; ?>">
                                             <input type="text" name="variations[]" value="<?php echo $variation; ?>" placeholder="Food Variation" required>
                                             <button type="button" class="remove-button" title="Remove Variation" onclick="removeVariation(this)">-</button>
                                         </div>
@@ -91,7 +87,7 @@
                         </div>
                         
                         <div class="button" style="left: 0; padding-bottom: 0">
-                            <input type="submit" name="submit" value="Add Category" class="btn-secondary">
+                            <input type="submit" name="submit" value="Update Category" class="btn-secondary">
                         </div>
                     </div>
                 </div>
@@ -201,6 +197,48 @@
         $status = mysqli_real_escape_string($conn, $_POST['status']);
         $variations = $_POST['variations'];
 
+        // Check if the category name already exists
+        $sql_check_category = "SELECT * FROM tbl_category WHERE title = '$title' AND id != $category_id";
+        $res_check_category = mysqli_query($conn, $sql_check_category) or die(mysqli_error());
+        if($res_check_category->num_rows > 0) {
+            // Category name already exists
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Category Name already Exists.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/update-category.php?id=".$category_id."';
+                    }
+                });
+            </script>";
+            exit;
+        }
+
+        // Check if any of the variations already exist
+        foreach($variations as $index => $variation) {
+            $variation = mysqli_real_escape_string($conn, $variation);
+            $variation_id = $variations_id[$index];
+            $sql_check_variation = "SELECT * FROM tbl_store_variation WHERE name = '$variation' AND id != $variation_id";
+            $res_check_variation = mysqli_query($conn, $sql_check_variation) or die(mysqli_error());
+            if($res_check_variation->num_rows > 0) {
+                // Variation already exists
+                echo "<script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Variation already Exists.',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '".SITEURL."admin/update-category.php?id=".$category_id."';
+                        }
+                    });
+                </script>";
+                exit;
+            }
+        }
+
         // SQL Query to update the category details in tbl_category
         $sql_category = "UPDATE tbl_category SET
             title = '$title',
@@ -211,8 +249,17 @@
         // Executing Query and Updating Data in tbl_category
         $res_category = mysqli_query($conn, $sql_category) or die(mysqli_error());
 
+        // SQL Query to update the status of all foods under this category in tbl_food
+        $sql_food = "UPDATE tbl_food SET
+            active = '$status'
+            WHERE category_id = $category_id
+        ";
+
+        // Executing Query and Updating Data in tbl_food
+        $res_food = mysqli_query($conn, $sql_food) or die(mysqli_error());
+
         // Check whether the (Query is executed) data is updated or not
-        if($res_category==TRUE)
+        if($res_category==TRUE && $res_food==TRUE)
         {
             // Data Updated
 
@@ -258,26 +305,48 @@
                 {
                     // Failed to Update or Insert Data
                     // Create a Session Variable to Display Message
-                    $_SESSION['add'] = "<div class='error'> Failed to Update Variation. Try Again Later. </div>";
-
-                    // Redirect to Update Category Page
-                    header("location:".SITEURL.'admin/update-category.php?id='.$category_id);
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to Update Variation. Try Again Later.',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '".SITEURL."admin/update-category.php?id='.$category_id';
+                            }
+                        });
+                    </script>";
                     exit();  // Terminate the script execution if a variation fails to update or insert
                 }
             }
 
             // If all variations updated or inserted successfully, redirect to Manage Category Page
-            $_SESSION['add'] = "<div class='success'> Category Updated Successfully. </div>";
-            header("location:".SITEURL.'admin/manage-category.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Category Updated Successfully.',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/manage-category.php';
+                    }
+                });
+            </script>";
         }
         else
         {
             // Failed to Update Data
-            // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error'> Failed to Update Category. Try Again Later. </div>";
-
-            // Redirect to Update Category Page
-            header("location:".SITEURL.'admin/update-category.php?id='.$category_id);
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Update Category. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."admin/update-category.php?id='.$category_id';
+                    }
+                });
+            </script>";
         }
     }
 ?>

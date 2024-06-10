@@ -9,10 +9,10 @@
 
     // Fetch order, customer, and address details
     $stmt = $conn->prepare("
-        SELECT o.*, c.full_name, c.email, c.ph_no, a.address, a.postal_code, a.city, a.state, a.country
+        SELECT o.*, c.full_name, c.email AS customer_email, a.firstname, a.phone, a.address, a.zip, a.city, a.state
         FROM tbl_order o
         JOIN tbl_customer c ON o.customer_id = c.id
-        JOIN tbl_address a ON o.address_id = a.id
+        JOIN tbl_order_address a ON o.address_id = a.id
         WHERE o.id = ?
     ");
     $stmt->bind_param("i", $orderId);
@@ -20,28 +20,32 @@
     $result = $stmt->get_result();
     $order = $result->fetch_assoc();
 
-    $id = $order['id'];
-    $fullName = $order['full_name'];
-    $email = $order['email'];
-    $phNo = $order['ph_no'];
-    $address = $order['address'];
-    $postalCode = $order['postal_code'];
-    $city = $order['city'];
-    $state = $order['state'];
-    $country = $order['country'];
-    $special_instructions = $order['special_instructions'];
+    if ($order) {
+        $id = $order['id'];
+        $fullName = $order['firstname']; // Changed from full_name to firstname
+        $email = $order['customer_email']; // Use customer_email to avoid confusion
+        $phNo = $order['phone']; // Changed from ph_no to phone
+        $address = $order['address'];
+        $zip = $order['zip'];
+        $city = $order['city'];
+        $state = $order['state'];
+        // Assuming special_instructions is part of the tbl_order
+        $special_instructions = $order['special_instructions'];
 
-    // Fetch order items and food details
-    $stmt = $conn->prepare("
-        SELECT oi.*, f.title
-        FROM tbl_order_items oi
-        JOIN tbl_food f ON oi.food_id = f.id
-        WHERE oi.order_id = ?
-    ");
-    $stmt->bind_param("i", $orderId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $orderItems = $result->fetch_all(MYSQLI_ASSOC);
+        // Fetch order items and food details
+        $stmt = $conn->prepare("
+            SELECT oi.*, f.title
+            FROM tbl_order_items oi
+            JOIN tbl_food f ON oi.food_id = f.id
+            WHERE oi.order_id = ?
+        ");
+        $stmt->bind_param("i", $orderId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orderItems = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        echo "Order not found!";
+    }
 ?>
 
 <section class="home">
@@ -76,7 +80,7 @@
 
                 <div class="input-box">
                     <span class="details readonly-color">Postal Code</span>
-                    <input class="readonly-color" type="text" name="title" value="<?php echo $postalCode ?>" readonly>
+                    <input class="readonly-color" type="text" name="title" value="<?php echo $zip ?>" readonly>
                 </div>
 
                 <div class="input-box">
@@ -87,11 +91,6 @@
                 <div class="input-box">
                     <span class="details readonly-color">State</span>
                     <input class="readonly-color" type="text" name="title" value="<?php echo $state ?>" readonly>
-                </div>
-
-                <div class="input-box">
-                    <span class="details readonly-color">Country</span>
-                    <input class="readonly-color" type="text" name="title" value="<?php echo $country ?>" readonly>
                 </div>
             </div>
         </div>

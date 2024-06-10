@@ -1,0 +1,85 @@
+.selector {
+    display: flex;
+    flex-direction: row;
+}
+
+.group {
+    margin-bottom: 20px;
+}
+
+.title {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.options {
+    display: flex;
+}
+
+.option {
+    padding: 10px;
+    border: 1px solid #555;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.option.active {
+    border: 1px solid #ff4500;
+    background-color: #ff4500;
+}
+
+.option.disabled {
+    border: 1px solid #555;
+    background-color: #555;
+    cursor: not-allowed;
+    color: #888;
+}
+
+button {
+    background-color: white;
+    color: black; /* Set the text color to black or any color you prefer */
+}
+
+.option-none {
+    font-size: 15px;
+    color: #000;
+    border: 1px solid #000;
+    width: 25%;
+    height: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    background: #E4E4E4;
+}
+
+.notification {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 20px;
+    z-index: 1000;
+    text-align: center;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.close-notification {
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
