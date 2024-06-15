@@ -1,5 +1,6 @@
 <?php 
     include('partials/menu.php'); 
+    
     $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
 ?>
 
@@ -87,7 +88,7 @@
         <div class="title" style="padding-top: 15px; margin-left: 5.5%;">
             <h1>Cart</h1>
         </div>
-        <div style="display: flex; flex-direction: row; gap: 25px; width: 89%; padding-bottom: 5%; margin: auto;">
+        <div style="display: flex; flex-direction: row; gap: 25px; width: 89%; padding-bottom: 5%; margin: auto; align-items: flex-start;">
             <div class="basket">
                 <div class="basket-labels">
                     <ul>
@@ -103,16 +104,22 @@
                     $total = 0;
 
                     if ($user_id !== "") {
-                        $sql = "SELECT tbl_cart_items.id as cart_items_id, tbl_cart_items.quantity as cart_quantity, tbl_cart_items.size as cart_size, tbl_food.title, tbl_food.normal_price, tbl_food.large_price, tbl_food_variation.name as variation_name
+                        $sql = "SELECT tbl_cart_items.id as cart_items_id, tbl_cart_items.quantity as cart_quantity, tbl_cart_items.size as cart_size, 
+                                    tbl_food.title, tbl_food.normal_price, tbl_food.large_price, tbl_food.active, tbl_food.image_name,
+                                    tbl_food_variation.name as variation_name
                                 FROM tbl_cart_items
                                 INNER JOIN tbl_food ON tbl_cart_items.food_id = tbl_food.id
                                 LEFT JOIN tbl_food_variation ON tbl_cart_items.variation = tbl_food_variation.id
                                 WHERE tbl_cart_items.customer_id = $user_id";
 
                         $result = $conn->query($sql);
+                        $inactive_foods = []; // Array to hold inactive food items
                         if ($result->num_rows > 0) {
                             $count = 1;
                             while ($row = $result->fetch_assoc()) {
+                                if ($row['active'] == 'No') {
+                                    $inactive_foods[] = $row; // Add inactive food items to the array
+                                }
                                 $price = $row['cart_size'] == 'Large' ? $row['large_price'] : $row['normal_price'];
                                 $subtotal = $price * $row['cart_quantity'];
                                 $total += $subtotal;
@@ -146,9 +153,15 @@
                             }
                         } else {
                             ?>
-                            <div class="item" style="width: 100%; margin-left: 10%;">
+                            <div class="item" style="width: 100%; ">
                                 <div class="product-details">
-                                    <h2 style="font-size: 60px;">Cart Empty</h2>
+                                    <?php if (empty($total)) { ?>
+                                        <div style="width: 100%; text-align: center; margin-top: 30px; ">
+                                            <h2 style="font-size: 60px;">Your cart is empty</h2>
+                                        </div>
+                                    <?php } else { ?>
+                                        <h2 style="font-size: 60px;">Cart Empty</h2>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <?php
@@ -177,7 +190,7 @@
 
             <?php if ($user_id !== ""): ?>
                 <div class="summary" style="width: 25%; height: 35%;">
-                    <div class="summary-total-items"><span class="total-items"></span>Payment</div>
+                    <div class="summary-total-items" style="font-size: 2rem;"><span class="total-items"></span>Summary</div>
 
                     <div class="shopping-option-title">Shopping Option</div>
                     <div class="shopping-options">
@@ -187,42 +200,26 @@
                         </div>
                     </div>
 
-                    <div class="payment-method-title">Payment Method</div>
-                    <div class="payment-methods">
-                        <div class="payment-method">
-                            <div class="payment-method-image">
-                                <img src="img/creditcard.png" alt="Bank Payment">
-                            </div>
-                            <div class="payment-method-name">
-                                <input type="radio" name="payment" value="bank">
-                                Credit/Debit Card
-                            </div>
-                        </div>
-
-                        <div class="payment-method">
-                            <div class="payment-method-image">
-                                <img src="img/cod.png" alt="E-Wallet Payment">
-                            </div>
-                            <div class="payment-method-name">
-                                <input type="radio" name="payment" value="cod">
-                                Cash on delivery (COD)
-                            </div>
-                        </div>
+                    <div class="special-instructions-title">Special Instructions</div>
+                    <div class="special-instructions">
+                        <textarea name="special_instructions" maxlength="250" style="width: 100%; height: 100px; overflow: auto;"></textarea>
                     </div>
 
-                    <div>
-                        <div class="delivery_title">
+                    <div style="display:flex; width: 100%;padding-top: 40px;">
+                        <div class="delivery_title" style="width: 50%;">
                             Delivery Fee
                         </div>
-                        <div class="delivery_fee">
+                        <div class="delivery_fee" style="text-align: center; width:50%;">
                             RM <?php echo $delivery_price; ?>
                         </div>
                     </div>
 
-                    <div class="summary-total">
-                        <div class="total-title">Total</div>
-                        <div class="total-value final-value" id="basket-total"><?php echo number_format($total, 2, '.', ''); ?></div>
+                    <div class="summary-total" style="padding-top: 20px;">
+                        <div class="total-title" style="width: 50%;">Total</div>
+                        <div class="total-value final-value" id="basket-total" style="width: 50%; text-align: center;"><?php echo number_format($total, 2, '.', ''); ?></div>
                     </div>
+
+                    <br> 
 
                     <div class="summary-checkout">
                         <button class="checkout-cta" style="background-color: rgb(106, 212, 125);border-radius: 18px; cursor: pointer;" onclick="redirectToCheckout(<?php echo $minimum_cart_price; ?>, '<?php echo $checkout_start_time; ?>', '<?php echo $checkout_end_time; ?>')">Checkout</button>
@@ -240,8 +237,11 @@
 
     <script>
         // Notification Functions
-        function showNotification(message) {
-            document.getElementById('notification-message').textContent = message;
+        function showNotification(message, imageName) {
+            document.getElementById('notification-message').innerHTML = message;
+            if (imageName) {
+                document.getElementById('notification-message').innerHTML += `<br><img src="img/${imageName}" alt="Food Image" style="width: 100px; height: 100px; display: block; margin-top: 10px;">`;
+            }
             document.querySelector('.overlay').style.display = 'block';
             document.querySelector('.notification').style.display = 'block';
         }
@@ -251,8 +251,19 @@
             document.querySelector('.notification').style.display = 'none';
         }
 
-        document.querySelector('.close-notification').addEventListener('click', hideNotification);
+        document.querySelector('.close-notification').addEventListener('click', function() {
+                document.querySelector('.overlay').style.display = 'none';
+                document.querySelector('.notification').style.display = 'none';
+        });
         document.querySelector('.overlay').addEventListener('click', hideNotification);
+
+        <?php
+        if (!empty($inactive_foods)) {
+            foreach ($inactive_foods as $food) {
+                echo "showNotification('The item \"{$food['title']}\" is currently unavailable.', '{$food['image_name']}');";
+            }
+        }
+        ?>
 
         function updateQuantity(cart_items_id, change) {
             var quantityField = document.querySelector('.quantity-field[data-cart-id="' + cart_items_id + '"]');
@@ -295,7 +306,7 @@
         
         function updateTotalPrice() {
             var total = 0;
-            var delivery_price = 5.00; // Set your delivery price here
+            var delivery_price = <?php echo $delivery_price; ?>;
             var subtotalElements = document.querySelectorAll('.subtotal');
             subtotalElements.forEach(function(subtotalElement) {
                 var subtotal = parseFloat(subtotalElement.getAttribute('data-subtotal'));
@@ -305,6 +316,29 @@
             });
             total += delivery_price; // Add the delivery price to the total
             document.getElementById('basket-total').textContent = total.toFixed(2);
+
+            checkIfCartIsEmpty();
+        }
+
+        function checkIfCartIsEmpty() {
+            var basketProducts = document.querySelectorAll('.basket-product');
+            if (basketProducts.length === 0) {
+                document.querySelector('.basket').innerHTML = `
+                    
+                    <div class="basket-labels">
+                        <ul>
+                            <li class="food-checkbox">No.</li>
+                            <li class="item item-heading">Item</li>
+                            <li class="price">Price</li>
+                            <li class="quantity">Quantity</li>
+                            <li class="subtotal">Subtotal</li>
+                        </ul>
+                    </div>
+                    <div class="item" style="width: 100%; text-align: center; margin-top: 30px;">
+                        <h2 style="font-size: 60px;">Your cart is empty</h2>
+                    </div>
+                `;
+            }
         }
         
 
@@ -344,32 +378,25 @@
                 return;
             }
 
-            if (document.querySelector('input[name="payment"]:checked') === null) {
-                showNotification("Please select a payment method.");
-                return;
-            }
+            var specialInstructions = document.querySelector('textarea[name="special_instructions"]').value.trim();
+            specialInstructions = specialInstructions !== "" ? specialInstructions : null;
 
-            // Perform AJAX request to check recent checkout verifications
+            // Perform AJAX request to save special instructions and redirect
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "check_checkout_verification.php", true);
+            xhr.open("POST", "save_special_instructions.php", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            var paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-                            window.location.href = 'checkout.php?payment=' + paymentMethod;
-                        } else {
-                            showNotification(response.message);
-                        }
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        window.location.href = 'checkout.php?payment=';
                     } else {
-                        showNotification("An error occurred. Please try again.");
+                        showNotification(response.message);
                     }
                 }
             };
 
-            xhr.send("user_id=" + <?php echo $user_id; ?>);
+            xhr.send("special_instructions=" + encodeURIComponent(specialInstructions));
         }
     </script>
 

@@ -72,31 +72,14 @@ ob_start();
                     <li class="nav-item">
                         <a href="index.php" class="nav-link">Home</a>
                         <a href="order.php" class="nav-link">View Orders</a>
+                        <a href="location.php" class="nav-link">Where are we?</a>
+                        <a href=""></a>
                     </li>
                 </ul>
                 <?php
                 $display = (isset($_SESSION['update']) || isset($_SESSION['add'])) ? 'none' : 'inline-block';
                 ?>
                 <img style="display: <?php echo $display; ?>;" src="<?php echo $current_image != "" ? SITEURL."images/Profile/".$current_image : '../images/no_profile_pic.png'; ?>" rel="logo" class="user-pic" onclick="toggleMenu()">
-                <?php
-                    if(isset($_SESSION['update'])) 
-                    {
-                        echo $_SESSION['update'];  
-                        unset($_SESSION['update']);  
-                    }
-
-                    if(isset($_SESSION['add'])) 
-                    {
-                        echo $_SESSION['add'];  
-                        unset($_SESSION['add']);  
-                    }
-
-                    if(isset($_SESSION['user-not-found'])) 
-                    {
-                        echo $_SESSION['user-not-found'];  
-                        unset($_SESSION['user-not-found']);  
-                    }
-                ?>
                 <div class="sub-menu-wrap" id="subMenu">
                     <div class="sub-menu">
                         <div class="user-info">
@@ -115,7 +98,7 @@ ob_start();
                             </form>
                         </a>
 
-                        <a href="#" class="sub-menu-link">
+                        <a href="change-password.php" class="sub-menu-link">
                             <i class='bx bx-lock icon'></i>
                             <p>Change Password</p>
                             <span>></span>

@@ -298,27 +298,9 @@
     ?>
     <section class="home">
         <div class="title">
-            <div class="text">Update Food</div>
+            <div class="text">Update Menu Item</div>
 
             <?php
-                if(isset($_SESSION['upload'])) 
-                {
-                    echo $_SESSION['upload'];  
-                    unset($_SESSION['upload']);  
-                }
-
-                if(isset($_SESSION['update'])) 
-                {
-                    echo $_SESSION['update'];  
-                    unset($_SESSION['update']);  
-                }
-
-                if(isset($_SESSION['failed-remove'])) 
-                {
-                    echo $_SESSION['failed-remove'];  
-                    unset($_SESSION['failed-remove']);  
-                }
-
                 if(isset($_GET['id']))
                 {
                     // Get the id of selected food

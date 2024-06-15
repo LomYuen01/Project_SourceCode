@@ -2,7 +2,15 @@
   include('partials/menu.php');
   $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
 
-  $selected_payment_method = $_GET['payment'];
+$special_instructions = isset($_SESSION['special_instructions']) ? $_SESSION['special_instructions'] : 'No special instructions provided';
+
+if(!$special_instructions || $special_instructions == 'No special_instructions provided') {
+    header("Location: cart.php");
+    exit;
+}
+
+$special_instructions = ($_SESSION['special_instructions'] !== "null" && !empty($_SESSION['special_instructions'])) ? $_SESSION['special_instructions'] : 'No special instructions provided';
+
 
   // Generate a random verification code
   $verification_code = rand(100000, 999999);
@@ -44,18 +52,19 @@
       }
   }
 
-  // Existing code to fetch saved addresses
-  $sql_fetch_addresses = "SELECT * FROM tbl_customer_address WHERE customer_id = $user_id";
-  $result_addresses = $conn->query($sql_fetch_addresses);
-  $saved_addresses = [];
-  if ($result_addresses->num_rows > 0) {
-      while ($row = $result_addresses->fetch_assoc()) {
-          $saved_addresses[] = $row;
-      }
-  }
+    // Existing code to fetch saved addresses
+    $sql_fetch_addresses = "SELECT * FROM tbl_order_address WHERE customer_id = $user_id ORDER BY id DESC LIMIT 3";
+    $result_addresses = $conn->query($sql_fetch_addresses);
+    $saved_addresses = [];
+    if ($result_addresses->num_rows > 0) {
+        while ($row = $result_addresses->fetch_assoc()) {
+            $saved_addresses[] = $row;
+        }
+    }
 
   if (isset($_POST['order'])) {
       $submitted_code = $_SESSION['verification_code'];
+      $special_instructions = ($_SESSION['special_instructions'] !== "null" && !empty($_SESSION['special_instructions'])) ? $_SESSION['special_instructions'] : 'No special instructions provided';
       
       // Fetch the verification details
       $sql_check_verification = "SELECT * FROM tbl_checkout_verification WHERE customer_id = $user_id";
@@ -140,7 +149,7 @@
                   }
               }
               
-              $selected_payment_method = $_GET['payment']; // or $_POST['payment'] if you used a POST request
+              $selected_payment_method = $_GET['payment'];
 
               if (strtolower($selected_payment_method) == 'cod') {
                   $paymethod_id = 1;
@@ -180,11 +189,11 @@
                   }
               }
 
-              // Calculate the total
-              $sql_cart = "SELECT SUM(price * quantity) as total_price FROM tbl_cart_items WHERE customer_id = $user_id";
-              $result_cart = $conn->query($sql_cart);
-              $row_cart = $result_cart->fetch_assoc();
-              $total = $row_cart['total_price'];
+                $current_day = date('l');
+                $sql_limit = "SELECT * FROM tbl_limit WHERE day = '$current_day'";
+                $result_limit = $conn->query($sql_limit);
+                $limit = $result_limit->fetch_assoc();
+                $delivery_price = $limit['delivery_price'];
 
               // Insert into tbl_order
               $sql_order = "INSERT INTO tbl_order SET 
@@ -221,14 +230,15 @@
                           exit;
                       }
 
-                      // Update the food stock
-                      $sql_food_stock = "SELECT * FROM tbl_food WHERE id = $cart_food_id";
-                      $result_food_stock = $conn->query($sql_food_stock);
-                      $food_stock = $result_food_stock->fetch_assoc();
-                      $new_stock = $food_stock['quantity'] - $cart_quantity;
+                        // Update the food stock
+                        $sql_food_stock = "SELECT * FROM tbl_food WHERE id = $cart_food_id";
+                        $result_food_stock = $conn->query($sql_food_stock);
+                        $food_stock = $result_food_stock->fetch_assoc();
+                        $new_stock = $food_stock['quantity'] - $cart_quantity;
 
-                      $sql_update_stock = "UPDATE tbl_food SET quantity = $new_stock WHERE id = $cart_food_id";
-                      $conn->query($sql_update_stock);
+                        $sql_update_stock = "UPDATE tbl_food SET quantity = $new_stock WHERE id = $cart_food_id";
+                        $conn->query($sql_update_stock);
+
                   }
 
                   // Clear the cart items for the user
@@ -366,6 +376,61 @@ span.price {
     margin-bottom: 20px;
   }
 }
+
+        .tab-container{
+           
+            background-color: #fff;
+            margin: 0 auto;
+            color: #000;
+            font-size: 24px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        ul.tab-title{
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+        }
+        ul.tab-title li{
+            list-style: none;
+            line-height: 80px;
+            padding: 0 40px;
+            position: relative;
+            cursor: pointer;
+            transition: all .3s;
+        }
+        ul.tab-title li:hover,
+        ul.tab-title li.active{
+            color: red;
+        }
+        ul.tab-title li::before{
+            content: '';
+            display: block;
+            width: 0;
+            height: 4px;
+            position: absolute;;
+            bottom: -2px;
+            left: 50%;
+            background-color: red;
+            border-radius: 2px;
+            transition: all .3s;
+        }
+        ul.tab-title li:hover:before,
+        ul.tab-title li.active:before{
+            width: 100%;
+            left: 0;
+        }
+        .tab-panel{
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            color: #999;
+        }
+        .tab-panel.show{
+            display: flex;
+        }
+
 </style>
 
 <section class="home">
@@ -411,7 +476,7 @@ span.price {
 
     <!--===== Content =====-->
     <form action="" method="post" style="display: flex; flex-direction: row; width: 89%; padding-top: 15px; margin: auto;">
-        <section class="checkout-home" style="width: 65%;">
+        <section class="checkout-home" style="width: 60%;">
             <h2 style="display: block; font-size: 24px; color: #000; font-weight: 600; margin-top: 20px; margin-bottom: 16px;">Checkout</h2>
             <div class="row" style="width: 100%;">
                 <div class="col-75" style="margin-left: 16px; padding: 0;">
@@ -425,7 +490,7 @@ span.price {
                                         <option value="">Select an address</option>
                                         <?php foreach ($saved_addresses as $address) { ?>
                                             <option value="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                                <?php echo $address['name'] . ' - ' . $address['address']; ?>
+                                                <?php echo $address['firstname'] . ' - ' . $address['address']; ?>
                                             </option>
                                         <?php } ?>
                                     </select>
@@ -469,43 +534,56 @@ span.price {
                         <div class="row">
                             <div class="col-50" style="padding-top: 15px;">
                                 <h3>Payment</h3>
-                                <?php if ($selected_payment_method == 'cod') { ?>
-                                    <p>COD</p>
-                                <?php } else { ?>
-                                <label for="fname" style="margin-top: 6px; margin-bottom: -6px;">Accepted Cards</label>
-                                <div class="icon-container">
-                                    <i class="fa fa-cc-visa" style="color:navy;"></i>
-                                    <i class="fa fa-cc-amex" style="color:blue;"></i>
-                                    <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                                    <i class="fa fa-cc-discover" style="color:orange;"></i>
-                                </div>
-                                <label for="cname">Name</label>
-                                <input type="text" id="cname" name="cardname" placeholder="Hooolely">
-                                <div style="display: block; width: 100%;">
-                                    <label for="ccnum">Credit card number</label>
-                                    <input type="tel" name="credit_card" 
-                                        id="credit_card_number"
-                                        placeholder="Card Number:"
-                                        class="form-control"
-                                        onkeypress='return formats(this,event)'
-                                        onkeyup="return numberValidation(event)">
-                                </div>
-                                
-                                <div style="display: block; width: 100%;">
-                                    <label for="expmonth" style="display: block;">Exp Month</label>
-                                    <input type="text" id="expmonth" name="expmonth" placeholder="September">
-                                </div>
-                                <div class="row">
-                                    <div class="col-50">
-                                        <label for="expyear">Exp Year</label>
-                                        <input type="text" id="expyear" name="expyear" placeholder="2018">
-                                    </div>
-                                    <div class="col-50">
-                                        <label for="cvv">CVV</label>
-                                        <input type="text" id="cvv" name="cvv" placeholder="352">
-                                    </div>  
-                                </div>
-                                <?php } ?>
+
+                                    <div class="tab-container">
+                                        <ul class="tab-title">
+                                            <li class="active">Credit Card</li>
+                                            <li>Cash On Delivery</li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-panel show">
+                                                <div style="display: flex; flex-direction:column;">
+                                                    <label for="fname" style="margin-top: 6px; margin-bottom: -6px;">Accepted Cards</label>
+                                                    <div class="icon-container">
+                                                        <i class="fa fa-cc-visa" style="color:navy;"></i>
+                                                        <i class="fa fa-cc-amex" style="color:blue;"></i>
+                                                        <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                                                        <i class="fa fa-cc-discover" style="color:orange;"></i>
+                                                    </div>
+                                                    <label for="cname">Name</label>
+                                                    <input type="text" id="cname" name="cardname" placeholder="Hooolely">
+                                                    <div style="display: block; width: 100%;">
+                                                        <label for="ccnum">Credit card number</label>
+                                                        <input type="tel" name="credit_card" 
+                                                            id="credit_card_number"
+                                                            placeholder="Card Number:"
+                                                            class="form-control"
+                                                            onkeypress='return formats(this,event)'
+                                                            onkeyup="return numberValidation(event)">
+                                                    </div>
+                                                    
+                                                    <div style="display: block; width: 100%;">
+                                                        <label for="expmonth" style="display: block;">Exp Month</label>
+                                                        <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-50">
+                                                            <label for="expyear">Exp Year</label>
+                                                            <input type="text" id="expyear" name="expyear" placeholder="2018">
+                                                        </div>
+                                                        <div class="col-50">
+                                                            <label for="cvv">CVV</label>
+                                                            <input type="text" id="cvv" name="cvv" placeholder="352">
+                                                        </div>  
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-panel" style="padding: 50px;">
+                                                <p>COD</p>
+                                            </div>
+                                        </div>
+                                    </div>                            
                             </div>
                         </div>
                     </div>
@@ -514,9 +592,9 @@ span.price {
             </div>
         </section>
 
-        <section style="margin-top: 5%; width: 100%;">
-            <div class="basket" style="width: 100%; margin-top: -8px; border: none;">
-                <div class="basket-labels">
+        <section style="margin-top: 5%; width: 40%; display: flex; flex-direction:column;">
+            <div class="basket" style="width: 100%; margin-top: -8px; border: none;  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1); padding: 15px; border-radius: 18px; background-color: #ffffff;" >
+                <div class="basket-labels" style="background-color: #ffffff;">
                     <ul>
                         <li class="food-checkbox">No.</li>
                         <li class="item item-heading">Item</li>
@@ -544,7 +622,7 @@ span.price {
                             $subtotal = $price * $row['cart_quantity'];
                             $total += $subtotal;
                             ?>
-                            <div class="basket-product">
+                            <div class="basket-product" style="background-color: #ffffff;">
                                 <ul>
                                     <li class="food-checkbox"><?php echo $count; ?></li>
                                     <li class="item">
@@ -572,7 +650,7 @@ span.price {
 
                 ?>
 
-                <div class="basket-product basket-product2">
+                <div class="basket-product basket-product2" style="background-color: #ffffff;">
                     <ul>
                         <li class="item" style="width: 90%;">
                             <div class="product-details">
@@ -600,12 +678,33 @@ span.price {
                 }
                 ?>
             </div>
+
+            <div style="margin-top: 50px; box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1); padding: 15px; border-radius: 18px;">
+                <h2 style="font-size: 24px; color: #000; font-weight: 600; margin-top: 20px; margin-bottom: 16px;">Special Instructions</h2>
+                <textarea name="special_instructions" id="special_instructions" cols="30" rows="10" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;"><?php echo $special_instructions; ?></textarea>
+            </div>
         </section>
     </form>
     <div id="timer" style="position: fixed; top: 10%; left: 50%; transform: translateX(-50%); color: green; font-size: 32px;"></div>
 </section>
 
 <script>
+
+    let btns=document.querySelectorAll('.tab-title li')
+    btns.forEach((item,i)=>{
+        item.onclick=function(){
+            let activeBtn=document.querySelector('.tab-title li.active')
+            activeBtn.classList.remove('active')
+            this.classList.add('active')
+
+            //tab 内容
+            let showPanel=document.querySelector('.tab-content .tab-panel.show')
+            showPanel.classList.remove('show')
+            let panels=document.querySelectorAll('.tab-content .tab-panel')
+            panels[i].classList.add('show')
+        }
+    })
+
     let subMenu = document.getElementById("subMenu");
     function toggleMenu(){
         subMenu.classList.toggle("open-menu");
@@ -644,7 +743,7 @@ span.price {
         var select = document.getElementById('saved_addresses');
         var address = JSON.parse(select.value);
         if (address) {
-            document.getElementById('fname').value = address.name;
+            document.getElementById('fname').value = address.firstname;
             document.getElementById('phone').value = address.phone;
             document.getElementById('email').value = address.email || ''; // Assuming email can be part of the address, otherwise remove this line
             document.getElementById('adr').value = address.address;

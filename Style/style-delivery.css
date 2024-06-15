@@ -21,8 +21,8 @@
 
 body {
     min-height: 100vh;
-    background: var(--body-color);
-    transition: var(--tran-05);
+    background: #E4E9F7;
+    transition: all 0.5s ease;
     overflow-x: hidden;
 }
 
@@ -31,8 +31,8 @@ body {
     left: 0;
     height: 100vh;
     width: 100%;
-    background: var(--body-color);
-    transition: var(--tran-05);
+    background: #E4E9F7;
+    transition: all 0.5s ease;
     padding: 25px 0px;
 }
 
@@ -291,7 +291,7 @@ li {
     margin: 10px;
     background: #F6F5FF;
     backdrop-filter: blur(7px);
-    box-shadow: -4px 4px 10px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0.8rem rgba(0,0,0,0.2);
     border-radius: 6px;
 }
 
@@ -306,6 +306,7 @@ li {
 
 .user-info img{
     width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin-right: 15px;
 }
@@ -534,10 +535,14 @@ li {
 .profile-form .button, .button {
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; 
     left: 15px;
     padding-bottom: 10px;
     padding-top: 10px;
+}
+
+.button {
+    justify-content: center;
 }
 
 .profile-details {
@@ -949,7 +954,7 @@ tbody tr {
     background-color: #f3f3f3; /* White */
 }
 
-tbody tr:hover {
+.home tbody tr:hover {
     transition: .2s ease-in-out;
     cursor: pointer;
     background-color: #e9e9fc;

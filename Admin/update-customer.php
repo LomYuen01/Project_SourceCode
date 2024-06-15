@@ -10,18 +10,14 @@
                     $customer_id = $_GET['id'];
                 }
 
-                if (isset($_GET['address_id'])) 
-                {
-                    $address_id = $_GET['address_id'];
-                }
-
                 if(isset($_GET['id'])) {
                     // Get the id of selected customer
                     $id = $_GET['id'];
 
                     // Create the Sql Query to Get the details
-                    $sql = "SELECT a.full_name, a.username, a.password, a.image_name, a.ph_no, a.email , a.status
+                    $sql = "SELECT a.full_name, a.username, a.password, a.image_name, a.ph_no, a.email , a.status, b.address, b.postal_code, b.city, b.state, b.country
                             FROM tbl_customer a 
+                            LEFT JOIN tbl_customer_address b ON a.id = b.customer_id
                             WHERE a.id=$id";
 
                     // Execute the Query
@@ -31,17 +27,18 @@
                         // Check whether the data is available or not
                         $count = mysqli_num_rows($res);
 
-                        if($count==1) {
+                        if($count > 0) {
                             // Get the Details
-                            $row = mysqli_fetch_assoc($res);
-
-                            $full_name = $row['full_name'];
-                            $username = $row['username'];
-                            $password = $row['password'];
-                            $current_image = $row['image_name'];
-                            $ph_no = $row['ph_no'];
-                            $email = $row['email'];
-                            $status = $row['status'];
+                            $i = 1;
+                            while($row = mysqli_fetch_assoc($res)) {
+                                $full_name = $row['full_name'];
+                                $username = $row['username'];
+                                $password = $row['password'];
+                                $current_image = $row['image_name'];
+                                $ph_no = $row['ph_no'];
+                                $email = $row['email'];
+                                $status = $row['status'];
+                            }
                         }
                         else
                         {
@@ -72,7 +69,7 @@
         
         <div class="form-container" style="overflow: visible;">
             <!-- =================================================== Form Section =================================================== -->
-                <form action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
+                <form id="update-customer-form" action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
                     <section class="profile-container">
                         <div class="profile-img">
                             <?php
@@ -123,16 +120,79 @@
                                     </div>
                                 </div>
 
+                                <div class="input-box" style="display: none;">
+                                    <span class="details">IC</span>
+                                    <input type="hidden" id="ic">
+                                </div>
+
                                 <div class="input-box">
                                     <span class="details">Email</span>
-                                    <input type="text" name="email" value="<?php echo $email; ?>" placeholder=" Email" required>
+                                    <input type="text" id="email" name="email" value="<?php echo $email; ?>" placeholder=" Email" required>
                                 </div>
 
                                 <div class="input-box">
                                     <span class="details">Ph No.</span>
-                                    <input type="text" name="ph_no" value="<?php echo $ph_no; ?>" placeholder=" Phone Number" required>
+                                    <input type="text" id="phone" name="ph_no" value="<?php echo $ph_no; ?>" placeholder=" Phone Number" required>
                                 </div>
                             </div>
+
+                            <!-- Address -->
+                            <span class="title-name">Address Details</span>
+                            <?php
+                                // Assuming $id is the customer's ID
+                                $sql_address = "SELECT id, address, postal_code, city, state, country FROM tbl_customer_address WHERE customer_id=$id";
+                                $res_address = mysqli_query($conn, $sql_address);
+
+                                if($res_address==TRUE) {
+                                    $count_address = mysqli_num_rows($res_address);
+
+                                    if($count_address > 0) {
+                                        $i = 1;
+                                        while($row_address = mysqli_fetch_assoc($res_address)) {
+                                            $address_id = $row_address['id'];
+                                            $address = $row_address['address'];
+                                            $postal_code = $row_address['postal_code'];
+                                            $city = $row_address['city'];
+                                            $state = $row_address['state'];
+                                            $country = $row_address['country'];
+
+                                            ?>
+                                            <div class="half-width">
+                                                <input type="hidden" name="address_id[]" value="<?php echo $address_id; ?>">
+
+                                                <div class="input-box">
+                                                    <span class="details">Address #<?php echo $i; ?></span>
+                                                    <input type="text" name="address[]" value="<?php echo $address; ?>" required>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">Postal Code</span>
+                                                    <input type="text" name="postal_code[]" value="<?php echo $postal_code; ?>" placeholder=" Postal Code" required>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">City</span>
+                                                    <input type="text" name="city[]" value="<?php echo $city; ?>" placeholder=" City" required>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">State</span>
+                                                    <input type="text" name="state[]" value="<?php echo $state; ?>" placeholder=" State" required>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">Country</span>
+                                                    <input type="text" name="country[]" value="<?php echo $country; ?>" placeholder=" Country" required>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            $i++;
+                                        }
+                                    } else {
+                                        echo "<div class='error' style='margin-left: 15px; margin-bottom: 25px;'>No address found for this customer.</div>";
+                                    }
+                                }
+                            ?>
 
                             <!-- Position & Status -->
                             <span class="title-name">Account Status</span>
@@ -143,7 +203,7 @@
                                         <select name="status" style="font-size: 14px; font-weight: 500;">
                                             <option value="Active" <?php echo $status == 'Active' ? 'selected' : ''; ?>>Active</option>
                                             <option value="Inactive" <?php echo $status == 'Inactive' ? 'selected' : ''; ?>>Inactive</option>
-                                        </select>
+                                        </select> 
                                     </div>
                                 </div>
                             </div>
@@ -159,36 +219,52 @@
             <!-- =================================================== Form Section =================================================== -->
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        const fileInput = document.getElementById('image');
-        const errorMessage = document.getElementById('errorMessage');
-        const icon = document.getElementById('image_icon');
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateCustomerForm = document.querySelector('#update-customer-form');
 
-        icon.addEventListener('click', () => {
-        fileInput.click();
-        });
+            updateCustomerForm.addEventListener('submit', (event) => {
+                event.preventDefault();
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            const image = new Image();
+                // Send the form data to the server using AJAX
+                const formData = new FormData(updateCustomerForm);
 
-            image.onload = function() {
-                if (this.width !== this.height) {
-                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
-                } else {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('profileImage').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
+                // Add the submit field manually
+                formData.append('submit', 'Update Customer');
 
-            image.src = URL.createObjectURL(file);
+                fetch('Process/process-update-customer.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.text();  // Change this line
+                })
+                .then(text => {
+                    console.log(text);  // Log the raw response text
+                    const data = JSON.parse(text);  // Parse the text as JSON
+
+                    if (data.success) {
+                        Swal.fire('Success!', data.message, 'success').then(() => {
+                            window.location.href = 'manage-customer.php';
+                        });
+                    } else {
+                        Swal.fire('Error!', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error!', error.message, 'error');
+                });
+            });
         });
     </script>
-    <script src="../Style/show-hide.js"></script>
-<?php include('Partials/footer.php'); ?>
+<script src="../Style/input-validate.js"></script>
+<script src="../Style/show-hide.js"></script>
+<script src="../Style/sidebar.js"></script>
 
 <?php
     if(isset($_POST['submit']))

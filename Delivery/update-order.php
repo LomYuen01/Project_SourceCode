@@ -53,6 +53,7 @@
 
 <!DOCTYPE html>
     <head>
+        <title>Update Order Status</title>
         <!-----===============| CSS |===============----->
         <link rel="stylesheet" href="../Style/style-delivery.css">
     </head>
@@ -75,12 +76,8 @@
                         <div class="status" style="margin: 0; margin-top: 8px;">
                             <span class="details">Status</span>
                             <select name="status" style="font-size: 14px; font-weight: 500;">
-                                <option value="pending" <?php echo $order_status == 'pending' ? 'selected' : ''; ?>>Pending</option>
-                                <option value="preparing" <?php echo $order_status == 'preparing' ? 'selected' : ''; ?>>Preparing</option>
                                 <option value="out-for-delivery" <?php echo $order_status == 'out-for-delivery' ? 'selected' : ''; ?>>Out for delivery</option>
                                 <option value="delivered" <?php echo $order_status == 'delivered' ? 'selected' : ''; ?>>Delivered</option>
-                                <option value="cancelled" <?php echo $order_status == 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                                <option value="on-hold" <?php echo $order_status == 'on-hold' ? 'selected' : ''; ?>>On hold</option>
                             </select>
                         </div>
                     </div>
@@ -93,6 +90,8 @@
         </section>
     </body>
 </html>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php
     if(isset($_POST['submit']))
@@ -112,18 +111,31 @@
         // Check whether the (Query is executed) data is updated or not
         if($res_order==TRUE)
         {
-            // Data Updated
-            $_SESSION['add'] = "<div class='success success-text-shadow' style='color: white;'> Order Status Updated Successfully. </div>";
-            header("location:".SITEURL.'delivery/order.php');
+            echo "<script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Order Status Updated Successfully.',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."delivery/order.php';
+                    }
+                });
+            </script>";
         }
         else
         {
-            // Failed to Update Data
-            // Create a Session Variable to Display Message
-            $_SESSION['add'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update Order Status. Try Again Later. </div>";
-
-            // Redirect to Update Order Page
-            header("location:".SITEURL.'delivery/order.php?id='.$order_id);
+            echo "<script>
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to Update Order Status. Try Again Later.',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '".SITEURL."delivery/order.php?id=".$order_id."';
+                    }
+                });
+            </script>";
         }
     }
 ?>

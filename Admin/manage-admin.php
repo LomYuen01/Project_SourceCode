@@ -10,7 +10,6 @@
         <div class="table">
             <!-- =================================================== Header Section =================================================== -->
             <section class="table-header">
-                
                 <div class="dropdown-toggle-column">
                     <div class="icon-border">
                         <i class='bx bx-cog select-icon'></i>

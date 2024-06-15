@@ -91,8 +91,8 @@
                                             <td><div class="<?php echo strtolower($status); ?>"><?php echo $status; ?></div></td>
                                             <td>RM <?php echo number_format($total, 2); ?></td>
                                             <td class="buttons" style="padding-right: 4rem;">
-                                                <a href="<?php echo SITEURL; ?>admin/update-order.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update Order"><i class='bx bxs-edit'></i></a>
                                                 <a href="<?php echo SITEURL; ?>admin/view-order.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-primary" title="View Order"><i class='bx bx-search-alt'></i></a>
+                                                <a href="<?php echo SITEURL; ?>admin/update-order.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary" title="Update Order"><i class='bx bxs-edit'></i></a>
                                             </td>
                                         </tr>
                                     <?php

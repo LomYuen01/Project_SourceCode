@@ -5,7 +5,7 @@
 
     <section class="home">
         <div class="title">
-            <div class="text">Manage Food</div>
+            <div class="text">Manage Menu Items</div>
         </div>
 
         <!-- Break --><br><!-- Line -->

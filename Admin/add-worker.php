@@ -9,13 +9,13 @@
         
         <div class="form-container">
             <!-- =================================================== Form Section =================================================== -->
-                <form action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
+                <form id="add-worker-form" action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
                     <section class="profile-container">
                         <div class="profile-img">
                             <img src="../images/no_profile_pic.png" id="profileImage">
                             <div class="icon-border">
                                 <i class='bx bx-camera icon' title="Choose an Image" id="image_icon"></i>
-                                <input type="file" id="fileInput" name="image" style="display: none;">
+                                <input type="file" id="image" name="image" style="display: none;">
                             </div>
                         </div>
                         <div class="user-details">
@@ -34,19 +34,26 @@
                                     <input type="text" name="full_name" value="" placeholder=" Full Name" required>
                                 </div>
 
+                                <div class="input-box password" style="display: none;">
+                                    <span class="details">Password</span>
+                                    <div class="password-container">
+                                        <input type="hidden" id="password" name="password" placeholder=" Password">
+                                    </div>
+                                </div>
+
                                 <div class="input-box">
                                     <span class="details">IC</span>
-                                    <input type="text" name="IC" value="" placeholder=" IC" required>
+                                    <input type="text" id="ic" name="IC" value="" placeholder=" IC" required>
                                 </div>
 
                                 <div class="input-box">
                                     <span class="details">Email</span>
-                                    <input type="text" name="email" value="" placeholder=" Email" required>
+                                    <input type="email" id="email" name="email" value="" placeholder=" Email" required>
                                 </div>
 
                                 <div class="input-box">
                                     <span class="details">Ph No.</span>
-                                    <input type="text" name="ph_no" value="" placeholder=" Phone Number" required>
+                                    <input type="text" id="phone" name="ph_no" value="" placeholder=" Phone Number" required>
                                 </div>
                             </div>
 
@@ -107,215 +114,49 @@
             <!-- =================================================== Form Section =================================================== -->
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const errorMessage = document.getElementById('errorMessage');
-        const icon = document.getElementById('image_icon');
+        document.addEventListener('DOMContentLoaded', () => {
+            const addWorkerForm = document.querySelector('#add-worker-form');
 
-        icon.addEventListener('click', () => {
-        fileInput.click();
-        });
+            addWorkerForm.addEventListener('submit', (event) => {
+                event.preventDefault();
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            const image = new Image();
+                // Send the form data to the server using AJAX
+                const formData = new FormData(addWorkerForm);
 
-            image.onload = function() {
-                if (this.width !== this.height) {
-                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
-                } else {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('profileImage').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
+                // Add the submit field manually
+                formData.append('submit', 'Add Worker');
 
-            image.src = URL.createObjectURL(file);
+                fetch('Process/process-add-worker.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.text(); 
+                })
+                .then(text => {
+                    console.log(text);  // Log the raw response text
+                    const data = JSON.parse(text);  // Parse the text as JSON
+
+                    if (data.success) {
+                        Swal.fire('Success!', data.message, 'success').then(() => {
+                            window.location.href = 'manage-worker.php';
+                        });
+                    } else {
+                        Swal.fire('Error!', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error!', error.message, 'error');
+                });
+            });
         });
     </script>
-    <script src="../Style/show-hide.js"></script>
-<?php include('Partials/footer.php'); ?>
-
-<?php
-    if(isset($_POST['submit']))
-    {
-        // Get the data from Form
-        $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-        $IC = mysqli_real_escape_string($conn, $_POST['IC']);
-        $ph_no = mysqli_real_escape_string($conn, $_POST['ph_no']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $position = mysqli_real_escape_string($conn, $_POST['position']);
-        $status = mysqli_real_escape_string($conn, $_POST['status']);
-
-        // Get the address details from Form
-        $address = mysqli_real_escape_string($conn, $_POST['address']);
-        $postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
-        $city = mysqli_real_escape_string($conn, $_POST['city']);
-        $state = mysqli_real_escape_string($conn, $_POST['state']);
-        $country = mysqli_real_escape_string($conn, $_POST['country']);
-
-        // Check if the full_name, username, IC, ph_no, email already exists
-        $fields_to_check = ['full_name', 'username', 'IC', 'ph_no', 'email'];
-        foreach($fields_to_check as $field) {
-            $value = $$field;  // get the value of the variable with the name contained in $field
-            $sql_check = "SELECT * FROM tbl_worker WHERE $field = '$value'";
-            $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
-            if($res_check->num_rows > 0) {
-                // Field value already exists
-                echo "<script>
-                    Swal.fire({
-                        title: 'Error!',
-                        text: '$field already Exists.',
-                        icon: 'error'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."admin/add-worker.php';
-                        }
-                    });
-                </script>";
-                exit;
-            }
-        }
-
-        // Upload the Image if selected
-        if(isset($_FILES['image']['name']))
-        {
-            // Get the details of the selected image
-            $image_name = $_FILES['image']['name'];
-
-            // Check whether the image is selected or not and upload image only if selected
-            if($image_name != "")
-            {
-                // Image is selected
-                // A. Rename the image
-                $ext = pathinfo($image_name, PATHINFO_EXTENSION);
-                $base_name = basename($image_name, ".".$ext);
-
-                // Start with no suffix
-                $suffix = '';
-                $index = 1;
-
-                // While a file with the current name exists, increment the suffix
-                while(file_exists("../images/Profile/" . $base_name . $suffix . '.' . $ext)) 
-                {
-                    $suffix = '(' . $index++ . ')';
-                }
-
-                // Set the image name to the base name plus the suffix
-                $image_name = $base_name . $suffix . '.' . $ext;
-
-                $source_path = $_FILES['image']['tmp_name'];  
-                $destination_path = "../images/Profile/".$image_name;
-
-                // B. Upload the image
-                $upload = move_uploaded_file($source_path, $destination_path);
-
-                // Check whether the image is uploaded or not
-                // If its not, we will stop the process and redirect with error message
-                if($upload == FALSE)
-                {
-                    echo "<script>
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Failed to Upload Image.',
-                            icon: 'error'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '".SITEURL."admin/add-worker.php';
-                            }
-                        });
-                    </script>";
-                    exit; 
-                }
-            }
-        }
-        else
-        {
-            $image_name = "";  // Default Value
-        }
-
-        // SQL Query to save the address details into tbl_address
-        $sql_address = "INSERT INTO tbl_address SET
-            address = '$address',
-            postal_code = '$postal_code',
-            city = '$city',
-            state = '$state',
-            country = '$country'
-        ";
-
-        // Executing Query and Saving Data into tbl_address
-        $res_address = mysqli_query($conn, $sql_address) or die(mysqli_error());
-
-        // Check whether the (Query is executed) data is inserted or not
-        if($res_address==TRUE)
-        {
-            // Data Inserted
-            // Get the ID of the inserted address row
-            $address_id = mysqli_insert_id($conn);
-
-            // SQL Query to save the worker details into tbl_worker
-            $sql_worker = "INSERT INTO tbl_worker SET
-                full_name = '$full_name',
-                IC = '$IC',
-                ph_no = '$ph_no',
-                email = '$email',
-                address_id = '$address_id',
-                position = '$position',
-                status = '$status',
-                image_name = '$image_name'
-            ";
-
-            // Executing Query and Saving Data into tbl_worker
-            $res_worker = mysqli_query($conn, $sql_worker) or die(mysqli_error());
-
-            // Check whether the (Query is executed) data is inserted or not and display appropriate message
-            if($res_worker==TRUE)
-            {
-                // Data Inserted
-                echo "<script>
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Worker Added Successfully.',
-                        icon: 'success'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."Admin/manage-worker.php';
-                        }
-                    });
-                </script>";
-            }
-            else
-            {
-                // Failed to Insert Data
-                echo "<script>
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Failed to Add Worker. Try Again Later.',
-                        icon: 'error'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."Admin/add-worker.php';
-                        }
-                    });
-                </script>";
-            }
-        }
-        else
-        {
-            // Failed to Insert Data
-            echo "<script>
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to Add Worker. Try Again Later.',
-                    icon: 'error'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '".SITEURL."Admin/add-worker.php';
-                    }
-                });
-            </script>";
-        }
-    }
-?>
+<script src="../Style/input-validate.js"></script>
+<script src="../Style/show-hide.js"></script>
+<script src="../Style/sidebar.js"></script>

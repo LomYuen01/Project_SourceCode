@@ -180,12 +180,16 @@
                         </tr>
                         <?php
                         // Fetch order items
-                        $sql_items = "SELECT tbl_order_items.*, tbl_food.title AS food_title 
+                        
+                        $sql_items = "SELECT tbl_order_items.*, tbl_food.title AS food_title, tbl_order.delivery_fee 
                                       FROM tbl_order_items 
                                       INNER JOIN tbl_food ON tbl_order_items.food_id = tbl_food.id 
+                                      INNER JOIN tbl_order ON tbl_order_items.order_id = tbl_order.id
                                       WHERE tbl_order_items.order_id = $set_order_id";
 
                         $res_items = mysqli_query($conn, $sql_items);
+                        $total = 0;
+                        
 
                         $sn = 1; // Serial number
                         while($row_items = mysqli_fetch_assoc($res_items)){
@@ -194,9 +198,12 @@
                             if ($item_size != "Regular" && $item_size != "Large") {
                                 $item_size = "Regular";
                             }
+                            $delivery_fee = $row_items['delivery_fee'];
                             $item_price = $row_items['price'];
                             $item_quantity = $row_items['quantity'];
                             $item_total = $item_price * $item_quantity;
+
+                            
 
                             echo '<tr style="border: 0px !important;padding:15px;">';
                             echo '<td style="border: 0px !important;padding:15px;">' . $sn++ . '</td>';
@@ -206,18 +213,33 @@
                             echo '<td style="border: 0px !important;padding:15px;text-align: center;">' . $item_quantity . '</td>';
                             echo '<td style="border: 0px !important;padding:15px;text-align: center;">' . $item_total . '</td>';
                             echo '</tr>';
+                            $total += $item_total;
                         }
                         ?>
                         <tr>
-                            <td colspan="5" style="text-align: right; color:#8b562a; border: 0px !important;">Total</td>
+                            <td colspan="5" style="text-align: right; color:#8b562a; border: 0px !important;">Subtotal</td>
                             <td style="color:#8b562a; border: 0px !important;text-align: center; padding:15px;">
                                 <?php
-                                // Calculate total
-                                $sql_subtotal = "SELECT SUM(price * quantity) AS Total FROM tbl_order_items WHERE order_id = $set_order_id";
-                                $res_subtotal = mysqli_query($conn, $sql_subtotal);
-                                $row_subtotal = mysqli_fetch_assoc($res_subtotal);
-                                $subtotal = $row_subtotal['Total'];
-                                echo $subtotal;
+                                
+                                echo number_format($total, 2);
+                                
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="text-align: right; color:#8b562a; border: 0px !important;">Delivery Fee</td>
+                            <td style="color:#8b562a; border: 0px !important;text-align: center; padding:15px;">
+                                <?php
+                                echo number_format($delivery_fee,2);
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="border: 0px;">    </td>
+                            <td colspan="1" style="text-align: right; color:#8b562a; border-top: 1px solid #8b562a; border-bottom: 1px solid #8b562a; font-weight: bold; border-left: 0; border-right: 0;">Total</td>
+                            <td style="color:#8b562a; border-top: 1px solid #8b562a; border-bottom: 1px solid #8b562a; border-left: 0; border-right: 0; text-align: center; padding:15px; font-weight: bold;">
+                                <?php
+                                echo $total + $delivery_fee;
                                 ?>
                             </td>
                         </tr>

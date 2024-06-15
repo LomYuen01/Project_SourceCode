@@ -33,6 +33,7 @@
                         </tr>
                     </table>
                 </div>
+                
                 <div class="col">
                     <h3>Contact Info <div class="underline"><span></span></div></h3>
                     <p>BG-8, Jalan Tun Perak</p>
@@ -41,14 +42,7 @@
                     <p class="email-id">RenoKitchen@gmail.com</p>
                     <h4>+60 14-925-9139</h4>
                 </div>
-                <div class="col">
-                    <h3>Links <div class="underline"><span></span></div></h3>
-                    <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="">About Us</a></li>
-                        <li><a href="">Contact Us</a></li>
-                    </ul>
-                </div>
+
                 <div class="col">
                     <h3>Newsletter <div class="underline"><span></span></div></h3>
                     <form>
@@ -77,6 +71,7 @@
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="../Style/search.js"></script>
     </body>
 </html>

@@ -9,6 +9,6 @@
         $_SESSION['no-login-message'] = "<div class='error text-center'>Please Login to Access Delivery Panel.</div>";
         
         // Redirect to Login Page
-        header('location:'.SITEURL.'delivery/login.php');
+        header('location:'.SITEURL.'delivery/Email/login.php');
     }
 ?>

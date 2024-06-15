@@ -28,10 +28,6 @@
             border-radius: 4px;
         }
 
-        .option.active {
-            border: 1px solid #ff4500;
-            background-color: #ff4500;
-        }
 
         .option.disabled {
             border: 1px solid #555;
@@ -197,16 +193,17 @@
                                                 <h4><?php echo $food_title; ?></h4>
                                                 <p class="food-detail" style="max-height: 160px; overflow-y: auto; scrollbar-width: none;"><?php echo $food_description; ?></p>
                                                 <p>Variation</p>
+                                                <div class="options" data-group="variation">
                                                 <?php
                                                     $sql_variation = "SELECT name, active FROM tbl_food_variation WHERE food_id = $food_id AND active = 'Yes'";
                                                     $result_variation = $conn->query($sql_variation);
                                                     if ($result_variation->num_rows > 0) {
                                                     ?>
                                                         <div>
-                                                            <select name="<?php echo $food_id; ?>" style="border: 1px solid; border-radius: 18px; padding: 5px; cursor: pointer;">
+                                                            <select name="variation" style="border: 1px solid; border-radius: 18px; padding: 5px; cursor: pointer;">
                                                                 <?php
                                                                 while ($row = $result_variation->fetch_assoc()) {
-                                                                    echo "<option value='" . $row['name'] . "'>" . $row['name'] . "</option>";
+                                                                    echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
                                                                 }
                                                                 ?>
                                                             </select>
@@ -216,6 +213,7 @@
                                                         echo "<option class='option-none'>None</option>";
                                                     }
                                                 ?>
+                                                </div>
                                                 <p class="food-price"></p>
                                                 <div class="selector">
                                                     <div class="group">
@@ -227,15 +225,19 @@
                                                             if ($result_price->num_rows > 0) {
                                                                 $row_price = $result_price->fetch_assoc();
                                                                 echo "<div class='selector'>";
-                                                                if ($row_price['normal_active'] == 'No') {
-                                                                    echo "<button style='display: block; position: relative; margin-bottom: 12px; cursor: pointer; font-size: 0.8em; user-select: none;' class='option' data-price='".$row_price['normal_price']."'>Regular: $".$row_price['normal_price']."</button>";
+                                                               if ($row_price['normal_price'] != 0.00) {
+                                                                    echo "<button type='button' style='display: block; position: relative;  margin-bottom: 12px; cursor: pointer; font-size: 0.8em; user-select: none;' class='option' data-price='" . $row_price['normal_price'] . "' onclick='selectSize(\"Normal\", this)'>Normal: $" . $row_price['normal_price'] . "</button>";
+                                                                    $selectedSize = "Regular";
                                                                 }
-                                                                if ($row_price['large_active'] == 'No') {
-                                                                    echo "<button style='display: block; position: relative; margin-bottom: 12px; cursor: pointer; font-size: 0.8em; user-select: none;' class='option' data-price='".$row_price['large_price']."'>Large: $".$row_price['large_price']."</button>";
+                                                                if ($row_price['large_price'] != 0.00) {
+                                                                    echo "<button type='button' style='display: block; position: relative; margin-bottom: 12px; cursor: pointer; font-size: 0.8em; user-select: none;' class='option' data-price='" . $row_price['large_price'] . "' onclick='selectSize(\"Large\", this)'>Large: $" . $row_price['large_price'] . "</button>";
+                                                                    $selectedSize = "Large";
                                                                 }
                                                                 echo "</div>";
                                                             }
                                                             ?>
+                                                            <input type="hidden" id="selectedSize" name="size" value="<?php echo $selectedSize; ?>">
+                                                                    <input type="hidden" id="selectedPrice" name="price">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -253,6 +255,7 @@
                                                     </div>
                                                 <?php } ?>
                                                 <div>
+                                                    <input type="hidden" name="food_id" value="<?php echo $food_id; ?>">
                                                     <button class="btn btn-primary add-cart-btn" data-food-id="<?php echo $food_id; ?>" style="display: block; margin: auto; border: 1px solid; border-radius: 18px; color: var(--sk-body-link-color, #06c); text-align: center; font-size: 1em;">Add to Cart</button>
                                                 </div>
                                             </div>
@@ -275,6 +278,20 @@
     </div>
 
     <script>
+        function selectSize(size, element) {
+            // Update the value of the hidden input field for size
+            document.getElementById('selectedSize').value = size;
+
+            // Update the value of the hidden input field for price
+            document.getElementById('selectedPrice').value = element.getAttribute('data-price');
+
+            // Change the color of the selected button and reset the color of the other button
+            var buttons = document.getElementsByClassName('option');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].style.backgroundColor = buttons[i] === element ? '#ddd' : '#fff';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const options = document.querySelectorAll('.option');
             const addCartButtons = document.querySelectorAll('.add-cart-btn');

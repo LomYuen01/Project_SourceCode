@@ -6,6 +6,6 @@
     session_destroy(); //Unset $_SESSION['user'];
 
     // 2. Redirect to Login Page
-    header('location:'.SITEURL.'delivery/login.php')
+    header('location:'.SITEURL.'delivery/Email/login.php')
 
 ?>

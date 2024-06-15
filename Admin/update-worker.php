@@ -79,7 +79,7 @@
         
         <div class="form-container" style="overflow: visible;">
             <!-- =================================================== Form Section =================================================== -->
-                <form action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
+                <form id="update-worker-form" action="" method="POST" enctype="multipart/form-data" style="background: none; box-shadow: none;">
                     <section class="profile-container">
                         <div class="profile-img">
                             <?php
@@ -98,7 +98,7 @@
                             ?>
                             <div class="icon-border">
                                 <i class='bx bx-camera icon' title="Choose an Image" id="image_icon"></i>
-                                <input type="file" id="fileInput" name="image" style="display: none;">
+                                <input type="file" id="image" name="image" style="display: none;">
                             </div>
                         </div>
                         <div class="user-details">
@@ -116,19 +116,26 @@
                                     <input type="text" name="full_name" value="<?php echo $full_name; ?>" placeholder=" Full Name" required>
                                 </div>
 
+                                <div class="input-box password" style="display: none;">
+                                    <span class="details">Password</span>
+                                    <div class="password-container">
+                                        <input type="hidden" id="password" name="password" placeholder=" Password">
+                                    </div>
+                                </div>
+
                                 <div class="input-box">
                                     <span class="details">IC</span>
-                                    <input type="text" name="IC" value="<?php echo $IC; ?>" placeholder=" IC" required>
+                                    <input type="text" id="ic" name="IC" value="<?php echo $IC; ?>" placeholder=" IC" required>
                                 </div>
 
                                 <div class="input-box">
                                     <span class="details">Email</span>
-                                    <input type="text" name="email" value="<?php echo $email; ?>" placeholder=" Email" required>
+                                    <input type="text" id="email" name="email" value="<?php echo $email; ?>" placeholder=" Email" required>
                                 </div>
 
                                 <div class="input-box">
                                     <span class="details">Ph No.</span>
-                                    <input type="text" name="ph_no" value="<?php echo $ph_no; ?>" placeholder=" Phone Number" required>
+                                    <input type="text" id="phone" name="ph_no" value="<?php echo $ph_no; ?>" placeholder=" Phone Number" required>
                                 </div>
                             </div>
 
@@ -192,234 +199,49 @@
             <!-- =================================================== Form Section =================================================== -->
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const errorMessage = document.getElementById('errorMessage');
-        const icon = document.getElementById('image_icon');
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateWorkerForm = document.querySelector('#update-worker-form');
 
-        icon.addEventListener('click', () => {
-        fileInput.click();
-        });
+            updateWorkerForm.addEventListener('submit', (event) => {
+                event.preventDefault();
 
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            const image = new Image();
+                // Send the form data to the server using AJAX
+                const formData = new FormData(updateWorkerForm);
 
-            image.onload = function() {
-                if (this.width !== this.height) {
-                    Swal.fire('Error!', 'Please upload an image with equal width and height.', 'error');
-                } else {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('profileImage').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
+                // Add the submit field manually
+                formData.append('submit', 'Update Worker');
 
-            image.src = URL.createObjectURL(file);
+                fetch('Process/process-update-worker.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.text();  // Change this line
+                })
+                .then(text => {
+                    console.log(text);  // Log the raw response text
+                    const data = JSON.parse(text);  // Parse the text as JSON
+
+                    if (data.success) {
+                        Swal.fire('Success!', data.message, 'success').then(() => {
+                            window.location.href = 'manage-worker.php';
+                        });
+                    } else {
+                        Swal.fire('Error!', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error!', error.message, 'error');
+                });
+            });
         });
     </script>
-    <script src="../Style/show-hide.js"></script>
-<?php include('Partials/footer.php'); ?>
-
-<?php
-    if(isset($_POST['submit']))
-    {
-        // Get the data from Form
-        $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-        $username = mysqli_real_escape_string($conn, $_POST['username']);
-        $password = mysqli_real_escape_string($conn, $_POST['password']);  // Password Encryption with MD5
-        $current_image = mysqli_real_escape_string($conn, $_POST['current_image']);
-        $IC = mysqli_real_escape_string($conn, $_POST['IC']);
-        $ph_no = mysqli_real_escape_string($conn, $_POST['ph_no']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $position = mysqli_real_escape_string($conn, $_POST['position']);
-        $status = mysqli_real_escape_string($conn, $_POST['status']);
-
-        // Get the address details from Form
-        $address = mysqli_real_escape_string($conn, $_POST['address']);
-        $postal_code = mysqli_real_escape_string($conn, $_POST['postal_code']);
-        $city = mysqli_real_escape_string($conn, $_POST['city']);
-        $state = mysqli_real_escape_string($conn, $_POST['state']);
-        $country = mysqli_real_escape_string($conn, $_POST['country']);
-
-        // Get the IDs of the records to update
-        $worker_id = mysqli_real_escape_string($conn, $_POST['worker_id']);
-        $address_id = mysqli_real_escape_string($conn, $_POST['address_id']);
-
-        // 2. Upload the Image if selected
-        // Check whether the select image is clicked or not and upload the image only if the image is selected
-        if(isset($_FILES['image']['name']))
-        {
-            // Get the details of the selected image
-            $image_name = $_FILES['image']['name'];
-
-            // Check whether the image is selected or not and upload image only if selected
-            if($image_name != "")
-            {
-                // Image is selected
-                // A. Rename the image
-
-                // ---------- If image exist, it will add a suffix to the image name ---------- //
-                        
-                    $ext = pathinfo($image_name, PATHINFO_EXTENSION);
-                    $base_name = basename($image_name, ".".$ext);
-                
-                    // Start with no suffix
-                    $suffix = '';
-                    $index = 1;
-                
-                    // While a file with the current name exists, increment the suffix
-                    while(file_exists("../images/Profile/" . $base_name . $suffix . '.' . $ext)) 
-                    {
-                        $suffix = '(' . $index++ . ')';
-                    }
-            
-                    // Set the image name to the base name plus the suffix
-                    $image_name = $base_name . $suffix . '.' . $ext;
-
-                // ---------------------------------------------------------------------------- //
-
-                $source_path = $_FILES['image']['tmp_name'];  
-
-                $destination_path = "../images/Profile/".$image_name;
-
-                // B. Upload the image
-                $upload = move_uploaded_file($source_path, $destination_path);
-
-                // Check whether the image is uploaded or not
-                // If its not, we will stop the process and redirect with error message
-                if($upload == FALSE)
-                {
-                    echo "<script>
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Failed to Upload Image.',
-                            icon: 'error'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '".SITEURL."admin/manage-worker.php';
-                            }
-                        });
-                    </script>";
-                    die(); // Stop the Process
-                }
-
-                // Remove the current image if it exists
-                if($current_image != "")
-                {
-                    $remove_path = "../images/Profile/".$current_image;
-                    $remove = unlink($remove_path);
-
-                    // Check whether the image is removed or not
-                    // If failed to remove, display message and stop the process
-                    if($remove==FALSE)
-                    {
-                        echo "<script>
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Failed to remove current Image.',
-                                icon: 'error'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = '".SITEURL."admin/manage-worker.php';
-                                }
-                            });
-                        </script>";
-                        die(); // Stop the Process
-                    }
-                }
-            }
-            else
-            {
-                $image_name = $current_image;
-            }
-        }
-        else
-        {
-            $current_image = $current_image;  // Default Value
-        }
-
-        // SQL Query to update the address details in tbl_address
-        $sql_address = "UPDATE tbl_address SET
-            address = '$address',
-            postal_code = '$postal_code',
-            city = '$city',
-            state = '$state',
-            country = '$country'
-            WHERE id = $address_id
-        ";
-
-        // Executing Query and Updating Data in tbl_address
-        $res_address = mysqli_query($conn, $sql_address) or die(mysqli_error());
-
-        // Check whether the (Query is executed) data is updated or not
-        if($res_address==TRUE)
-        {
-            // Data Updated
-            // SQL Query to update the worker details in tbl_worker
-            $sql_worker = "UPDATE tbl_worker SET
-                full_name = '$full_name',
-                IC = '$IC',
-                ph_no = '$ph_no',
-                email = '$email',
-                address_id = '$address_id',
-                position = '$position',
-                status = '$status',
-                image_name = '$image_name'
-                WHERE id = $worker_id
-            ";
-
-            // Executing Query and Updating Data in tbl_worker
-            $res_worker = mysqli_query($conn, $sql_worker) or die(mysqli_error());
-
-            // Check whether the (Query is executed) data is updated or not and display appropriate message
-            if($res_worker==TRUE)
-            {
-                // Data Updated
-                echo "<script>
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Worker's Information Updated Successfully.',
-                        icon: 'success'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."admin/manage-worker.php';
-                        }
-                    });
-                </script>";
-            }
-            else
-            {
-                // Failed to Update Data
-                echo "<script>
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Failed to Update Worker's Information. Try Again Later.',
-                        icon: 'error'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."admin/manage-worker.php';
-                        }
-                    });
-                </script>";
-            }
-        }
-        else
-        {
-            // Failed to Update Address
-            echo "<script>
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to Update Address. Try Again Later.',
-                    icon: 'error'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '".SITEURL."admin/manage-worker.php';
-                    }
-                });
-            </script>";
-        }
-    }
-?>
+<script src="../Style/input-validate.js"></script>
+<script src="../Style/show-hide.js"></script>
+<script src="../Style/sidebar.js"></script>

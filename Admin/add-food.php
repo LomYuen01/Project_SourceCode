@@ -1,7 +1,7 @@
 <?php include('Partials/menu.php'); ?>
     <section class="home">
         <div class="title">
-            <div class="text">Add Food</div>
+            <div class="text">Add Menu Item</div>
         </div>
 
         <!-- Break --><br><!-- Line -->

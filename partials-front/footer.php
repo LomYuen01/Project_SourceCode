@@ -45,9 +45,9 @@
                 <div class="col">
                     <h3>Links <div class="underline"><span></span></div></h3>
                     <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="">About Us</a></li>
-                        <li><a href="">Contact Us</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="about-us.php">About Us</a></li>
+                        <li><a href="contact-us.php">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="col">

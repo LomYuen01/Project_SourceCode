@@ -118,6 +118,61 @@
                                 </div>
                             </div>
 
+                            <!-- Address -->
+                            <span class="title-name">Address Details</span>
+                            <?php
+                                // Assuming $id is the customer's ID
+                                $sql_address = "SELECT address, postal_code, city, state, country FROM tbl_customer_address WHERE customer_id=$id";
+                                $res_address = mysqli_query($conn, $sql_address);
+
+                                if($res_address==TRUE) {
+                                    $count_address = mysqli_num_rows($res_address);
+
+                                    if($count_address > 0) {
+                                        $i = 1;
+                                        while($row_address = mysqli_fetch_assoc($res_address)) {
+                                            $address = $row_address['address'];
+                                            $postal_code = $row_address['postal_code'];
+                                            $city = $row_address['city'];
+                                            $state = $row_address['state'];
+                                            $country = $row_address['country'];
+
+                                            ?>
+                                            <div class="half-width">
+                                                <div class="input-box">
+                                                    <span class="details">Address #<?php echo $i; ?></span>
+                                                    <input class="readonly-color" type="text" name="address" value="<?php echo $address; ?>" readonly>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">Postal Code</span>
+                                                    <input class="readonly-color" type="text" name="postal_code" value="<?php echo $postal_code; ?>" placeholder=" Postal Code" readonly>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">City</span>
+                                                    <input class="readonly-color" type="text" name="city" value="<?php echo $city; ?>" placeholder=" City" readonly>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">State</span>
+                                                    <input class="readonly-color" type="text" name="state" value="<?php echo $state; ?>" placeholder=" State" readonly>
+                                                </div>
+
+                                                <div class="input-box">
+                                                    <span class="details">Country</span>
+                                                    <input class="readonly-color" type="text" name="country" value="<?php echo $country; ?>" placeholder=" Country" readonly>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            $i++;
+                                        }
+                                    } else {
+                                        echo "<div class='error' style='margin-left: 15px; margin-bottom: 25px;'>No address found for this customer.</div>";
+                                    }
+                                }
+                            ?>
+
                             <!-- Position & Status -->
                             <span class="title-name">Account Status</span>
                             <div class="half-width">

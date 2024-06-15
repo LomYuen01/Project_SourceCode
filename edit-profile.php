@@ -25,24 +25,6 @@
                         $customer_id = $_GET['id'];
                     }
 
-                    if(isset($_SESSION['upload'])) 
-                    {
-                        echo $_SESSION['upload'];  
-                        unset($_SESSION['upload']);  
-                    }
-
-                    if(isset($_SESSION['update'])) 
-                    {
-                        echo $_SESSION['update'];  
-                        unset($_SESSION['update']);  
-                    }
-
-                    if(isset($_SESSION['failed-remove'])) 
-                    {
-                        echo $_SESSION['failed-remove'];  
-                        unset($_SESSION['failed-remove']);  
-                    }
-
                     // Check if the redirect_url is set in the POST data
                     if(isset($_POST['redirect_url'])) {
                         $redirect_url = $_POST['redirect_url'];

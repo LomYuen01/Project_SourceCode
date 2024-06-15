@@ -23,5 +23,4 @@
         echo "<div class='error'>Invalid request.</div>";
     }
 
-    include('partials-front/footer.php');
 ?>
