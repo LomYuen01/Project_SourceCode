@@ -1,6 +1,6 @@
 <?php
     // Include constants.php for SITEURL
-    include('../config/constant.php');
+    include('../../config/constant.php');
 
     if (!isset($_POST["admin_id"], $_POST["current_password"], $_POST["new_password"], $_POST["password_confirmation"])) {
         die("Missing POST data");

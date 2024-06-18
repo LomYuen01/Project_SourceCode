@@ -26,9 +26,8 @@
                             <label><input type="checkbox" class="checkbox-column" data-column="1" checked/>&nbsp; No. &nbsp; </label> <br>
                             <label><input type="checkbox" class="checkbox-column" data-column="2" checked/>&nbsp; Food Name &nbsp; </label> <br>
                             <label><input type="checkbox" class="checkbox-column" data-column="3" checked/>&nbsp; Category &nbsp; </label> <br>
-                            <label><input type="checkbox" class="checkbox-column" data-column="4" checked/>&nbsp; Recommended &nbsp; </label> <br>
-                            <label><input type="checkbox" class="checkbox-column" data-column="5" checked/>&nbsp; Status &nbsp; </label> <br>
-                            <label><input type="checkbox" class="checkbox-column" data-column="6" checked/>&nbsp; Actions &nbsp; </label>
+                            <label><input type="checkbox" class="checkbox-column" data-column="4" checked/>&nbsp; Status &nbsp; </label> <br>
+                            <label><input type="checkbox" class="checkbox-column" data-column="5" checked/>&nbsp; Actions &nbsp; </label>
                         </li>
                     </ul>
                 </div>
@@ -84,14 +83,13 @@
                             <th> <span class="cursor_pointer">No. <span class="icon-arrow"><i class='bx bx-chevron-down icon'></i></span></span></th>
                             <th> <span class="cursor_pointer">Food Name <span class="icon-arrow"></span></span></th>
                             <th> <span class="cursor_pointer">Category <span class="icon-arrow"></span></span></th>
-                            <th> <span class="cursor_pointer">Recommended <span class="icon-arrow"></span></span></th>
                             <th> <span class="cursor_pointer">Status <span class="icon-arrow"></span></span></th>
                             <th style="padding-right: 4rem;"> <span class="cursor_pointer">Actions <span class="icon-arrow"></span></span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT tbl_food.*, tbl_category.title AS category_name 
+                            $sql = "SELECT tbl_food.*, tbl_category.title AS category_name
                             FROM tbl_food 
                             INNER JOIN tbl_category ON tbl_food.category_id = tbl_category.id";
 
@@ -114,9 +112,9 @@
                                 {
                                     $id = $row['id'];
                                     $title = $row['title'];
-                                    $featured = $row['featured'];
                                     $active = $row['active'];
                                     $category = $row['category_name'];
+                                    $current_category_id = $row['category_id'];
                                     $image_name = $row['image_name'];
 
                                     // Assign status based on the value of active
@@ -127,10 +125,9 @@
                                         <td><?php echo str_pad($SN++, 2, '0', STR_PAD_LEFT); ?></td>
                                         <td><?php echo $title; ?></td>
                                         <td><?php echo $category; ?></td>
-                                        <td><?php echo $featured; ?></td>
                                         <td><div class="<?php echo $status_class; ?>"><?php echo $status; ?></div></td>
                                         <td class="buttons" style="padding-right: 4rem;">
-                                            <a href="<?php echo SITEURL; ?>admin/update-food.php?id=<?php echo $id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary"><i class='bx bxs-edit'></i></a>
+                                        <a href="<?php echo SITEURL; ?>admin/update-food.php?id=<?php echo $id; ?>&category_id=<?php echo $current_category_id; ?>" style="width: 40px; font-size: 14px;" class="btn-secondary"><i class='bx bxs-edit'></i></a>
                                             <a href="javascript:void(0);" onclick="deleteFood(<?php echo $id; ?>, '<?php echo $image_name; ?>');" style="width: 40px; font-size: 14px;" class="btn-danger"><i class='bx bx-trash'></i></a>
                                         </td>
                                     </tr>

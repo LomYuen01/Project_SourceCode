@@ -126,8 +126,7 @@
                                 <div class="input-box password" style="display: none;">
                                     <span class="details">Password</span>
                                     <div class="password-container">
-                                        <input type="hidden" id="password" name="password" placeholder=" Password" required>
-                                        <i class="fa-solid fa-eye-slash pw-hide"></i>
+                                        <input type="hidden" id="password">
                                     </div>
                                 </div>
 

@@ -76,10 +76,7 @@ ob_start();
                         <a href=""></a>
                     </li>
                 </ul>
-                <?php
-                $display = (isset($_SESSION['update']) || isset($_SESSION['add'])) ? 'none' : 'inline-block';
-                ?>
-                <img style="display: <?php echo $display; ?>;" src="<?php echo $current_image != "" ? SITEURL."images/Profile/".$current_image : '../images/no_profile_pic.png'; ?>" rel="logo" class="user-pic" onclick="toggleMenu()">
+                <img src="<?php echo $current_image != "" ? SITEURL."images/Profile/".$current_image : '../images/no_profile_pic.png'; ?>" rel="logo" class="user-pic" onclick="toggleMenu()">
                 <div class="sub-menu-wrap" id="subMenu">
                     <div class="sub-menu">
                         <div class="user-info">

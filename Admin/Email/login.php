@@ -19,7 +19,7 @@
 						<div class="card fat">
 							<div class="card-body">
 								<h4 class="card-title">Admin Login</h4>
-								<form method="POST" class="my-login-validation" novalidate="">
+								<form method="POST" class="my-login-validation" novalidate="" onsubmit="rememberMe()">
 									<div class="form-group">
 										<label for="email">Username</label>
 										<input id="email" type="text" class="form-control" name="username" value="" required autofocus>
@@ -110,6 +110,27 @@
 					});
 				});
 			});
+
+			function rememberMe() {
+				if(document.getElementById('remember').checked) {
+					// If the "Remember Me" checkbox is checked, save the username to localStorage
+					localStorage.setItem('username', document.getElementById('email').value);
+				} else {
+					// Otherwise, remove the username from localStorage
+					localStorage.removeItem('username');
+				}
+			}
+
+			window.onload = function() {
+				// When the page loads, check if there is a saved username in localStorage
+				var savedUsername = localStorage.getItem('username');
+				if(savedUsername) {
+					// If there is a saved username, set the value of the username input field to it
+					document.getElementById('email').value = savedUsername;
+					// And check the "Remember Me" checkbox
+					document.getElementById('remember').checked = true;
+				}
+			};
 		</script>
 	</body>
 </html>

@@ -11,6 +11,7 @@
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $position = mysqli_real_escape_string($conn, $_POST['position']);
         $status = mysqli_real_escape_string($conn, $_POST['status']);
+        $current_image = mysqli_real_escape_string($conn, $_POST['current_image']);
 
         $worker_id = mysqli_real_escape_string($conn, $_POST['worker_id']);
         $address_id = mysqli_real_escape_string($conn, $_POST['address_id']);
@@ -135,10 +136,6 @@
         // Check whether the (Query is executed) data is inserted or not
         if($res_address==TRUE)
         {
-            // Data Inserted
-            // Get the ID of the inserted address row
-            $address_id = mysqli_insert_id($conn);
-
             // SQL Query to save the worker details into tbl_worker
             $sql_worker = "UPDATE tbl_worker SET
                 full_name = '$full_name',

@@ -120,7 +120,7 @@
         }
 
         // SQL Query to save the address details into tbl_address
-        $sql_address = "UPDATE tbl_address SET
+        $sql_address = "UPDATE tbl_address SET 
             address = '$address',
             postal_code = '$postal_code',
             city = '$city',
@@ -140,7 +140,6 @@
             $sql_admin = "UPDATE tbl_admin SET
                 full_name = '$full_name',
                 username = '$username',
-                password = '$password',
                 IC = '$IC',
                 ph_no = '$ph_no',
                 email = '$email',
