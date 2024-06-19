@@ -87,6 +87,9 @@
             padding: 10px;
         }
 
+        .swal-footer {
+            text-align: center;
+        }
     </style>
 
     <section class="home">
@@ -96,7 +99,7 @@
 
             <!-- Login Form -->
             <div class="form login-form">
-                <form action="<?php echo SITEURL; ?>login.php" method="POST">
+                <form method="POST">
                     <h2>Login</h2>
 
                     <div class="input-box">
@@ -131,14 +134,18 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-
-                <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex;">
+        <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex;">
             <div style="border: 1px solid black; width: 20%; font-size: 1rem;  background: #8e9eab;  background: -webkit-linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243)); background: linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243));">
                 <h1>Profile</h1>
                     <?php
-                        
-                        $sql = "SELECT * FROM tbl_customer WHERE id=$user_id";
-                        $res = mysqli_query($conn, $sql);
+                        $username = ""; // Initialize $username
+                        $current_image = ""; // Initialize $current_image
+                        $user_id = mysqli_real_escape_string($conn, $user_id);
+                        $sql = "SELECT * FROM tbl_customer WHERE id=?";
+                        $stmt = $conn->prepare($sql); // Prepare the SQL statement
+                        $stmt->bind_param("s", $user_id); // "s" indicates that the parameter is a string
+                        $stmt->execute();
+                        $res = $stmt->get_result();
                         $count = mysqli_num_rows($res);
                         if($count==1){
                             $row = mysqli_fetch_assoc($res);
@@ -302,4 +309,46 @@
             </div>
         </div>
     </section>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.querySelector('.form.login-form form');
+
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                // Send the form data to the server using AJAX
+                const formData = new FormData(loginForm);
+
+                // Add the submit field manually
+                formData.append('submit', 'Login');
+
+                fetch('<?php echo SITEURL; ?>login.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.text();  // Change this line
+                })
+                .then(text => {
+                    console.log(text);  // Log the raw response text
+                    const data = JSON.parse(text);  // Parse the text as JSON
+
+                    if (data.success) {
+                        swal('Success!', data.message, 'success').then(() => {
+                            window.location.href = data.redirect;
+                        });
+                    } else {
+                        swal('Error!', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    swal('Error!', error.message, 'error');
+                });
+            });
+        });
+    </script>
 <?php include('partials-front/footer.php'); ?>

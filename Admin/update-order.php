@@ -54,7 +54,7 @@
 
 <section class="home" style="overflow: hidden;">
     <div class="title">
-        <div class="text">View Orders</div>
+        <div class="text">Update Order Status</div>
     </div>
 
     <!-- Break --><br><!-- Line -->

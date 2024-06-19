@@ -31,7 +31,6 @@
                         <a href="<?php echo SITEURL; ?>Payment/customer_menu.php" class="nav-link">Menu</a>
                         <a href="<?php echo SITEURL; ?>Payment/cart.php" class="nav-link">Cart</a>
                         <a href="<?php echo SITEURL; ?>profile_order.php" class="nav-link">Orders</a>
-                        <a href="<?php echo SITEURL; ?>about-us.php" class="nav-link">About Us</a>
                         <a href="<?php echo SITEURL; ?>contact-us.php" class="nav-link">Contact Us</a>
                     </li>
                 </ul>

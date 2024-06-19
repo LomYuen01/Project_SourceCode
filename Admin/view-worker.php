@@ -2,7 +2,7 @@
 <script src="https://kit.fontawesome.com/3bfb2b9d7b.js" crossorigin="anonymous"></script>
     <section class="home">
         <div class="title">
-            <div class="text">Update Worker</div>
+            <div class="text">View Worker Details</div>
 
             <?php
                 if (isset($_GET['id'])) 

@@ -41,6 +41,10 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
+        .swal-footer {
+            text-align: center;
+        }
     </style>
 
     <section class="home">
@@ -242,7 +246,48 @@
         <button class="close-notification">Close</button>
     </div>
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.querySelector('.form.login-form form');
+
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                // Send the form data to the server using AJAX
+                const formData = new FormData(loginForm);
+
+                // Add the submit field manually
+                formData.append('submit', 'Login');
+
+                fetch('<?php echo SITEURL; ?>login.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.text();  // Change this line
+                })
+                .then(text => {
+                    console.log(text);  // Log the raw response text
+                    const data = JSON.parse(text);  // Parse the text as JSON
+
+                    if (data.success) {
+                        swal('Success!', data.message, 'success').then(() => {
+                            window.location.href = data.redirect;
+                        });
+                    } else {
+                        swal('Error!', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    swal('Error!', error.message, 'error');
+                });
+            });
+        });
+        
         // Notification Functions
         function showNotification(message, imageName) {
             document.getElementById('notification-message').innerHTML = message;
