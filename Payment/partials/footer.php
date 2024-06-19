@@ -1,5 +1,5 @@
 
-        <footer>
+<footer>
             <div class="row">
                 <div class="col">
                     <h3>Working Hours <div class="underline"><span></span></div></h3>
@@ -36,20 +36,21 @@
                 </div>
                 <div class="col">
                     <h3>Contact Info <div class="underline"><span></span></div></h3>
-                    <p>BG-8, Jalan Tun Perak</p>
-                    <p>Taman Kenaga Mewah</p>
-                    <p>75200 Melaka</p>
-                    <p class="email-id">RenoKitchen@gmail.com</p>
+                    <p style="margin: 0;">BG-8, Jalan Tun Perak</p>
+                    <p style="margin: 0;">Taman Kenaga Mewah</p>
+                    <p style="margin: 0;">75200 Melaka</p>
+                    <p class="email-id">RenoKitchen3@gmail.com</p>
                     <h4>+60 14-925-9139</h4>
                 </div>
                 <div class="col">
                     <h3>Links <div class="underline"><span></span></div></h3>
                     <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="">About Us</a></li>
-                        <li><a href="">Contact Us</a></li>
+                        <li style="padding: 0;"><a href="index.php">Home</a></li><br>
+                        <li style="padding: 0;"><a href="about-us.php">About Us</a></li><br>
+                        <li style="padding: 0;"><a href="contact-us.php">Contact Us</a></li>
                     </ul>
                 </div>
+                <!--
                 <div class="col">
                     <h3>Newsletter <div class="underline"><span></span></div></h3>
                     <form>
@@ -63,7 +64,7 @@
                         <i class="fa-brands fa-linkedin"></i>
                         <i class="fa-brands fa-github"></i>
                     </div>
-                </div>
+                </div>-->
             </div>
             <hr>
             <p class="copyright">All Rights Reserved, Reno Kitchen &copy; 2024</p>

@@ -1,133 +1,137 @@
 <?php include('partials-front/menu.php'); ?>
 
 <style>
-.hero-section {
-    position: relative;
-    text-align: center;
-    color: white;
-    background: url('images/home.jpg') no-repeat center center/cover;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .hero-section {
+        position: relative;
+        text-align: center;
+        color: white;
+        background: url('images/home.jpg') no-repeat center center/cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.hero-content {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-}
+    .hero-content {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+    }
 
-.hero-title {
-    font-size: 4em;
-    margin: 0;
-}
+    .hero-title {
+        font-size: 4em;
+        margin: 0;
+    }
 
-.hero-subtitle {
-    font-size: 1.5em;
-    margin: 10px 0;
-}
+    .hero-subtitle {
+        font-size: 1.5em;
+        margin: 10px 0;
+    }
 
-.hero-button {
-    padding: 10px 20px;
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-}
+    .hero-button {
+        padding: 10px 20px;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+    }
 
-.our-story {
-    padding: 50px;
-    background-color: #1c1c1c;
-    color: white;
-    text-align: center;
-}
+    .our-story {
+        padding: 50px;
+        background-color: #1c1c1c;
+        color: white;
+        text-align: center;
+    }
 
-.section-title {
-    font-size: 2.5em;
-    margin-bottom: 30px;
-}
+    .section-title {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
 
-.story-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+    .story-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-.story-image {
-    width: 300px;
-    height: auto;
-    border-radius: 10px;
-    margin: 20px;
-}
+    .story-image {
+        width: 300px;
+        height: auto;
+        border-radius: 10px;
+        margin: 20px;
+    }
 
-.story-text {
-    max-width: 600px;
-    text-align: left;
-}
+    .story-text {
+        max-width: 600px;
+        text-align: left;
+    }
 
-.story-text h3 {
-    font-size: 2em;
-    margin: 0 0 10px;
-}
+    .story-text h3 {
+        font-size: 2em;
+        margin: 0 0 10px;
+    }
 
-.story-text p {
-    font-size: 1.2em;
-    line-height: 1.6;
-}
+    .story-text p {
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
 
-.new-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 50px;
-    background-color: #f4f4f4;
-}
+    .new-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 50px;
+        background-color: #f4f4f4;
+    }
 
-.new-section .text {
-    max-width: 600px;
-    margin: 20px;
-}
+    .new-section .text {
+        max-width: 600px;
+        margin: 20px;
+    }
 
-.new-section .text h3 {
-    font-size: 2em;
-    margin-bottom: 10px;
-}
+    .new-section .text h3 {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
 
-.new-section .text p {
-    font-size: 1.2em;
-    line-height: 1.6;
-}
+    .new-section .text p {
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
 
-.new-section .menu-image {
-    width: 300px;
-    height: auto;
-    border-radius: 10px;
-    margin: 20px;
-}
+    .new-section .menu-image {
+        width: 300px;
+        height: auto;
+        border-radius: 10px;
+        margin: 20px;
+    }
 
-.location-section {
-    text-align: center;
-    padding: 50px;
-    background-color: #e2e2e2;
-}
+    .location-section {
+        text-align: center;
+        padding: 50px;
+        background-color: #e2e2e2;
+    }
 
-.location-section .location-text {
-    max-width: 800px;
-    margin: 0 auto;
-    font-size: 1.2em;
-    line-height: 1.6;
-}
+    .location-section .location-text {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
 
-.location-section img {
-    margin-top: 20px;
-    width: 80%;
-    height: auto;
-    border-radius: 10px;
-}
+    .location-section img {
+        margin-top: 20px;
+        width: 80%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .swal-footer {
+        text-align: center;
+    }
 </style>
 
 <!-- Home -->
@@ -138,7 +142,7 @@
 
         <!-- Login Form -->
         <div class="form login-form">
-            <form action="<?php echo SITEURL; ?>login.php" method="POST">
+            <form method="POST">
                 <h2>Login</h2>
 
                 <div class="input-box">
@@ -208,5 +212,47 @@
         </div>
     </div>
 </section>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.querySelector('.form.login-form form');
+
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Send the form data to the server using AJAX
+            const formData = new FormData(loginForm);
+
+            // Add the submit field manually
+            formData.append('submit', 'Login');
+
+            fetch('<?php echo SITEURL; ?>login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.text();  // Change this line
+            })
+            .then(text => {
+                console.log(text);  // Log the raw response text
+                const data = JSON.parse(text);  // Parse the text as JSON
+
+                if (data.success) {
+                    swal('Success!', data.message, 'success').then(() => {
+                        window.location.href = data.redirect;
+                    });
+                } else {
+                    swal('Error!', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                swal('Error!', error.message, 'error');
+            });
+        });
+    });
+</script>
 
 <?php include('partials-front/footer.php'); ?>

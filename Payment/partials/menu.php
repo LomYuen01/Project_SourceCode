@@ -33,7 +33,6 @@
                         <a href="<?php echo SITEURL; ?>profile_order.php" class="nav-link">Orders</a>
                         <a href="<?php echo SITEURL; ?>about-us.php" class="nav-link">About Us</a>
                         <a href="<?php echo SITEURL; ?>contact-us.php" class="nav-link">Contact Us</a>
-                        <a href=""></a>
                     </li>
                 </ul>
                 <?php 
@@ -92,7 +91,7 @@
                         </div>
                     <?php else: ?>
                         <a href="#" id="scroll-to-top">
-                            <button class="btn" id="form-open">Login</button>
+                            <button class="btn" id="form-open">Login/Signup</button>
                         </a>
                 <?php endif; ?>
             </nav>

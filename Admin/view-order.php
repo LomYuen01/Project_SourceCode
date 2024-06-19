@@ -29,6 +29,7 @@
         $zip = $order['zip'];
         $city = $order['city'];
         $state = $order['state'];
+        $paymethod = $order['paymethod'];
         // Assuming special_instructions is part of the tbl_order
         $special_instructions = $order['special_instructions'];
 
@@ -114,7 +115,7 @@
                             $title = $item['title'];
                             $price = $item['price'];
                             $quantity = $item['quantity'];
-                            $totalPrice += $price; // Just add the price without considering the quantity
+                            $totalPrice += $price * $quantity; // Just add the price without considering the quantity
 
                             // Fetch the image name from the tbl_food table
                             $sql = "SELECT image_name FROM tbl_food WHERE id = $itemId";
@@ -148,7 +149,7 @@
                 <div style="position: relative; display: flex; flex-wrap: wrap; justify-content: space-between;">
                     <div class="input-box" style="width: 48%;">
                         <span class="details readonly-color">Payment Method</span>
-                        <input class="readonly-color" type="text" name="title" value="COD" readonly>
+                        <input class="readonly-color" type="text" name="title" value="<?php echo $paymethod ?>" readonly>
                     </div>
 
                     <div class="input-box" style="width: 48%;">

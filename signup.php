@@ -1,77 +1,6 @@
-<?php include('partials-front/menu.php'); 
-
-$error_message = '';
-
-if (isset($_POST['submit'])) {
-
-    $fullname = $_POST['fullname'];
-    $ph_no = $_POST['phone'];
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    // Verify email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error_message = 'Invalid email format.';
-    } else {
-        // Check if the password and confirm password match
-        if ($password !== $confirm_password) {
-            $error_message = 'Passwords do not match.';
-        } else {
-            // Check if email already exists in the database
-            $sql = "SELECT * FROM tbl_customer WHERE email = ?";
-            if ($stmt = $conn->prepare($sql)) {
-                $stmt->bind_param("s", $email);
-                $stmt->execute();
-
-                // Get the result
-                $result = $stmt->get_result();
-
-                // Check if a row was returned
-                if ($result->num_rows > 0) {
-                    // Email already exists
-                    $error_message = 'Email already exists.';
-                } else {
-                    // Check if phone number already exists in the database
-                    $sql = "SELECT * FROM tbl_customer WHERE ph_no = ?";
-                    if ($stmt = $conn->prepare($sql)) {
-                        $stmt->bind_param("s", $ph_no);
-                        $stmt->execute();
-
-                        // Get the result
-                        $result = $stmt->get_result();
-
-                        // Check if a row was returned
-                        if ($result->num_rows > 0) {
-                            // Phone number already exists
-                            $error_message = 'Phone number already exists.';
-                        } else {
-                            // Email and phone number do not exist, insert the new user
-                            $sql = "INSERT INTO tbl_customer (full_name, ph_no, username, email, password) VALUES (?, ?, ?, ?, ?)";
-                            if ($stmt = $conn->prepare($sql)) {
-                                $stmt->bind_param("sssss", $fullname, $ph_no, $username, $email, $password);
-                                if ($stmt->execute()) {
-                                    // User registered successfully
-                                    header('Location: login.php');
-                                } else {
-                                    echo "Error executing statement.";
-                                }
-                            } else {
-                                echo "Error preparing statement.";
-                            }
-                        }
-                    } else {
-                        echo "Error preparing statement.";
-                    }
-                }
-            } else {
-                echo "Error preparing statement.";
-            }
-        }
-    }
-    
-}
+<?php 
+    include('partials-front/menu.php'); 
+    $error_message = '';
 ?>
 
 <style>
@@ -81,7 +10,7 @@ if (isset($_POST['submit'])) {
         justify-content: center;
         align-items: center;
         margin: auto;
-        padding: 10px; 
+        padding: 20px; 
         background: -webkit-linear-gradient(to bottom, rgb(201, 214, 255), rgb(226, 226, 226)); 
         background: linear-gradient(to bottom, rgb(201, 214, 255), rgb(226, 226, 226));
     }
@@ -108,13 +37,15 @@ if (isset($_POST['submit'])) {
         flex-direction: column;
     }
 
-    .input-box {
+    .input-boxx {
+        height: 40px;
         margin-top: 0;
         margin-bottom: 15px;
         position: relative;
     }
 
-    .input-box input {
+    .input-boxx input {
+        height: 100%;
         width: 100%;
         padding: 15px;
         border: 1px solid #ddd;
@@ -125,20 +56,22 @@ if (isset($_POST['submit'])) {
     .fa-eye-slash {
         position: absolute;
         top: 50%;
-        right: 15px;
+        right: 0px;
         transform: translateY(-50%);
         cursor: pointer;
     }
 
-    .forgot-password {
-        text-align: right;
-        color: #555;
-        text-decoration: none;
-        margin-bottom: 20px;
+    .pw-hide {
+        position: absolute;
+        top: 50%;
+        right: 0px;
+        transform: translateY(-50%);
+        cursor: pointer;
     }
 
     .button {
-        padding: 15px;
+        padding: 7px;
+        height: 40px;
         border: none;
         border-radius: 5px;
         font-size: 16px;
@@ -248,24 +181,24 @@ if (isset($_POST['submit'])) {
                 <p>Please enter information in details below</p>
                 <br>
                 <form action="" method="POST" class="form">
-                    <div class="input-box">
+                    <div class="input-boxx">
                         <input type="text" name="fullname" placeholder="Full Name" required>
                     </div>
-                    <div class="input-box">
+                    <div class="input-boxx">
                         <input type="text" name="username" placeholder="Username" minlength="8" required>
                     </div>
-                    <div class="input-box">
+                    <div class="input-boxx">
                         <input type="email" name="email" placeholder="Email" required>
                     </div>
-                    <div class="input-box">
+                    <div class="input-boxx">
                         <input type="tel" id="phone" name="phone" placeholder="Phone Number" maxlength="15" required>
                     </div>
                     
-                    <div class="input-box">
-                        <input type="password" name="password" placeholder="Password (min 8 character, max 16 character)" minlength="8" maxlength="16" required style="overflow: hidden; margin-right: -50px; padding-right: 50px;">
+                    <div class="input-boxx">
+                        <input type="password" name="password" placeholder="Password (min 8, max 16)" minlength="8" maxlength="16" required style="overflow: hidden; margin-right: -50px; padding-right: 50px;">
                         <i class="fa-solid fa-eye-slash pw-hide" style="margin-right: 15px;"></i>
                     </div>
-                    <div class="input-box">
+                    <div class="input-boxx">
                         <input type="password" name="confirm_password" placeholder="Confirm password" minlength="8" maxlength="16" required>
                         <i class="fa-solid fa-eye-slash pw-hide" style="margin-right: 15px;"></i>
                     </div>
@@ -275,13 +208,12 @@ if (isset($_POST['submit'])) {
                         <?php endif; ?>
                     </div>
                     <input type="submit" class="button" name="submit" value="Register">
-                    <p class="signup-text">Have an account? <a href="login.php">Log in</a></p>
                 </form>
             </div>
         </div>
     </div>
 </section>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const phoneInput = document.getElementById('phone');
@@ -310,3 +242,88 @@ if (isset($_POST['submit'])) {
 </script>
 
 <?php include('partials-front/footer.php'); ?>
+
+<?php 
+    if (isset($_POST['submit'])) {
+
+        $fullname = $_POST['fullname'];
+        $ph_no = $_POST['phone'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        // Verify email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error_message = 'Invalid email format.';
+        } else {
+            // Check if the password and confirm password match
+            if ($password !== $confirm_password) {
+                $error_message = 'Passwords do not match.';
+            } else {
+                // Check if email already exists in the database
+                $sql = "SELECT * FROM tbl_customer WHERE email = ?";
+                if ($stmt = $conn->prepare($sql)) {
+                    $stmt->bind_param("s", $email);
+                    $stmt->execute();
+
+                    // Get the result
+                    $result = $stmt->get_result();
+
+                    // Check if a row was returned
+                    if ($result->num_rows > 0) {
+                        // Email already exists
+                        $error_message = 'Email already exists.';
+                    } else {
+                        // Check if phone number already exists in the database
+                        $sql = "SELECT * FROM tbl_customer WHERE ph_no = ?";
+                        if ($stmt = $conn->prepare($sql)) {
+                            $stmt->bind_param("s", $ph_no);
+                            $stmt->execute();
+
+                            // Get the result
+                            $result = $stmt->get_result();
+
+                            // Check if a row was returned
+                            if ($result->num_rows > 0) {
+                                // Phone number already exists
+                                $error_message = 'Phone number already exists.';
+                            } else {
+                                // Email and phone number do not exist, insert the new user
+                                $sql = "INSERT INTO tbl_customer (full_name, ph_no, username, email, password) VALUES (?, ?, ?, ?, ?)";
+                                if ($stmt = $conn->prepare($sql)) {
+                                    $stmt->bind_param("sssss", $fullname, $ph_no, $username, $email, $password);
+                                    if ($stmt->execute()) {
+                                        // User registered successfully
+                                        echo "
+                                        <script>
+                                            Swal.fire({
+                                                title: 'Registration Successful!',
+                                                text: 'You may log in now.',
+                                                icon: 'success',
+                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = 'index.php';
+                                                }
+                                            });
+                                        </script>";
+                                    } else {
+                                        echo "Error executing statement.";
+                                    }
+                                } else {
+                                    echo "Error preparing statement.";
+                                }
+                            }
+                        } else {
+                            echo "Error preparing statement.";
+                        }
+                    }
+                } else {
+                    echo "Error preparing statement.";
+                }
+            }
+        }
+        
+    }
+?>

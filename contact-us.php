@@ -1,105 +1,109 @@
 <?php include('partials-front/menu.php'); ?>
 
 <style>
-.contact-container-unique {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    color: white;
-    padding: 20px;
-    height: 100%;
-}
+    .contact-container-unique {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        
+        color: white;
+        padding: 20px;
+        height: 100%;
+    }
 
-.contact-heading-container {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    margin: auto;
-}
+    .contact-heading-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        margin: auto;
+    }
 
-.contact-heading-container h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-    z-index: 2; /* 保证标题在视频上层 */
-    position: relative;
-}
+    .contact-heading-container h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+        z-index: 2; /* 保证标题在视频上层 */
+        position: relative;
+    }
 
-.contact-heading-container video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1; /* 确保视频在标题下层 */
-}
+    .contact-heading-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1; /* 确保视频在标题下层 */
+    }
 
-.contact-subheading {
-    margin-bottom: 20px;
-}
+    .contact-subheading {
+        margin-bottom: 20px;
+    }
 
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
 
-.contact-label {
-    margin-bottom: 5px;
-}
+    .contact-label {
+        margin-bottom: 5px;
+    }
 
-.contact-input, .contact-textarea {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-}
+    .contact-input, .contact-textarea {
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+    }
 
-.contact-button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #ff6347;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-}
+    .contact-button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #ff6347;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+    }
 
-.contact-button:hover {
-    background-color: #ff4500;
-}
+    .contact-button:hover {
+        background-color: #ff4500;
+    }
 
-.contact-info-unique {
-    text-align: left;
-    max-width: 400px;
-}
+    .contact-info-unique {
+        text-align: left;
+        max-width: 400px;
+    }
 
-.contact-info-heading {
-    margin-top: 20px;
-    font-size: 1.2em;
-}
+    .contact-info-heading {
+        margin-top: 20px;
+        font-size: 1.2em;
+    }
 
-.contact-info-text {
-    margin-top: 5px;
-    color: black;
-    display: flex;
-    flex-direction: column;
-}
+    .contact-info-text {
+        margin-top: 5px;
+        color: black;
+        display: flex;
+        flex-direction: column;
+    }
 
-.contact-info-link {
-    color: black;
-    text-decoration: none;
-}
+    .contact-info-link {
+        color: black;
+        text-decoration: none;
+    }
 
-.contact-info-link:hover {
-    text-decoration: underline;
-}
+    .contact-info-link:hover {
+        text-decoration: underline;
+    }
 
-.contact-subheading {
-    font-size: 1.5rem;
-}
+    .contact-subheading {
+        font-size: 1.5rem;
+    }
+
+    .swal-footer {
+        text-align: center;
+    }
 </style>
 
 <section class="home">
@@ -109,7 +113,7 @@
 
         <!-- Login Form -->
         <div class="form login-form">
-            <form action="<?php echo SITEURL; ?>login.php" method="POST">
+            <form method="POST">
                 <h2>Login</h2>
 
                 <div class="input-box">
@@ -198,7 +202,48 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.querySelector('.form.login-form form');
+
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Send the form data to the server using AJAX
+            const formData = new FormData(loginForm);
+
+            // Add the submit field manually
+            formData.append('submit', 'Login');
+
+            fetch('<?php echo SITEURL; ?>login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.text();  // Change this line
+            })
+            .then(text => {
+                console.log(text);  // Log the raw response text
+                const data = JSON.parse(text);  // Parse the text as JSON
+
+                if (data.success) {
+                    swal('Success!', data.message, 'success').then(() => {
+                        window.location.href = data.redirect;
+                    });
+                } else {
+                    swal('Error!', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                swal('Error!', error.message, 'error');
+            });
+        });
+    });
+    
     document.querySelector('.contact-form').addEventListener('submit', function(event) {
     event.preventDefault();
 

@@ -220,7 +220,7 @@
                             <input type="hidden" name="current_image" value="<?php echo $current_image; ?>">
                             <input type="hidden" name="id" value="<?php echo $food_id; ?>">
                             <input type="hidden" id="category_id" name="category_id" value="<?php echo $category_id; ?>">
-                            <input type="submit" name="submit" value="Update Food" class="btn-secondary">
+                            <input type="submit" name="submit" value="Update Item" class="btn-secondary">
                         </div>
                     </div>
                 </section>
@@ -243,7 +243,7 @@
                                 ?>
                             </div>
                             <div class="button" style="left: 0; padding-bottom: 0">
-                                <input type="button" value="Update Image" class="btn-secondary">
+                                <input type="button" value="Select an Image" class="btn-secondary">
                                 <input type="file" id="image" name="image" style="display: none;">
                             </div>
                         </div>

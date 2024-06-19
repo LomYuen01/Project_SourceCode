@@ -430,17 +430,21 @@ footer table {
 }
 
 .row {
-    width: 85%;
-    margin: auto;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 180px;
 }
 
 .col {
-    flex-basis: 25%;
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 200px;
+    margin-left: 15px;
 }
 
 .col img {
@@ -448,10 +452,6 @@ footer table {
     width: auto; 
     filter: contrast(150%) saturate(250%) brightness(100%) hue-rotate(210deg);
 }
-
-.col:nth-child(2), .col:nth-child(3) {
-    flex-basis: 25%;
-} 
 
 .logo {
     width: 80px;

@@ -111,7 +111,7 @@
                         </div>
                         
                         <div class="button" style="left: 0; padding-bottom: 0">
-                            <input type="submit" name="submit" value="Add Category" class="btn-secondary">
+                            <input type="submit" name="submit" value="Add Item" class="btn-secondary">
                         </div>
                     </div>
                 </section>
@@ -123,7 +123,7 @@
                                 <img src="../images/no_image.png" id="profileImage" style="border-radius: 0; border: 0px; width: 250px; height: 250px;">
                             </div>
                             <div class="button" style="left: 0; padding-bottom: 0">
-                                <input type="button" value="Insert Image" class="btn-secondary">
+                                <input type="button" value="Select an Image" class="btn-secondary">
                                 <input type="file" id="image" name="image" style="display: none;">
                             </div>
                         </div>

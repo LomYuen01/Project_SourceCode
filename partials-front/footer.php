@@ -39,7 +39,7 @@
                     <p>BG-8, Jalan Tun Perak</p>
                     <p>Taman Kenaga Mewah</p>
                     <p>75200 Melaka</p>
-                    <p class="email-id">RenoKitchen@gmail.com</p>
+                    <p class="email-id">RenoKitchen3@gmail.com</p>
                     <h4>+60 14-925-9139</h4>
                 </div>
                 <div class="col">
@@ -50,6 +50,7 @@
                         <li><a href="contact-us.php">Contact Us</a></li>
                     </ul>
                 </div>
+                <!--
                 <div class="col">
                     <h3>Newsletter <div class="underline"><span></span></div></h3>
                     <form>
@@ -63,7 +64,7 @@
                         <i class="fa-brands fa-linkedin"></i>
                         <i class="fa-brands fa-github"></i>
                     </div>
-                </div>
+                </div>-->
             </div>
             <hr>
             <p class="copyright">All Rights Reserved, Reno Kitchen &copy; 2024</p>

@@ -35,16 +35,26 @@
             // Save the user id in the session
             $_SESSION['user']['user_id'] = $row['id'];
 
-            // Redirect to the previous page or Home Page/Dashboard
-            header('location:'.$redirect_url);
+            // Return a JSON response
+            echo json_encode([
+                'success' => true,
+                'message' => 'Login Successful.',
+                'redirect' => $redirect_url
+            ]);
         }
         else
         {
             // User not Available and Login Fail
             $_SESSION['user']['login'] = "<div class='error text-center'>Username or Password did not match.</div>";
 
-            // Redirect to the previous page or Home Page/Dashboard
-            header('location:'.$redirect_url);
+            // Return a JSON response
+            echo json_encode([
+                'success' => false,
+                'message' => 'Username or Password did not match.'
+            ]);
         }
+
+        // Prevent the rest of the script from running
+        exit;
     }
 ?>

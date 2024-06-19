@@ -89,7 +89,7 @@
             <h1>Cart</h1>
         </div>
         <div style="display: flex; flex-direction: row; gap: 25px; width: 89%; padding-bottom: 5%; margin: auto; align-items: flex-start;">
-            <div class="basket">
+            <div class="basket" ">
                 <div class="basket-labels">
                     <ul>
                         <li class="food-checkbox">No.</li>
@@ -124,7 +124,7 @@
                                 $subtotal = $price * $row['cart_quantity'];
                                 $total += $subtotal;
                                 ?>
-                                <div class="basket-product" data-cart-id="<?php echo $row['cart_items_id']; ?>">
+                                <div class="basket-product" data-cart-id="<?php echo $row['cart_items_id']; ?>" style="color: black !important;">
                                     <div class="food-checkbox"><?php echo $count; ?></div>
                                     <div class="item">
                                         <div class="product-details">
@@ -185,6 +185,13 @@
                     $checkout_end_time = $limit['end_time'];
                     $minimum_cart_price = $limit['minimum_cart_price'];
                     $delivery_price = $limit['delivery_price'];
+
+                    // Add delivery price to the total if there are items in the cart
+                    if ($total > 0) {
+                        $total += $delivery_price;
+                    } else {
+                        $total = 0;
+                    }
                 ?>
             </div>
 
@@ -240,7 +247,7 @@
         function showNotification(message, imageName) {
             document.getElementById('notification-message').innerHTML = message;
             if (imageName) {
-                document.getElementById('notification-message').innerHTML += `<br><img src="img/${imageName}" alt="Food Image" style="width: 100px; height: 100px; display: block; margin-top: 10px;">`;
+                document.getElementById('notification-message').innerHTML += `<br><img src="images/Food/${imageName}" alt="Food Image" style="width: 100px; height: 100px; display: block; margin-top: 10px;">`;
             }
             document.querySelector('.overlay').style.display = 'block';
             document.querySelector('.notification').style.display = 'block';
@@ -260,7 +267,8 @@
         <?php
         if (!empty($inactive_foods)) {
             foreach ($inactive_foods as $food) {
-                echo "showNotification('The item \"{$food['title']}\" is currently unavailable.', '{$food['image_name']}');";
+                
+                echo "showNotification('The item \"{$food['title']}\" is currently unavailable.', 'images/Food/{$food['image_name']}');";
             }
         }
         ?>
@@ -305,8 +313,9 @@
 
         
         function updateTotalPrice() {
-            var total = 0;
+            
             var delivery_price = <?php echo $delivery_price; ?>;
+            var total = 0 + delivery_price;
             var subtotalElements = document.querySelectorAll('.subtotal');
             subtotalElements.forEach(function(subtotalElement) {
                 var subtotal = parseFloat(subtotalElement.getAttribute('data-subtotal'));
@@ -381,23 +390,47 @@
             var specialInstructions = document.querySelector('textarea[name="special_instructions"]').value.trim();
             specialInstructions = specialInstructions !== "" ? specialInstructions : null;
 
-            // Perform AJAX request to save special instructions and redirect
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "save_special_instructions.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        window.location.href = 'checkout.php?payment=';
+            // Perform AJAX request to check verification
+            var xhrVerification = new XMLHttpRequest();
+            xhrVerification.open("POST", "check_checkout_verification.php", true);
+            xhrVerification.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhrVerification.onreadystatechange = function() {
+                if (xhrVerification.readyState === XMLHttpRequest.DONE && xhrVerification.status === 200) {
+                    var verificationResponse = JSON.parse(xhrVerification.responseText);
+                    if (verificationResponse.success) {
+                        // Proceed to save special instructions and redirect
+                        var xhrSaveInstructions = new XMLHttpRequest();
+                        xhrSaveInstructions.open("POST", "save_special_instructions.php", true);
+                        xhrSaveInstructions.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhrSaveInstructions.onreadystatechange = function() {
+                            if (xhrSaveInstructions.readyState === XMLHttpRequest.DONE && xhrSaveInstructions.status === 200) {
+                                var response = JSON.parse(xhrSaveInstructions.responseText);
+                                if (response.success) {
+                                    window.location.href = 'checkout.php?payment=';
+                                } else {
+                                    showNotification(response.message);
+                                }
+                            }
+                        };
+
+                        xhrSaveInstructions.send("special_instructions=" + encodeURIComponent(specialInstructions));
                     } else {
-                        showNotification(response.message);
+                        showNotification(verificationResponse.message);
                     }
                 }
             };
 
-            xhr.send("special_instructions=" + encodeURIComponent(specialInstructions));
+            var userId = <?php echo json_encode($user_id); ?>;
+            if (userId) {
+                xhrVerification.send("user_id=" + encodeURIComponent(userId));
+            } else {
+                showNotification("User ID not provided.");
+            }
         }
+
+
+        updateTotal();
     </script>
+    
 
 <?php include('partials/footer.php');

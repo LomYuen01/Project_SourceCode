@@ -131,7 +131,60 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-        <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex; ">
+
+                <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex;">
+            <div style="border: 1px solid black; width: 20%; font-size: 1rem;  background: #8e9eab;  background: -webkit-linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243)); background: linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243));">
+                <h1>Profile</h1>
+                    <?php
+                        
+                        $sql = "SELECT * FROM tbl_customer WHERE id=$user_id";
+                        $res = mysqli_query($conn, $sql);
+                        $count = mysqli_num_rows($res);
+                        if($count==1){
+                            $row = mysqli_fetch_assoc($res);
+                            $full_name = $row['full_name'];
+                            $username = $row['username'];
+                            $current_image = $row['image_name'];
+                        }
+                    ?>
+                <div style="padding:10%;">
+                    <div class="profile-img" style="display: flex; justify-content: center; align-items: center; width: 100%; ;">
+                        <?php
+                            if($current_image != "") {
+                                // If $current_image is not empty, display the image
+                                
+                                echo "<img src='".SITEURL."images/Profile/".$current_image."' id='profileImage' style='border-width: 2.5px; width: 100% !important; height:auto !important; object-fit: contain;'>";
+                            }
+                            else {
+                                // If $current_image is empty, display the default image
+                                echo "<img src='images/no_profile_pic.png' id='profileImage' style='border-width: 2.5px; width: 100% !important; height:auto !important; object-fit: contain;'>";
+                            }
+                        ?>
+                    </div>
+
+                    <div class="user-info" style="text-align: center; font-size: 1rem;margin:auto;">
+                        <?php echo $username; ?>
+                    </div>
+                </div>
+                <div class="profile-menu" style="height: auto;">
+                    <ul style="font-size: 1rem !important;">
+                        <li style="height: 80px;">
+                            <a href="profile-edit.php">Edit Profile</a>
+                        </li>
+                        <li style="height: 80px;">
+                            <a href="change-password.php">Change Password</a>
+                        </li>
+                        <li style="height: 80px;">
+                            <a href="profile_order.php">Order History</a>
+                        </li>
+                        <li style="height: 80px;">
+                            <a href="profile_address.php">Address</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        <div style="width: 80%; margin: auto;  margin-left:2%; display:inline-flex; ">
             <div class="order_box" style="border: 1px solid black; font-size: 1rem; width: 80%; height: 75vh; margin-left: 2%; background-color: #d9d9d9;" >
                 <div class="order_tab">
                     <input type="radio" name="order" id="order_current" class="order_input" checked>
@@ -144,8 +197,8 @@
                                     <th class="order-title">Name</th>
                                     <th class="order-title">Address</th>
                                     <th class="order-title">Order Time</th>
-                                    
                                     <th class="order-title">Order Status</th>
+                                    <th class="order-title">PaymentMethod</th>
                                 </tr>
                                 <?php
 
@@ -167,6 +220,7 @@
                                         $order_time = $row['order_time'];
                                         $order_status = empty($row['order_status']) ? 'Prepare' : $row['order_status'];
                                         $delivery_time = empty($row['delivery_time']) ? 'No delivery yet' : $row['delivery_time'];
+                                        $payment_method = empty($row['payment_method']) ? 'No payment method' : $row['payment_method'];
 
                                         echo '<tr class="detail">';
                                         echo '<td class="detail">' . $tbl_order_id . '</td>';
@@ -174,6 +228,7 @@
                                         echo '<td class="detail">' . $address . '</td>'; 
                                         echo '<td class="detail">' . $order_time . '</td>';
                                         echo '<td class="detail">' . $order_status . '</td>';
+                                        echo '<td class="detail">' . $payment_method . '</td>';
                                         echo '</tr>';
                                     }
                                 } else {
@@ -189,7 +244,7 @@
                     <input type="radio" name="order" id="order_history" class="order_input">
                     <label for="order_history">Order History</label>
                     <div class="order_content" style="padding-bottom: 10%; padding-top:10%;">
-                        <div style="margin:auto; width:80%;">
+                        <div style="margin:auto; width:80%; color:rgb(55, 55, 55)">
                             <table class="order">
                                 <tr>
                                     <th class="order-title">Order ID</th>
@@ -198,6 +253,7 @@
                                     <th class="order-title">Order Time</th>
                                     <th class="order-title">Delivery Time</th>
                                     <th class="order-title">Order Status</th>
+                                    <th class="order-title">PaymentMethod</th>
                                     <th class="order-title">Action</th>
                                 </tr>
                                 <?php
@@ -231,6 +287,7 @@
                                         echo '<td>' . $order_time . '</td>';
                                         echo '<td>' . $delivery_time . '</td>';
                                         echo '<td>' . $order_status . '</td>';
+                                        echo '<td>' . $payment_method . '</td>';
                                         echo '<td><a href="profile_invoice.php?order_id=' . $tbl_order_id . '"><button>Invoice</button></a></td>';
                                         echo '</tr>';
                                     }

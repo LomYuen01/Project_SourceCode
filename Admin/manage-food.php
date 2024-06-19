@@ -69,7 +69,7 @@
                 <div class="add-food">
                     <label for="dropdown-nav-bar" class="add-btn">
                         <i class='bx bx-plus icon'></i>    
-                        <?php echo "<a href=\"".SITEURL."admin/add-food.php\">Add Food</a>" ?>
+                        <?php echo "<a href=\"".SITEURL."admin/add-food.php\">Add Item</a>" ?>
                     </label>
                 </div>
             </section>
@@ -175,7 +175,12 @@
                                 <div class="food-details-container" data-id="<?php echo $row['id']; ?>">
                                     <article class="food-details-box">
                                         <h4 class="details food_name"><?php echo $title; ?></h4>
-                                        <p class="details price">&nbsp;&nbsp;RM <?php echo $normal_price; ?> - Regular<br>&nbsp;&nbsp;RM <?php echo $large_price; ?> - Large</p>
+                                        <p class="details price" style="<?php echo (floatval($normal_price) == 0.0) ? 'display: none;' : ''; ?>">&nbsp;&nbsp;RM <?php echo $normal_price; ?> - Regular</p>
+                                        <?php if(floatval($large_price) == 0.0): ?>
+                                            <div style="margin-bottom: 10px;"></div>
+                                        <?php else: ?>
+                                            <p class="details price">&nbsp;&nbsp;RM <?php echo $large_price; ?> - Large</p>
+                                        <?php endif; ?>
                                         <p class="description" style="font-size: 12px; margin-top: 5px;"><span style="font-weight: 500;">Description: </span><br><span id="description-text"><?php echo $description; ?></span></p>
                                     </article>
 

@@ -1,5 +1,5 @@
 <?php include('partials-front/menu.php'); 
-
+    $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
     if (isset($_POST['password'])) {
         
         $user_id = 1;
@@ -110,30 +110,52 @@
         <!--====== Forms ======-->
 
         <!--===== Content =====-->
-        <php $user_id = 1; ?>
         <div style="width: 90%; margin: auto; margin-top: 5%; margin-left:2%; display:inline-flex;">
-            <div style="border: 1px solid black; width: 20%; font-size: 1rem;">
+            <div style="border: 1px solid black; width: 20%; font-size: 1rem;  background: #8e9eab;  background: -webkit-linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243)); background: linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243));">
                 <h1>Profile</h1>
-                <div style="border: 1px solid black;">
-                    <div class="profile-img" style="display: flex; justify-content: center; align-items: center; width: 100%;">
-                        <img src="images/user.png" alt="User Image" class="img-responsive img-curve" style="width: 100%; height: auto; object-fit: cover;">
+                    <?php
+                        
+                        $sql = "SELECT * FROM tbl_customer WHERE id=$user_id";
+                        $res = mysqli_query($conn, $sql);
+                        $count = mysqli_num_rows($res);
+                        if($count==1){
+                            $row = mysqli_fetch_assoc($res);
+                            $full_name = $row['full_name'];
+                            $username = $row['username'];
+                            $current_image = $row['image_name'];
+                        }
+                    ?>
+                <div style="padding:10%;">
+                    <div class="profile-img" style="display: flex; justify-content: center; align-items: center; width: 100%; ;">
+                        <?php
+                            if($current_image != "") {
+                                // If $current_image is not empty, display the image
+                                
+                                echo "<img src='".SITEURL."images/Profile/".$current_image."' id='profileImage' style='border-width: 2.5px; width: 100% !important; height:auto !important; object-fit: contain;'>";
+                            }
+                            else {
+                                // If $current_image is empty, display the default image
+                                echo "<img src='images/no_profile_pic.png' id='profileImage' style='border-width: 2.5px; width: 100% !important; height:auto !important; object-fit: contain;'>";
+                            }
+                        ?>
                     </div>
-                    <div class="user-info">
-                        User Name
+
+                    <div class="user-info" style="text-align: center; font-size: 1rem;margin:auto;">
+                        <?php echo $username; ?>
                     </div>
                 </div>
-                <div class="profile-menu">
-                    <ul>
-                        <li>
-                            <a href="profile_edit.php">Edit Profile</a>
+                <div class="profile-menu" style="height: auto;">
+                    <ul style="font-size: 1rem !important;">
+                        <li style="height: 80px;">
+                            <a href="profile-edit.php">Edit Profile</a>
                         </li>
-                        <li>
-                            <a href="profile_password.php">Change Password</a>
+                        <li style="height: 80px;">
+                            <a href="change-password.php">Change Password</a>
                         </li>
-                        <li>
+                        <li style="height: 80px;">
                             <a href="profile_order.php">Order History</a>
                         </li>
-                        <li>
+                        <li style="height: 80px;">
                             <a href="profile_address.php">Address</a>
                         </li>
                     </ul>

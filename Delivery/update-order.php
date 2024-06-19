@@ -5,14 +5,18 @@
 
     if (isset($_GET['id'])) {
         $orderId = $_GET['id'];
+    } else {
+        // Handle the case where no id is provided, perhaps redirect to another page
+        header("Location: manage-order.php");
+        exit;
     }
 
     // Fetch order, customer, and address details
     $stmt = $conn->prepare("
-        SELECT o.*, c.full_name, c.email, c.ph_no, a.address, a.postal_code, a.city, a.state, a.country, o.order_status, o.order_time
+        SELECT o.*, c.full_name, c.email AS customer_email, a.firstname, a.phone, a.address, a.zip, a.city, a.state
         FROM tbl_order o
         JOIN tbl_customer c ON o.customer_id = c.id
-        JOIN tbl_address a ON o.address_id = a.id
+        JOIN tbl_order_address a ON o.address_id = a.id
         WHERE o.id = ?
     ");
     $stmt->bind_param("i", $orderId);
@@ -20,34 +24,39 @@
     $result = $stmt->get_result();
     $order = $result->fetch_assoc();
 
-    $id = $order['id'];
-    $fullName = $order['full_name'];
-    $email = $order['email'];
-    $phNo = $order['ph_no'];
-    $order_status = $order['order_status'];
-    $address = $order['address'];
-    $postalCode = $order['postal_code'];
-    $city = $order['city'];
-    $state = $order['state'];
-    $country = $order['country'];
-    $special_instructions = $order['special_instructions'];
+    if ($order) {
+        $id = $order['id'];
+        $fullName = $order['firstname']; // Changed from full_name to firstname
+        $email = $order['customer_email']; // Use customer_email to avoid confusion
+        $phNo = $order['phone']; // Changed from ph_no to phone
+        $address = $order['address'];
+        $postalCode = $order['zip'];
+        $city = $order['city'];
+        $state = $order['state'];
+        $paymethod = $order['paymethod'];
+        $order_status = $order['order_status'];
+        // Assuming special_instructions is part of the tbl_order
+        $special_instructions = $order['special_instructions'];
 
-    // Fetch order items and food details
-    $stmt = $conn->prepare("
-        SELECT oi.*, f.title
-        FROM tbl_order_items oi
-        JOIN tbl_food f ON oi.food_id = f.id
-        WHERE oi.order_id = ?
-    ");
-    $stmt->bind_param("i", $orderId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $orderItems = $result->fetch_all(MYSQLI_ASSOC);
-    
-    // Calculate total price
-    $totalPrice = 0;
-    foreach ($orderItems as $item) {
-        $totalPrice += $item['price'];
+        // Fetch order items and food details
+        $stmt = $conn->prepare("
+            SELECT oi.*, f.title
+            FROM tbl_order_items oi
+            JOIN tbl_food f ON oi.food_id = f.id
+            WHERE oi.order_id = ?
+        ");
+        $stmt->bind_param("i", $orderId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orderItems = $result->fetch_all(MYSQLI_ASSOC);
+
+        // Calculate total price
+        $totalPrice = 0;
+        foreach ($orderItems as $item) {
+            $totalPrice += $item['price'] * $item['quantity']; // Multiply the price by the quantity
+        }
+    } else {
+        echo "Order not found!";
     }
 ?>
 
@@ -69,6 +78,7 @@
                         <p><span class="details">Customer Name:</span> <?php echo $fullName; ?></p>
                         <p><span class="details">Phone Number:</span> <?php echo $phNo ?></p>
                         <p><span class="details">Delivery Address:</span> <?php echo $address . ", " . $postalCode . ", " . $city; ?></p>
+                        <p><span class="details">Payment Method:</span> <?php echo $paymethod ?></p>
                         <p><span class="details">Total Price:</span> RM <?php echo number_format($totalPrice, 2)?></p>
                     </div>
 
