@@ -74,12 +74,12 @@
                                     $status = $row['order_status'];
 
                                     // Fetch the total price from the tbl_order_items table
-                                    $sql2 = "SELECT price FROM tbl_order_items WHERE order_id = $id";
+                                    $sql2 = "SELECT price, quantity FROM tbl_order_items WHERE order_id = $id"; // Add quantity to the SELECT statement
                                     $res2 = mysqli_query($conn, $sql2) or die(mysqli_error($conn));
                                     $total = 0;
                                     while($row2 = mysqli_fetch_assoc($res2))
                                     {
-                                        $total += $row2['price'];
+                                        $total += $row2['price'] * $row2['quantity']; // Now you can use $row2['quantity']
                                     }
 
                                     ?>

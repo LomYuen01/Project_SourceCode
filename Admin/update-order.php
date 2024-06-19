@@ -4,17 +4,16 @@
     if (isset($_GET['id'])) {
         $orderId = $_GET['id'];
     } else {
-        // Handle the case where no id is provided, perhaps redirect to another page
+        header("Location: manage-order.php");
+        exit;
     }
-
-    // Assuming you have a MySQLi connection $conn
 
     // Fetch order, customer, and address details
     $stmt = $conn->prepare("
-        SELECT o.*, c.full_name, c.email, c.ph_no, a.address, a.postal_code, a.city, a.state, a.country, o.order_status, o.order_time
+        SELECT o.*, c.full_name, c.email AS customer_email, a.firstname, a.phone, a.address, a.zip, a.city, a.state
         FROM tbl_order o
         JOIN tbl_customer c ON o.customer_id = c.id
-        JOIN tbl_address a ON o.address_id = a.id
+        JOIN tbl_order_address a ON o.address_id = a.id
         WHERE o.id = ?
     ");
     $stmt->bind_param("i", $orderId);
@@ -22,30 +21,35 @@
     $result = $stmt->get_result();
     $order = $result->fetch_assoc();
 
-    $id = $order['id'];
-    $fullName = $order['full_name'];
-    $email = $order['email'];
-    $phNo = $order['ph_no'];
-    $order_status = $order['order_status'];
-    $order_time = $order['order_time'];
-    $address = $order['address'];
-    $postalCode = $order['postal_code'];
-    $city = $order['city'];
-    $state = $order['state'];
-    $country = $order['country'];
-    $special_instructions = $order['special_instructions'];
+    if ($order) {
+        $id = $order['id'];
+        $fullName = $order['firstname']; // Changed from full_name to firstname
+        $order_time = $order['order_time']; // Added order_time
+        $order_status = $order['order_status']; // Added order_status
+        $email = $order['customer_email']; // Use customer_email to avoid confusion
+        $phNo = $order['phone']; // Changed from ph_no to phone
+        $address = $order['address'];
+        $zip = $order['zip'];
+        $city = $order['city'];
+        $state = $order['state'];
+        $paymethod = $order['paymethod'];
+        // Assuming special_instructions is part of the tbl_order
+        $special_instructions = $order['special_instructions'];
 
-    // Fetch order items and food details
-    $stmt = $conn->prepare("
-        SELECT oi.*, f.title
-        FROM tbl_order_items oi
-        JOIN tbl_food f ON oi.food_id = f.id
-        WHERE oi.order_id = ?
-    ");
-    $stmt->bind_param("i", $orderId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $orderItems = $result->fetch_all(MYSQLI_ASSOC);
+        // Fetch order items and food details
+        $stmt = $conn->prepare("
+            SELECT oi.*, f.title
+            FROM tbl_order_items oi
+            JOIN tbl_food f ON oi.food_id = f.id
+            WHERE oi.order_id = ?
+        ");
+        $stmt->bind_param("i", $orderId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orderItems = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        echo "Order not found!";
+    }
 ?>
 
 <section class="home" style="overflow: hidden;">
@@ -109,7 +113,7 @@
                             $title = $item['title'];
                             $price = $item['price'];
                             $quantity = $item['quantity'];
-                            $totalPrice += $price; // Just add the price without considering the quantity
+                            $totalPrice += $price * $quantity; 
 
                             // Fetch the image name from the tbl_food table
                             $sql = "SELECT image_name FROM tbl_food WHERE id = $itemId";

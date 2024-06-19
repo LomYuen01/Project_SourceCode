@@ -35,7 +35,6 @@
         $state = $order['state'];
         $paymethod = $order['paymethod'];
         $order_status = $order['order_status'];
-        // Assuming special_instructions is part of the tbl_order
         $special_instructions = $order['special_instructions'];
 
         // Fetch order items and food details
