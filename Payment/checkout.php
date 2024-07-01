@@ -97,7 +97,7 @@ if (isset($_POST['order'])) {
         } else {
             $selected_payment_method = $_POST['payment_method']; 
 
-            if ($selected_payment_method == 'cod') {
+            if ($selected_payment_method == 'COD') {
                 $selected_payment_method = 'COD';
                 $address_id = 1;
             } else {
@@ -245,7 +245,7 @@ if (isset($_POST['order'])) {
         box-sizing: border-box;
     }
 
-    .row {
+    .row01 {
         display: -ms-flexbox;
         /* IE10 */
         display: flex;
@@ -458,7 +458,7 @@ if (isset($_POST['order'])) {
                         <input type="checkbox" id="check">
                         <label for="check" style="margin-bottom: 0;">Remember me</label>
                     </span>
-                    <a href="#" class="forgot-password">Forgot password?</a>
+                    <a href=".../Email/forgot.php" class="forgot-password">Forgot password?</a>
                 </div>
 
                 <button type="submit" name="submit" class="btn">Login Now</button>
@@ -567,7 +567,7 @@ if (isset($_POST['order'])) {
                                                     <input type="text" id="expmonth" name="expmonth"
                                                         placeholder="September">
                                                 </div>
-                                                <div class="row">
+                                                <div class="row01">
                                                     <div class="col-50">
                                                         <label for="expyear">Exp Year</label>
                                                         <input type="text" id="expyear" name="expyear"

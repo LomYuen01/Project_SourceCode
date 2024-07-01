@@ -120,7 +120,7 @@
                             <input type="checkbox" id="check">
                             <label for="check" style="margin-bottom: 0;">Remember me</label>
                         </span>
-                        <a href="#" class="forgot-password">Forgot password?</a>
+                        <a href="Email/forgot.php" class="forgot-password">Forgot password?</a>
                     </div>
 
                     <button type="submit" name="submit" class="btn">Login Now</button>

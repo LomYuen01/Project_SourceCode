@@ -236,7 +236,7 @@ if (isset($_POST['update'])) {
                             <input type="checkbox" id="check">
                             <label for="check">Remember me</label>
                         </span>
-                        <a href="#" class="forgot-password">Forgot password?</a>
+                        <a href="Email/forgot.php" class="forgot-password">Forgot password?</a>
                     </div>
 
                     <button class="btn">Login Now</button>

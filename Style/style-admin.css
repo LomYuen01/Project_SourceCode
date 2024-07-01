@@ -648,10 +648,10 @@ thead th .icon:hover {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    margin: 19.08% auto;
+    margin: 18.08% auto;
 
     width: 95%;
-    height: 60%;
+    min-height: 60%;
 
     background: #FFF;
     box-shadow: .2rem -.1rem .5rem #0005;

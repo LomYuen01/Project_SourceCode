@@ -28,7 +28,7 @@
 ?>
 
 <style>
-    .container {
+    .container01 {
         position: relative;
         display: flex;
         justify-content: center;
@@ -160,7 +160,7 @@
 
 
     <!--====== Content ======-->
-   <div class="container">
+   <div class="container01">
         <div style="position: relative; background: #8e9eab;  background: -webkit-linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243)); background: linear-gradient(to bottom, rgb(239, 248, 245), rgb(238, 242, 243)); display: flex; padding: 40px; border-radius: 11px;">
             <div class="left-side">
                 <h2>
@@ -169,7 +169,6 @@
                 
                 <form method="POST" action="process-reset-password.php" class="my-login-validation" novalidate="">
                     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-                    <?php echo $token; ?>
                     <div class="form-group">
                         <h4>New Password</h4>
                         <input id="password" type="password" class="form-control input-box" name="password" required data-eye>
