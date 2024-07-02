@@ -216,26 +216,30 @@
             exit;
         }
 
-        // Check if any of the variations already exist
-        foreach($variations as $index => $variation) {
-            $variation = mysqli_real_escape_string($conn, $variation);
-            $variation_id = $variations_id[$index];
-            $sql_check_variation = "SELECT * FROM tbl_store_variation WHERE name = '$variation' AND id != $variation_id";
-            $res_check_variation = mysqli_query($conn, $sql_check_variation) or die(mysqli_error());
-            if($res_check_variation->num_rows > 0) {
-                // Variation already exists
-                echo "<script>
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Variation already Exists.',
-                        icon: 'error'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '".SITEURL."admin/update-category.php?id=".$category_id."';
-                        }
-                    });
-                </script>";
-                exit;
+        if(empty($variations)) 
+        {
+            $sql_delete_all_variations = "DELETE FROM tbl_store_variation WHERE category_id = $category_id";
+            mysqli_query($conn, $sql_delete_all_variations) or die(mysqli_error());
+        } 
+        else 
+        {
+            foreach($variations as $variation) 
+            {
+                $variation = mysqli_real_escape_string($conn, $variation);
+            
+                // Check if the variation already exists
+                $sql_check = "SELECT * FROM tbl_store_variation WHERE category_id = $category_id AND name = '$variation'";
+                $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
+                if(mysqli_num_rows($res_check) == 0) {
+                    // The variation does not exist, insert it
+                    $sql_variation = "INSERT INTO tbl_store_variation SET
+                        category_id = '$category_id',
+                        name = '$variation'
+                    ";
+            
+                    // Executing Query and Inserting Data into tbl_store_variation
+                    $res_variation = mysqli_query($conn, $sql_variation) or die(mysqli_error());
+                }
             }
         }
 
@@ -281,20 +285,16 @@
                 $variation = mysqli_real_escape_string($conn, $variation);
 
                 // Check if the variation already exists
-                $sql_check = "SELECT * FROM tbl_store_variation WHERE category_id = $category_id AND name = '$variation'";
-                $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
-                if(mysqli_num_rows($res_check) > 0) {
-                    // The variation exists, update it
-                    $sql_variation = "UPDATE tbl_store_variation SET
-                        name = '$variation'
-                        WHERE category_id = $category_id AND name = '$variation'
-                    ";
-                } else {
-                    // The variation doesn't exist, insert it
-                    $sql_variation = "INSERT INTO tbl_store_variation SET
-                        category_id = '$category_id',
-                        name = '$variation'
-                    ";
+                if(!empty($variations)) {
+                    $sql_check = "SELECT * FROM tbl_store_variation WHERE category_id = $category_id AND name = '$variation'";
+                    $res_check = mysqli_query($conn, $sql_check) or die(mysqli_error());
+                    if(mysqli_num_rows($res_check) > 0) {
+                        // The variation exists, update it
+                        $sql_variation = "UPDATE tbl_store_variation SET
+                            name = '$variation'
+                            WHERE category_id = $category_id AND name = '$variation'
+                        ";
+                    }
                 }
 
                 // Executing Query and Updating or Inserting Data into tbl_store_variation
