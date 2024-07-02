@@ -318,7 +318,7 @@ if (isset($_POST['update'])) {
                 <div class="profile-menu" style="height: auto;">
                     <ul style="font-size: 1rem !important;">
                         <li style="height: 80px;">
-                            <a href="profile-edit.php">Edit Profile</a>
+                            <a href="edit-profile.php?id=<?php echo $_SESSION['user']['user_id']; ?>">Edit Profile</a>
                         </li>
                         <li style="height: 80px;">
                             <a href="change-password.php">Change Password</a>

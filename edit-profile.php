@@ -241,8 +241,9 @@
                 // If its not, we will stop the process and redirect with error message
                 if($upload == FALSE)
                 {
-                    $_SESSION['upload'] = "<div class='error'> Failed to Upload Image. </div>";
-                    header('location:'.$redirect_url);
+                     echo "<script>Swal.fire({icon: 'error',title: 'Error!',text: 'Failed to Upload Image.',confirmButtonText: 'OK'}).then((result) => {if (result.isConfirmed) {
+                    
+                     window.location.href = '".$redirect_url."';}});</script>";
                     die(); // Stop the Process
                 }
 
@@ -256,8 +257,9 @@
                     // If failed to remove, display message and stop the process
                     if($remove==FALSE)
                     {
-                        $_SESSION['failed-remove'] = "<div class='error'> Failed to remove current Image. </div>";
-                        header('location:'.$redirect_url);
+                        echo "<script>Swal.fire({icon: 'error',title: 'Error!',text: 'Failed to remove current Image.',confirmButtonText: 'OK'}).then((result) => {if (result.isConfirmed) {
+                    
+                        window.location.href = '".$redirect_url."';}});</script>";
                         die(); // Stop the Process
                     }
                 }
@@ -291,19 +293,20 @@
         {
             // Data Updated
             // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='success success-text-shadow' style='color: white;'> customer Updated Successfully. </div>";
+            echo "<script>Swal.fire({icon: 'success',title: 'Success!',text: 'Customer Updated Successfully.',confirmButtonText: 'OK'}).then((result) => {if (result.isConfirmed) {
+                        
 
             // Redirect to Manage customer Page
-            header('location:'.$redirect_url);
+            window.location.href = '".$redirect_url."';}});</script>";
         }
         else
         {
             // Failed to Update Data
             // Create a Session Variable to Display Message
-            $_SESSION['update'] = "<div class='error error-text-shadow' style='color: white;'> Failed to Update customer. Try Again Later. </div>";
-
+            echo "<script>Swal.fire({icon: 'error',title: 'Error!',text: 'Failed to Update Customer. Try Again Later.',confirmButtonText: 'OK'}).then((result) => {if (result.isConfirmed) {
+            
             // Redirect to Manage customer Page
-            header('location:'.$redirect_url);
+            window.location.href = '".$redirect_url."';}});</script>";
         }
     }
 ob_end_flush();

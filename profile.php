@@ -85,10 +85,10 @@
                 <div class="profile-menu">
                     <ul>
                         <li>
-                            <a href="profile_edit.php">Edit Profile</a>
+                            <a href="edit-profile.php?id=<?php echo $_SESSION['user']['user_id']; ?>">Edit Profile</a>
                         </li>
                         <li>
-                            <a href="profile_password.php">Change Password</a>
+                            <a href="change-password.php">Change Password</a>
                         </li>
                         <li>
                             <a href="profile_order.php">Order History</a>
