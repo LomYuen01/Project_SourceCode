@@ -472,129 +472,123 @@ if (isset($_POST['order'])) {
     <!--====== Forms ======-->
 
     <!--===== Content =====-->
-    <form action="" method="post"
-        style="display: flex; flex-direction: row; width: 89%; padding-top: 15px; margin: auto;">
-        <section class="checkout-home" style="width: 60%;">
-            <h2
-                style="display: block; font-size: 24px; color: #000; font-weight: 600; margin-top: 20px; margin-bottom: 16px;">
-                Checkout</h2>
-            <div class="row" style="width: 100%;">
-                <div class="col-75" style="margin-left: 16px; padding: 0;">
-                    <div class="container" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
-                        <div class="row">
-                            <div class="col-50" style="padding-top: 15px;">
-                                <h3>Address</h3>
-                                <div class="addresssave">
-                                    <label for="saved_addresses">Select Saved Address</label>
-                                    <select id="saved_addresses" onchange="fillAddress()" style="margin-bottom: 15px;">
-                                        <option value="">Select an address</option>
-                                        <?php foreach ($saved_addresses as $address) { ?>
-                                            <option value="<?php echo htmlspecialchars(json_encode($address)); ?>">
-                                                <?php echo $address['name'] . ' - ' . $address['address']; ?>
-                                            </option>
-                                        <?php } ?>
+<form action="" method="post" style="display: flex; flex-direction: row; width: 89%; padding-top: 15px; margin: auto;">
+    <section class="checkout-home" style="width: 60%;">
+        <h2 style="display: block; font-size: 24px; color: #000; font-weight: 600; margin-top: 20px; margin-bottom: 16px;">
+            Checkout</h2>
+        <div class="row" style="width: 100%;">
+            <div class="col-75" style="margin-left: 16px; padding: 0;">
+                <div class="container" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                    <div class="row">
+                        <div class="col-50" style="padding-top: 15px;">
+                            <h3>Address</h3>
+                            <div class="addresssave">
+                                <label for="saved_addresses">Select Saved Address</label>
+                                <select id="saved_addresses" onchange="fillAddress()" style="margin-bottom: 15px;">
+                                    <option value="">Select an address</option>
+                                    <?php foreach ($saved_addresses as $address) { ?>
+                                        <option value="<?php echo htmlspecialchars(json_encode($address)); ?>">
+                                            <?php echo $address['name'] . ' - ' . $address['address']; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <!-- Existing form fields -->
+                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                            <input type="text" id="fname" name="firstname" placeholder="Aaa Bbbbb">
+                            <label for="phone"><i class="fa fa-phone"></i> Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="0123456789">
+                            <br>
+                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                            <input type="text" id="email" name="email" placeholder="abc123@example.com">
+                            <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                            <input type="text" id="adr" name="address" placeholder="123, adc">
+                            <label for="city"><i class="fa fa-institution"></i> Taman</label>
+                            <input type="text" id="city" name="city" placeholder="Taman Kenanga Mewah">
+                            <div style="margin-left: -15px; display: flex; flex-direction: row;">
+                                <div class="col-50">
+                                    <label for="zip">Postcode</label>
+                                    <select id="zip" name="zip" required>
+                                        <option value="">Select a postcode</option>
+                                        <option value="75100">75100</option>
+                                        <option value="75200">75200</option>
+                                        <option value="75250">75250</option>
+                                        <option value="75300">75300</option>
                                     </select>
                                 </div>
-                                <!-- Existing form fields -->
-                                <label for="fname"><i class="fa fa-user"></i> Full Name</label>
-                                <input type="text" id="fname" name="firstname" placeholder="Aaa Bbbbb">
-                                <label for="phone"><i class="fa fa-phone"></i> Phone Number</label>
-                                <input type="tel" id="phone" name="phone" placeholder="0123456789">
-                                <br>
-                                <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                <input type="text" id="email" name="email" placeholder="abc123@example.com">
-                                <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
-                                <input type="text" id="adr" name="address" placeholder="123, adc">
-                                <label for="city"><i class="fa fa-institution"></i> Taman</label>
-                                <input type="text" id="city" name="city" placeholder="Taman Kenanga Mewah">
-                                <div style="margin-left: -15px; display: flex; flex-direction: row;">
-                                    <div class="col-50">
-                                        <label for="zip">Postcode</label>
-                                        <select id="zip" name="zip" required>
-                                            <option value="">Select a postcode</option>
-                                            <option value="75100">75100</option>
-                                            <option value="75200">75200</option>
-                                            <option value="75250">75250</option>
-                                            <option value="75300">75300</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-50">
-                                        <label for="state">State</label>
-                                        <select id="state" name="state">
-                                            <option value="Melaka">Melaka</option>
-                                        </select>
-                                    </div>
+                                <div class="col-50">
+                                    <label for="state">State</label>
+                                    <select id="state" name="state">
+                                        <option value="Melaka">Melaka</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Existing payment section -->
-                    <div class="container"
-                        style="margin-top: 2%; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                        <div class="row">
-                            <div class="col-50" style="padding-top: 15px;">
-                                <h3>Payment</h3>
+                <!-- Existing payment section -->
+                <div class="container" style="margin-top: 2%; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                    <div class="row">
+                        <div class="col-50" style="padding-top: 15px;">
+                            <h3>Payment</h3>
 
-                                <div class="tab-container">
-                                    <ul class="tab-title">
+                            <div class="tab-container">
+                                <ul class="tab-title">
                                     <li class="active" onclick="setPaymentMethod('CreditCard');">Credit Card</li>
                                     <li onclick="setPaymentMethod('COD');">Cash On Delivery</li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-panel show">
-                                            <div style="display: flex; flex-direction:column;">
-                                                <label for="fname"
-                                                    style="margin-top: 6px; margin-bottom: -6px;">Accepted Cards</label>
-                                                <div class="icon-container">
-                                                    <i class="fa fa-cc-visa" style="color:navy;"></i>
-                                                    <i class="fa fa-cc-amex" style="color:blue;"></i>
-                                                    <i class="fa fa-cc-mastercard" style="color:red;"></i>
-                                                    <i class="fa fa-cc-discover" style="color:orange;"></i>
-                                                </div>
-                                                <label for="cname">Name</label>
-                                                <input type="text" id="cname" name="cardname" placeholder="Hooolely">
-                                                <div style="display: block; width: 100%;">
-                                                    <label for="ccnum">Credit card number</label>
-                                                    <input type="tel" name="credit_card" id="credit_card_number"
-                                                        placeholder="Card Number:" class="form-control"
-                                                        onkeypress='return formats(this,event)'
-                                                        onkeyup="return numberValidation(event)">
-                                                </div>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-panel show">
+                                        <div style="display: flex; flex-direction:column;">
+                                            <label for="fname" style="margin-top: 6px; margin-bottom: -6px;">Accepted Cards</label>
+                                            <div class="icon-container">
+                                                <i class="fa fa-cc-visa" style="color:navy;"></i>
+                                                <i class="fa fa-cc-amex" style="color:blue;"></i>
+                                                <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                                                <i class="fa fa-cc-discover" style="color:orange;"></i>
+                                            </div>
+                                            <label for="cname">Name</label>
+                                            <input type="text" id="cname" name="cardname" placeholder="Hooolely">
+                                            <div style="display: block; width: 100%;">
+                                                <label for="ccnum">Credit card number</label>
+                                                <input type="tel" name="credit_card" id="credit_card_number"
+                                                    placeholder="Card Number:" class="form-control"
+                                                    onkeypress='return formats(this,event)'
+                                                    onkeyup="numberValidation(event)">
+                                            </div>
 
-                                                <div style="display: block; width: 100%;">
-                                                    <label for="expmonth" style="display: block;">Exp Month</label>
-                                                    <input type="text" id="expmonth" name="expmonth"
-                                                        placeholder="September">
+                                            <div style="display: block; width: 100%;">
+                                                <label for="expmonth" style="display: block;">Exp Month</label>
+                                                <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                                            </div>
+                                            <div class="row01">
+                                                <div class="col-50">
+                                                    <label for="expyear">Exp Year</label>
+                                                    <input type="text" id="expyear" name="expyear" placeholder="2018">
                                                 </div>
-                                                <div class="row01">
-                                                    <div class="col-50">
-                                                        <label for="expyear">Exp Year</label>
-                                                        <input type="text" id="expyear" name="expyear"
-                                                            placeholder="2018">
-                                                    </div>
-                                                    <div class="col-50">
-                                                        <label for="cvv">CVV</label>
-                                                        <input type="text" id="cvv" name="cvv" placeholder="352">
-                                                    </div>
+                                                <div class="col-50">
+                                                    <label for="cvv">CVV</label>
+                                                    <input type="text" id="cvv" name="cvv" placeholder="352" minlength="3" maxlength="4">
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="tab-panel" style="padding: 50px;">
-                                            <p>COD</p>
-                                        </div>
+                                    <div class="tab-panel" style="padding: 50px;">
+                                        <p>COD</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="payment_method" name="payment_method" value="CreditCard">
-                    <input type="submit" name="order" class="btn <?= ($total > 1) ? '' : 'disabled'; ?>" value="Place order"
-                        style="border-radius: 18px; margin-top:5%; transition: .2s ease;">
                 </div>
+                <input type="hidden" id="payment_method" name="payment_method" value="CreditCard">
+                <input type="submit" name="order" class="btn <?= ($total > 1) ? '' : 'disabled'; ?>" value="Place order"
+                    style="border-radius: 18px; margin-top:5%; transition: .2s ease;">
             </div>
-        </section>
+        </div>
+    </section>
 
         <section style="margin-top: 5%; width: 40%; display: flex; flex-direction:column;">
             <div class="basket"
@@ -702,135 +696,58 @@ if (isset($_POST['order'])) {
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const loginForm = document.querySelector('.form.login-form form');
-
-        loginForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            // Send the form data to the server using AJAX
-            const formData = new FormData(loginForm);
-
-            // Add the submit field manually
-            formData.append('submit', 'Login');
-
-            fetch('<?php echo SITEURL; ?>login.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-                return response.text();
-            })
-            .then(text => {
-                console.log(text);  // Log the raw response text
-                const data = JSON.parse(text);  // Parse the text as JSON
-
-                if (data.success) {
-                    swal('Success!', data.message, 'success').then(() => {
-                        window.location.href = data.redirect;
-                    });
-                } else {
-                    swal('Error!', data.message, 'error');
-                }
-            })
-            .catch(error => {
-                swal('Error!', error.message, 'error');
-            });
-        });
-
         function setPaymentMethod(method) {
             document.getElementById('payment_method').value = method;
         }
 
-        // Other UI event handlers
-        let btns = document.querySelectorAll('.tab-title li')
+        let btns = document.querySelectorAll('.tab-title li');
         btns.forEach((item, i) => {
             item.onclick = function () {
-                let activeBtn = document.querySelector('.tab-title li.active')
-                activeBtn.classList.remove('active')
-                this.classList.add('active')
+                let activeBtn = document.querySelector('.tab-title li.active');
+                activeBtn.classList.remove('active');
+                this.classList.add('active');
 
-                // Tab content
-                let showPanel = document.querySelector('.tab-content .tab-panel.show')
-                showPanel.classList.remove('show')
-                let panels = document.querySelectorAll('.tab-content .tab-panel')
-                panels[i].classList.add('show')
+                let showPanel = document.querySelector('.tab-content .tab-panel.show');
+                showPanel.classList.remove('show');
+                let panels = document.querySelectorAll('.tab-content .tab-panel');
+                panels[i].classList.add('show');
             }
-        })
+        });
 
-        let subMenu = document.getElementById("subMenu");
-        function toggleMenu() {
-            subMenu.classList.toggle("open-menu");
-        }
-
-        var countDownDate = new Date().getTime() + 900000;
-        var x = setInterval(function () {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
-            if (distance < 0) {
-                clearInterval(x);
-                alert("Your session has expired. Please try again.");
-                window.location.href = 'cart.php';
-            }
-        }, 1000);
-
-        function formats(ele, e) {
-            if (ele.value.length < 19) {
-                ele.value = ele.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-                return true;
+        document.getElementById('phone').addEventListener('input', function (e) {
+            const value = this.value.replace(/\D/g, '');
+            if (value.length > 3 && (value.startsWith('010') || value.startsWith('011') || value.startsWith('012') || value.startsWith('013') || value.startsWith('014') || value.startsWith('016') || value.startsWith('017') || value.startsWith('018') || value.startsWith('019'))) {
+                let formattedValue = value.match(/(\d{1,3})(\d{1,8})?/);
+                if (formattedValue) {
+                    this.value = formattedValue[1] + (formattedValue[2] ? '-' + formattedValue[2] : '');
+                }
             } else {
-                return false;
+                this.value = value.substring(0, 3);
             }
-        }
+        });
 
-        function numberValidation(e) {
-            e.target.value = e.target.value.replace(/[^\d ]/g, '');
-            return false;
-        }
-
-        function fillAddress() {
-            var select = document.getElementById('saved_addresses');
-            var address = JSON.parse(select.value);
-            if (address) {
-                document.getElementById('fname').value = address.firstname;
-                document.getElementById('phone').value = address.phone;
-                document.getElementById('email').value = address.email || ''; 
-                document.getElementById('adr').value = address.address;
-                document.getElementById('city').value = address.city;
-                document.getElementById('zip').value = address.postal_code;
-                document.getElementById('state').value = address.state;
+        document.getElementById('phone').addEventListener('blur', function (e) {
+            const value = this.value.replace(/\D/g, '');
+            if (value.length < 10 || value.length > 11) {
+                alert('Invalid phone number. Please enter a valid phone number.');
+                this.value = '';
             }
-        }
+        });
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const phoneInput = document.getElementById('phone');
+        document.getElementById('credit_card_number').addEventListener('keypress', function (e) {
+            if (this.value.length < 19) {
+                this.value = this.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+            } else {
+                e.preventDefault();
+            }
+        });
 
-            phoneInput.addEventListener('input', function (e) {
-                const value = phoneInput.value.replace(/\D/g, '');
+        document.getElementById('credit_card_number').addEventListener('keyup', function (e) {
+            this.value = this.value.replace(/[^\d ]/g, '');
+        });
 
-                if (value.length > 3 && value.startsWith('010') || value.startsWith('011') || value.startsWith('012') || value.startsWith('013') || value.startsWith('014') || value.startsWith('016') || value.startsWith('017') || value.startsWith('018') || value.startsWith('019')) {
-                    let formattedValue = value.match(/(\d{1,3})(\d{1,8})?/);
-                    if (formattedValue) {
-                        phoneInput.value = formattedValue[1] + (formattedValue[2] ? '-' + formattedValue[2] : '');
-                    }
-                } else {
-                    phoneInput.value = value.substring(0, 3);
-                }
-            });
-
-            phoneInput.addEventListener('blur', function (e) {
-                const value = phoneInput.value.replace(/\D/g, '');
-                if (value.length < 10 || value.length > 11) {
-                    alert('Invalid phone number. Please enter a valid phone number.');
-                    phoneInput.value = '';
-                }
-            });
+        document.getElementById('cvv').addEventListener('input', function () {
+            validateCreditCard();
         });
 
         function validateCreditCard() {
@@ -842,36 +759,32 @@ if (isset($_POST['order'])) {
             let cvv = document.getElementById('cvv').value;
             let errorMessages = [];
 
-            // Clear previous errors
             document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
-            // Validate card name
             if (!cardName) {
                 isValid = false;
                 errorMessages.push("Card name is required.");
             }
 
-            // Validate card number using Luhn's algorithm
             if (!isValidCardNumber(cardNumber)) {
                 isValid = false;
                 errorMessages.push("Invalid card number.");
             }
 
-            // Validate expiration date
             if (!isValidExpiry(expMonth, expYear)) {
                 isValid = false;
                 errorMessages.push("Invalid expiration date.");
             }
 
-            // Validate CVV
             if (!/^\d{3,4}$/.test(cvv)) {
                 isValid = false;
                 errorMessages.push("Invalid CVV.");
             }
 
-            // Display error messages
             if (!isValid) {
                 document.getElementById('error-messages').innerHTML = errorMessages.map(msg => `<p class="error">${msg}</p>`).join('');
+            } else {
+                document.getElementById('error-messages').innerHTML = '';
             }
 
             return isValid;
@@ -902,6 +815,35 @@ if (isset($_POST['order'])) {
 
             return inputDate >= currentDate;
         }
+
+        function fillAddress() {
+            var select = document.getElementById('saved_addresses');
+            var address = JSON.parse(select.value);
+            if (address) {
+                document.getElementById('fname').value = address.firstname;
+                document.getElementById('phone').value = address.phone;
+                document.getElementById('email').value = address.email || ''; 
+                document.getElementById('adr').value = address.address;
+                document.getElementById('city').value = address.city;
+                document.getElementById('zip').value = address.postal_code;
+                document.getElementById('state').value = address.state;
+            }
+        }
+
+        var countDownDate = new Date().getTime() + 900000;
+        var x = setInterval(function () {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+            if (distance < 0) {
+                clearInterval(x);
+                alert("Your session has expired. Please try again.");
+                window.location.href = 'cart.php';
+            }
+        }, 1000);
     });
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

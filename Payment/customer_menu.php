@@ -222,6 +222,7 @@
                                                             }
                                                             ?>
                                                         </select>
+                                                        <div><?php echo "<p>In store: " . (empty($quantity) ? "0" : $quantity) . "</p>";?></div>
                                                     </div>
                                                 <?php
                                                 } else {

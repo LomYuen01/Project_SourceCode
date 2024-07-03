@@ -58,7 +58,7 @@
                 <button class="btn">Login Now</button>
 
                 <div class="login-singup">
-                    Don't have an account? <a href="#" id="signup">Sign up</a>
+                    Don't have an account? <a href="<?php echo SITEURL; ?>signup.php">Sign up</a>
                 </div>
             </form>
         </div>
@@ -174,7 +174,7 @@
                     $city = $row_order['city'];
                     $state = $row_order['state'];
                     $zip = $row_order['zip'];
-                    $payment_method = $row_order['payment_method'];
+                    $payment_method = $row_order['paymethod'];
                 }
                 ?>
                 <div class="split">

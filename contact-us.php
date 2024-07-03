@@ -192,7 +192,7 @@
                 <p class="contact-info-text">Sunday: 06:30 - 14:00</p>
                 <h2 class="contact-info-heading">Find Us On</h2>
                 <p class="contact-info-text">
-                    <a href="#" class="contact-info-link">Facebook</a>
+                    <a href="https://www.facebook.com/profile.php?id=100089915641375" class="contact-info-link">Facebook</a>
                     <a href="#" class="contact-info-link">Twitter</a>
                     <a href="#" class="contact-info-link">Instagram</a>
                 </p>

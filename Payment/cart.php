@@ -109,12 +109,12 @@
 
                     if ($user_id !== "") {
                         $sql = "SELECT tbl_cart_items.id as cart_items_id, tbl_cart_items.quantity as cart_quantity, tbl_cart_items.size as cart_size, 
-                                    tbl_food.title, tbl_food.normal_price, tbl_food.large_price, tbl_food.active, tbl_food.image_name,
-                                    tbl_food_variation.name as variation_name
-                                FROM tbl_cart_items
-                                INNER JOIN tbl_food ON tbl_cart_items.food_id = tbl_food.id
-                                LEFT JOIN tbl_food_variation ON tbl_cart_items.variation = tbl_food_variation.id
-                                WHERE tbl_cart_items.customer_id = $user_id";
+                            tbl_food.title, tbl_food.normal_price, tbl_food.large_price, tbl_food.active, tbl_food.image_name, tbl_food.quantity as food_quantity,
+                            tbl_food_variation.name as variation_name
+                        FROM tbl_cart_items
+                        INNER JOIN tbl_food ON tbl_cart_items.food_id = tbl_food.id
+                        LEFT JOIN tbl_food_variation ON tbl_cart_items.variation = tbl_food_variation.id
+                        WHERE tbl_cart_items.customer_id = $user_id";
 
                         $result = $conn->query($sql);
                         $inactive_foods = []; // Array to hold inactive food items
@@ -150,6 +150,8 @@
                                     <div class="subtotal" data-subtotal="<?php echo number_format($subtotal, 2, '.', ''); ?>"><?php echo number_format($subtotal, 2); ?></div>
                                     <div class="remove" style="border: 0; color: var(--sk-body-link-color,#06c)">
                                         <button onclick="removeFromCart(<?php echo $row['cart_items_id']; ?>)">Remove</button>
+                                        <?php echo "<p>In store: " . (empty($row['food_quantity']) ? "0" : $row['food_quantity']) . "</p>";  if ($row['active'] != 'Yes') {echo "<p>Status: Unavailable</p>";}?>
+                                        
                                     </div>
                                 </div>
                                 <?php

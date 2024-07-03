@@ -7,7 +7,7 @@
     <head>
         <!-----===============| CSS |===============----->
         <link rel="stylesheet" href="Style/style-edit-profile.css">
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-----===========| Boxicon CSS |===========----->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <script src="https://kit.fontawesome.com/3bfb2b9d7b.js" crossorigin="anonymous"></script>
@@ -295,7 +295,6 @@
             // Create a Session Variable to Display Message
             echo "<script>Swal.fire({icon: 'success',title: 'Success!',text: 'Customer Updated Successfully.',confirmButtonText: 'OK'}).then((result) => {if (result.isConfirmed) {
                         
-
             // Redirect to Manage customer Page
             window.location.href = '".$redirect_url."';}});</script>";
         }

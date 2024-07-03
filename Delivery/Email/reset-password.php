@@ -124,7 +124,7 @@
 								}).then((result) => {
 									if (result.isConfirmed) {
 										// Redirect to the login page
-										window.location.href = 'http://localhost/RenoKitchen/delivery/login.php';
+										window.location.href = 'http://localhost/RenoKitchen/delivery/Email/login.php';
 									}
 								});
 							} else {

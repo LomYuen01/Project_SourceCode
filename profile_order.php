@@ -192,12 +192,12 @@
             </div>
 
         <div style="width: 80%; margin: auto;  margin-left:2%; display:inline-flex; ">
-            <div class="order_box" style="border: 1px solid black; font-size: 1rem; width: 80%; height: 75vh; margin-left: 2%; background-color: #d9d9d9;" >
+            <div class="order_box" style="border: 1px solid black; font-size: 1rem; width: 80%; height: 75vh; margin-left: 2%; background-color: #d9d9d9; width:100%;" >
                 <div class="order_tab">
                     <input type="radio" name="order" id="order_current" class="order_input" checked>
                     <label for="order_current">Order</label>
                     <div class="order_content"  style="padding-bottom: 10%; padding-top:10%;">
-                        <div style="margin:auto; width:80%;">
+                        <div style="margin:auto; width:90%;">
                             <table class="order">
                                 <tr>
                                     <th class="order-title">Order ID</th>
@@ -209,7 +209,7 @@
                                 </tr>
                                 <?php
 
-                                $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, 
+                                $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, tbl_order.paymethod,
                                     tbl_order_address.id as tbl_order_address_id, tbl_order_address.firstname, tbl_order_address.address, tbl_order_address.city, tbl_order_address.state, 
                                     tbl_order_address.zip 
                                     FROM tbl_order 
@@ -227,7 +227,7 @@
                                         $order_time = $row['order_time'];
                                         $order_status = empty($row['order_status']) ? 'Prepare' : $row['order_status'];
                                         $delivery_time = empty($row['delivery_time']) ? 'No delivery yet' : $row['delivery_time'];
-                                        $payment_method = empty($row['payment_method']) ? 'No payment method' : $row['payment_method'];
+                                        $paymethod = empty($row['paymethod']) ? 'No payment method' : ($row['paymethod'] === 'CreditCard' ? 'Credit Card' : $row['paymethod']);
 
                                         echo '<tr class="detail">';
                                         echo '<td class="detail">' . $tbl_order_id . '</td>';
@@ -235,7 +235,7 @@
                                         echo '<td class="detail">' . $address . '</td>'; 
                                         echo '<td class="detail">' . $order_time . '</td>';
                                         echo '<td class="detail">' . $order_status . '</td>';
-                                        echo '<td class="detail">' . $payment_method . '</td>';
+                                        echo '<td class="detail">' . $paymethod . '</td>';
                                         echo '</tr>';
                                     }
                                 } else {
@@ -267,7 +267,7 @@
                                 $user_id = 1; 
 
                                 
-                                $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, 
+                                $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, tbl_order.paymethod,
                                     tbl_order_address.id as tbl_order_address_id, tbl_order_address.firstname, tbl_order_address.address, tbl_order_address.city, tbl_order_address.state, 
                                     tbl_order_address.zip 
                                     FROM tbl_order 
@@ -286,6 +286,7 @@
                                         $order_time = $row['order_time'];
                                         $order_status = empty($row['order_status']) ? 'Prepare' : $row['order_status'];
                                         $delivery_time = empty($row['delivery_time']) ? 'No delivery yet' : $row['delivery_time'];
+                                        $paymethod = empty($row['paymethod']) ? 'No payment method' : ($row['paymethod'] === 'CreditCard' ? 'Credit Card' : $row['paymethod']);
 
                                         echo '<tr>';
                                         echo '<td>' . $tbl_order_id . '</td>';
@@ -294,7 +295,7 @@
                                         echo '<td>' . $order_time . '</td>';
                                         echo '<td>' . $delivery_time . '</td>';
                                         echo '<td>' . $order_status . '</td>';
-                                        echo '<td>' . $payment_method . '</td>';
+                                        echo '<td>' . $paymethod . '</td>';
                                         echo '<td><a href="profile_invoice.php?order_id=' . $tbl_order_id . '"><button>Invoice</button></a></td>';
                                         echo '</tr>';
                                     }

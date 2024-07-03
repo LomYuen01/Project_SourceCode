@@ -2,7 +2,7 @@
     $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
     if (isset($_POST['password'])) {
         
-        $user_id = 1;
+        $user_id = $_SESSION['user']['user_id'];
         $current_password = $_POST['current_password'];
         $new_password = $_POST['new_password'];
         $confirm_password = $_POST['confirm_new_password'];
@@ -18,22 +18,22 @@
                     $res2 = mysqli_query($conn, $sql2);
                     if ($res2 == TRUE) {
                         $_SESSION['password_change'] = "<div class='success'>Password changed successfully</div>";
-                        header('location:'.SITEURL.'profile.php');
+                        header('location:'.SITEURL.'change-password.php');
                     } else {
                         $_SESSION['password_change'] = "<div class='error'>Failed to change password</div>";
-                        header('location:'.SITEURL.'profile_password.php');
+                        header('location:'.SITEURL.'change-password.php');
                     }
                 } else {
                     $_SESSION['password_change'] = "<div class='error'>New password and confirm password do not match</div>";
-                    header('location:'.SITEURL.'profile_password.php');
+                    header('location:'.SITEURL.'change-password.php');
                 }
             } else {
                 $_SESSION['password_change'] = "<div class='error'>Password does not match</div>";
-                header('location:'.SITEURL.'profile_password.php');
+                header('location:'.SITEURL.'change-password.php');
             }
         } else {
             $_SESSION['password_change'] = "<div class='error'>Failed to change password</div>";
-            header('location:'.SITEURL.'profile_password.php');
+            header('location:'.SITEURL.'change-password.php');
         }
     }
 
@@ -195,6 +195,7 @@
 
                     <div style="display: flex; justify-content: center; width: 100%;">
                         <input type="submit" name="password" value="Submit">
+                        <?php if (!empty($_SESSION['password_change'])) {echo $_SESSION['password_change'];}?>
                     </div>
                     </form>
                 </div>

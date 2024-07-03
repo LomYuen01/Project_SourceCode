@@ -180,7 +180,7 @@
     <div class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">Reno Kitchen</h1>
-            <p class="hero-subtitle">Takeout & Delivery</p>
+            <p class="hero-subtitle">Delivery</p>
             <a href="Payment/customer_menu.php" class="hero-button">Menu</a>
         </div>
     </div>

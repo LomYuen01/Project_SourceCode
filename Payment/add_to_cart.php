@@ -7,7 +7,7 @@ if (isset($_SESSION['user']['user_id']) && isset($_POST['food_id']) && isset($_P
     $user_id = $_SESSION['user']['user_id'];
     $food_id = $_POST['food_id'];
     $variation = $_POST['variation'];
-    $size = $_POST['size'];
+    $size = (empty($_POST['size']) || $_POST['size'] === 'Regular') ? 'Normal' : $_POST['size'];
     $price = $_POST['price'];
 
     // Prepare statement

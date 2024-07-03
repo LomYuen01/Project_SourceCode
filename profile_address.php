@@ -80,8 +80,9 @@ if (isset($_POST['update'])) {
     $edit_country = $_POST['edit_country'];
     $edit_zip = $_POST['edit_zip'];
 
+
                 $allowed_zip_codes = ['75100', '75200', '75250', '75300'];
-    if (!in_array($postal_code, $allowed_zip_codes)) {
+    if (!in_array($edit_zip, $allowed_zip_codes)) {
         echo "<script>
             Swal.fire({
                 icon: 'error',
@@ -542,6 +543,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("edit_state").value = state;
             document.getElementById("edit_zip").value = zip;
             document.getElementById("edit_phone").value = phone;
+            
 
             modal.style.display = "block";
         });
