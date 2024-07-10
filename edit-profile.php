@@ -24,6 +24,7 @@
                     {
                         $customer_id = $_GET['id'];
                     }
+                    if (empty($customer_id)) {header('Location: index.php');exit();}
 
                     // Check if the redirect_url is set in the POST data
                     if(isset($_POST['redirect_url'])) {

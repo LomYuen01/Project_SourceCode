@@ -1,6 +1,9 @@
 <?php include('partials-front/menu.php'); 
     $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
-    
+    if (empty($user_id)) {
+        header('Location: index.php');
+        exit();
+    }
     ?>
 <!-- Home -->
 <style>

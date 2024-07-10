@@ -1,5 +1,9 @@
 <?php include('partials-front/menu.php'); 
 $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
+if (empty($user_id)) {
+    header('Location: index.php');
+    exit();
+}
 if (isset($_POST['submit'])) {
         $name = $_POST['name'];
         $address = $_POST['address'];

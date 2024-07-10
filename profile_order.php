@@ -1,17 +1,29 @@
 <?php 
     include('partials-front/menu.php'); 
     $user_id = isset($_SESSION['user']['user_id']) ? $_SESSION['user']['user_id'] : "";
+    if (empty($user_id)) {
+        header('Location: index.php');
+        exit();
+    }
 ?>
     <!-- Home -->
     <style>
         table, th, td {
-            border: 1px solid grey;
+            border-bottom: 1px solid ;
             border-collapse: collapse;
             padding: auto;
         }
 
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .detail:hover {
+            background-color: #f5f5f5; 
+        }
+
         .order_box{
-            border: 1px solid black;
+            border-bottom: 1px solid #f2f2f2;
             position: relative;
             width: 80%;
             margin-top: -25px;
@@ -205,7 +217,7 @@
                                     <th class="order-title">Address</th>
                                     <th class="order-title">Order Time</th>
                                     <th class="order-title">Order Status</th>
-                                    <th class="order-title">PaymentMethod</th>
+                                    <th class="order-title">PayMethod</th>
                                 </tr>
                                 <?php
 
@@ -251,21 +263,19 @@
                     <input type="radio" name="order" id="order_history" class="order_input">
                     <label for="order_history">Order History</label>
                     <div class="order_content" style="padding-bottom: 10%; padding-top:10%;">
-                        <div style="margin:auto; width:80%; color:rgb(55, 55, 55)">
+                        <div style="margin:auto; width:90%; color:rgb(55, 55, 55)">
                             <table class="order">
                                 <tr>
-                                    <th class="order-title">Order ID</th>
-                                    <th class="order-title">Name</th>
-                                    <th class="order-title">Address</th>
-                                    <th class="order-title">Order Time</th>
-                                    <th class="order-title">Delivery Time</th>
-                                    <th class="order-title">Order Status</th>
-                                    <th class="order-title">PaymentMethod</th>
-                                    <th class="order-title">Action</th>
+                                    <th style="width: 10%;">Order ID</th>
+                                    <th style="width: 10%;">Name</th>
+                                    <th style="width: 20%;">Address</th>
+                                    <th style="width: 10%;">Order Time</th>
+                                    <th style="width: 10%;">Delivery Time</th>
+                                    <th style="width: 10%;">Order Status</th>
+                                    <th style="width: 10%;">PayMethod</th>
+                                    <th style="width: 10%;">Action</th>
                                 </tr>
                                 <?php
-                                $user_id = 1; 
-
                                 
                                 $sql = "SELECT tbl_order.id as tbl_order_id, tbl_order.order_time, tbl_order.delivery_time, tbl_order.order_status, tbl_order.paymethod,
                                     tbl_order_address.id as tbl_order_address_id, tbl_order_address.firstname, tbl_order_address.address, tbl_order_address.city, tbl_order_address.state, 
@@ -300,7 +310,7 @@
                                         echo '</tr>';
                                     }
                                 } else {
-                                    echo "<tr><td colspan='7'>No orders found.</td></tr>";
+                                    echo "<tr><td colspan='8' style='text-align:center;'>No orders found.</td></tr>";
                                 }
                                 ?>
                             </table>
